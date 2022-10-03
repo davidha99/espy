@@ -44,19 +44,19 @@ def p_variable(p):
     variable : ID
     '''
 
-def body(p):
+def p_body(p):
     '''
     body : with_multiple_defs multiple_expr
     '''
 
-def with_multiple_defs(p):
+def p_with_multiple_defs(p):
     '''
     with_multiple_defs : with_multiple_defs with_multiple_defs
                        | definition
                        | empty
     '''
 
-def multiple_expr(p):
+def p_multiple_expr(p):
     '''
     multiple_expr : multiple_expr multiple_expr
                   | expression
@@ -67,7 +67,7 @@ def multiple_expr(p):
 #     keyword : identifier
 #     '''
 
-def expression(p):
+def p_expression(p):
     '''
     expression : constant
                | variable
@@ -77,7 +77,7 @@ def expression(p):
                | derived_expression
     '''
 
-def inside_expr(p):
+def p_inside_expr(p):
     '''
     inside_expr : QUOTE datum
                 | SET variable expression
@@ -85,7 +85,7 @@ def inside_expr(p):
                 | IF expression expression expression
     '''
 
-def constant(p):
+def p_constant(p):
     '''
     constant : boolean
              | number
@@ -93,17 +93,37 @@ def constant(p):
              | string
     '''
 
-def application(p):
+def p_application(p):
     '''
     application : LPAREN expression RPAREN
     '''
 
-def derived_expression(p):
+def p_derived_expression(p):
     '''
     derived_expression: COND
                       | AND
                       | OR
                       | DO
+    '''
+
+def p_datum(p):
+    '''
+    datum : boolean
+          | number
+          | character
+          | string
+          | list
+    '''
+
+def p_list(p):
+    '''
+    list : LPAREN with_multiple_datums RPAREN
+    '''
+
+def p_with_multiple_datums(p):
+    '''
+    with_multiple_datums : with_multiple_datums with_multiple_datums
+                         | empty
     '''
 
 def p_var_id(p):
