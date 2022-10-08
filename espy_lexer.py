@@ -15,13 +15,12 @@ reservadas = {
     'and' : 'AND',
     'or' : 'OR',
     'not' : 'NOT',
-    'display': 'DISPLAY'
+    'display': 'DISPLAY',
 }
 
-tokens = ['ID', 'SQUOTE', 'UNDERSCORE', 'EQUALS', 'LPAREN', 'RPAREN',
-          'LBRACK', 'RBRACK', 'LSQUAREBRACK', 'RSQUAREBRACK', 'GT', 'LT', 
-          'NE', 'PLUS', 'MINUS', 'TIMES', 'DIVIDE', 'CTEINT', 'CTEFLOAT', 
-          'BANNER'] + list(reservadas.values())
+tokens = ['ID', 'SQUOTE', 'UNDERSCORE', 'EQUALS', 'LPAREN', 'RPAREN', 'LBRACK', 'RBRACK', 
+          'LSQUAREBRACK', 'RSQUAREBRACK', 'GT', 'LT', 'NE', 'PLUS', 'MINUS', 'TIMES', 'DIVIDE', 
+          'BOOLEAN', 'CTEINT', 'CTEFLOAT', 'CHAR', 'BANNER'] + list(reservadas.values())
 
 # Tokens
 t_SQUOTE = r'\''
@@ -42,6 +41,16 @@ t_TIMES = r'\*'
 t_DIVIDE = r'/'
 t_BANNER = r'".*" | \'.*\''
 
+def t_BOOLEAN(t):
+    r'true | false'
+    t.value = str(t.value)
+    return t
+
+def t_CHAR(t):
+    r'\#[a-zA-Z]+ | \#\newline | \#\space'
+    t.value = str(t.value)
+    return t
+
 def t_ID(t):
     r'[a-zA-Z_][a-zA-Z_0-9]*'
     t.type = reservadas.get(t.value,'ID')
@@ -56,6 +65,7 @@ def t_CTEINT(t):
     r'[+-]?[0-9]+'
     t.value = int(t.value)
     return t
+
 
 # Ignored characters
 t_ignore = " \t"
@@ -76,25 +86,8 @@ if __name__ == "__main__":
     data = '''
     (main 
     
-        (define (fo+o)
-            (+ (* 5.0 4.0) 2.0))
-        
-        (if (5 > 3))
-        }
 
-        (cond ((> 3 2) 'greater)
-        ((< 3 2) 'less))
-
-        (cond ((> 3 3) 'greater)
-        ((< 3 3) 'less)
-        (else 'equal))
-        
-        (if (> 3 2) 'yes 'no)
-        
-        (do ((vec (make-vector 5))
-            (i 0 (+ i 1)))
-            ((= i 5) vec)
-        (vector-set! vec i i))
+        (display x)
     
     )
     '''
