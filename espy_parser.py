@@ -47,10 +47,6 @@ def p_with_multiple_vars(p):
 def p_variable(p):
     '''
     variable : ID
-             | PLUS
-             | MINUS
-             | TIMES
-             | DIVIDE
     '''
 
 def p_body(p):
@@ -78,12 +74,13 @@ def p_expression(p):
                | lambda_expression
                | conditional_expression
                | assignment
-               | derived_expressions
+               | derived_expression
+               | display
     '''
 
 def p_conditional_expression(p):
     '''
-    condition_expression : LPAREN IF expression expression alternate RPAREN
+    conditional_expression : LPAREN IF expression expression alternate RPAREN
     '''
 
 def p_alternate(p):
@@ -105,7 +102,7 @@ def p_literal(p):
 
 def p_self_evaluating(p):
     '''
-    self_evaluating : BOOL
+    self_evaluating : BOOLEAN
                     | num10
                     | CHAR
                     | BANNER
@@ -131,13 +128,6 @@ def p_formals(p):
     '''
     formals : LPAREN with_multiple_vars RPAREN
             | variable
-    '''
-
-def p_inside_expr(p):
-    '''
-    inside_expr : QUOTE datum
-                | SET variable expression
-                | IF expression expression expression
     '''
 
 def p_constant(p):

@@ -1,3 +1,13 @@
+% Ejemplo.espy
+
 (main 
     (if (> 1 2) 1 2)
+
+    (display "Hola") % Imprimir hola
+
+    (define (comparar param1 param2)
+        (+ param1 param2)
+    )
+
+    (comparar 2 3)
 )

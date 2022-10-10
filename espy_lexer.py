@@ -19,41 +19,23 @@ reservadas = {
     'lambda' : 'LAMBDA'
 }
 
-tokens = ['ID', 'SQUOTE', 'UNDERSCORE', 'EQUALS', 'LPAREN', 'RPAREN', 'LBRACK', 'RBRACK', 
-          'LSQUAREBRACK', 'RSQUAREBRACK', 'GT', 'LT', 'NE', 'PLUS', 'MINUS', 'TIMES', 'DIVIDE', 
-          'BOOLEAN', 'CTEINT', 'CTEFLOAT', 'CHAR', 'BANNER'] + list(reservadas.values())
+tokens = ['ID', 'SQUOTE', 'LPAREN', 'RPAREN', 'BOOLEAN', 'CTEINT', 
+          'CTEFLOAT', 'CHAR', 'BANNER', 'COMMENT'] + list(reservadas.values())
 
 # Tokens
 t_SQUOTE = r'\''
-t_UNDERSCORE = r'_'
-t_EQUALS = r'='
 t_LPAREN = r'\('
 t_RPAREN = r'\)'
-t_LBRACK = r'\}'
-t_RBRACK = r'\{'
-t_LSQUAREBRACK = r'\['
-t_RSQUAREBRACK = r'\]'
-t_GT = r'>'
-t_LT = r'<'
-t_NE = r'!='
-t_PLUS = r'\+'
-t_MINUS = r'-'
-t_TIMES = r'\*'
-t_DIVIDE = r'/'
-t_BANNER = r'".*" | \'.*\''
+t_BANNER = r'".*"'
+t_CHAR = r'\'[a-zA-Z]\''
 
 def t_BOOLEAN(t):
     r'true | false'
     t.value = str(t.value)
     return t
 
-def t_CHAR(t):
-    r'\#[a-zA-Z]+ | \#\newline | \#\space'
-    t.value = str(t.value)
-    return t
-
 def t_ID(t):
-    r'[a-zA-Z_][a-zA-Z_0-9]*'
+    r'[a-zA-Z_][a-zA-Z_0-9]* | [+-/*><] | !='
     t.type = reservadas.get(t.value,'ID')
     return t
 
@@ -67,6 +49,9 @@ def t_CTEINT(t):
     t.value = int(t.value)
     return t
 
+def t_COMMENT(t):
+    r'%.*\n'
+    pass
 
 # Ignored characters
 t_ignore = " \t"
@@ -86,8 +71,16 @@ if __name__ == "__main__":
     # Test data
     data = '''
     (main 
-    
-
+        % Ignorar este mensaje
+        !=
+        >
+        <
+        +
+        -
+        /
+        *
+        (and true false)
+        (+ 1 2 3 4.5)
         (display x)
     
     )
