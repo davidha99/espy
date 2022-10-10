@@ -17,7 +17,7 @@ def p_main(p):
 
 def p_with_multiple_forms(p):
     '''
-    with_multiple_forms : with_multiple_forms forms
+    with_multiple_forms : with_multiple_forms form
                         | empty
     '''
 
@@ -72,12 +72,65 @@ def p_with_multiple_expr(p):
 
 def p_expression(p):
     '''
-    expression : constant
-               | variable
-               | LPAREN inside_expr RPAREN
-               | SQUOTE datum
-               | application
-               | derived_expression
+    expression : variable
+               | literal
+               | procedure_call
+               | lambda_expression
+               | conditional_expression
+               | assignment
+               | derived_expressions
+    '''
+
+def p_conditional_expression(p):
+    '''
+    condition_expression : LPAREN IF expression expression alternate RPAREN
+    '''
+
+def p_alternate(p):
+    '''
+    alternate : expression
+              | empty
+    '''
+
+def p_assignment(p):
+    '''
+    assignment : LPAREN SET variable expression RPAREN
+    '''
+
+def p_literal(p):
+    '''
+    literal : quotation
+            | self_evaluating
+    '''
+
+def p_self_evaluating(p):
+    '''
+    self_evaluating : BOOL
+                    | num10
+                    | CHAR
+                    | BANNER
+    '''
+
+def p_quotation(p):
+    '''
+    quotation : LPAREN QUOTE datum RPAREN
+              | SQUOTE datum
+    '''
+
+def p_procedure_call(p):
+    '''
+    procedure_call : LPAREN expression with_multiple_expr RPAREN
+    '''
+
+def p_lambda_expression(p):
+    '''
+    lambda_expression : LPAREN LAMBDA formals body RPAREN
+    '''
+
+def p_formals(p):
+    '''
+    formals : LPAREN with_multiple_vars RPAREN
+            | variable
     '''
 
 def p_inside_expr(p):
@@ -95,23 +148,24 @@ def p_constant(p):
              | BANNER
     '''
 
-def p_application(p):
-    '''
-    application : LPAREN expression with_multiple_expr RPAREN
-    '''
-
 def p_derived_expression(p):
     '''
-    derived_expression: COND
-                      | AND
-                      | OR
-                      | DO
+    derived_expression : COND
+                       | AND
+                       | OR
+                       | DO
     '''
 
 def p_datum(p):
     '''
     datum : constant
+          | symbol
           | list
+    '''
+
+def p_symbol(p):
+    '''
+    symbol : ID
     '''
 
 def p_list(p):
@@ -142,7 +196,7 @@ def p_empty(p):
 
 # Error rule for syntax errors
 def p_error(p):
-    print("Syntax error in input!")
+    print("Syntax error in input! - {}".format(p))
 
 parser = yacc.yacc()
 

@@ -16,6 +16,7 @@ reservadas = {
     'or' : 'OR',
     'not' : 'NOT',
     'display': 'DISPLAY',
+    'lambda' : 'LAMBDA'
 }
 
 tokens = ['ID', 'SQUOTE', 'UNDERSCORE', 'EQUALS', 'LPAREN', 'RPAREN', 'LBRACK', 'RBRACK', 
