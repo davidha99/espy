@@ -140,10 +140,15 @@ def p_constant(p):
 
 def p_derived_expression(p):
     '''
-    derived_expression : COND
-                       | AND
-                       | OR
+    derived_expression : LPAREN COND cond_clause RPAREN
+                       | LPAREN AND with_multiple_expr RPAREN
+                       | LPAREN OR with_multiple_expr RPAREN
                        | DO
+    '''
+
+def p_cond_clause(p):
+    '''
+    cond_clause : LPAREN expression with_multiple_expr RPAREN
     '''
 
 def p_datum(p):

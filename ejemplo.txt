@@ -10,4 +10,8 @@
     )
 
     (comparar 2 3)
+
+    (display "Hola") % Imprimir hola
+    (and true false)
+    (or true false)
 )
