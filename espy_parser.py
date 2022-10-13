@@ -80,7 +80,12 @@ def p_expression(p):
 
 def p_conditional_expression(p):
     '''
-    conditional_expression : LPAREN IF expression expression alternate RPAREN
+    conditional_expression : LPAREN IF test consequent alternate RPAREN
+    '''
+
+def p_consequent(p):
+    '''
+    consequent : expression
     '''
 
 def p_alternate(p):
@@ -116,7 +121,23 @@ def p_quotation(p):
 
 def p_procedure_call(p):
     '''
-    procedure_call : LPAREN expression with_multiple_expr RPAREN
+    procedure_call : LPAREN operator with_multiple_operands RPAREN
+    '''
+
+def p_operator(p):
+    '''
+    operator : expression
+    '''
+
+def p_operand(p):
+    '''
+    operand : expression 
+    '''
+
+def p_with_multiple_operands(p):
+    '''
+    with_multiple_operands : with_multiple_operands operand
+                           | empty 
     '''
 
 def p_lambda_expression(p):
@@ -130,27 +151,99 @@ def p_formals(p):
             | variable
     '''
 
-def p_constant(p):
-    '''
-    constant : BOOLEAN
-             | num10
-             | CHAR
-             | BANNER
-    '''
+# def p_constant(p):
+#     '''
+#     constant : BOOLEAN
+#              | num10
+#              | CHAR
+#              | BANNER
+#     '''
 
 def p_derived_expression(p):
     '''
-    derived_expression : COND
-                       | AND
-                       | OR
-                       | DO
+    derived_expression : LPAREN COND cond_clause with_multiple_cond_clause RPAREN
+                       | LPAREN AND with_multiple_expr RPAREN
+                       | LPAREN OR with_multiple_expr RPAREN
+                       | LPAREN DO LPAREN with_multiple_iteration_specs RPAREN LPAREN test sequence RPAREN with_multiple_commands RPAREN
+    '''
+
+def p_cond_clause(p):
+    '''
+    cond_clause : LPAREN test sequence RPAREN
+    '''
+
+def p_with_multiple_cond_clause(p):
+    '''
+    with_multiple_cond_clause : with_multiple_cond_clause cond_clause
+                              | empty
+    '''
+
+def p_test(p):
+    '''
+    test : expression
+    '''
+
+def p_sequence(p):
+    '''
+    sequence : with_multiple_commands expression
+    '''
+
+def p_command(p):
+    '''
+    command : expression
+    '''
+
+def p_with_multiple_commands(p):
+    '''
+    with_multiple_commands : with_multiple_commands command
+                           | empty  
+    '''
+
+# def p_do_expression(p):
+#     '''
+#      do_expression : LPAREN DO LPAREN with_multiple_iteration_specs RPAREN LPAREN test sequence RPAREN with_multiple_commands RPAREN
+#     '''
+
+def p_iteration_spec(p):
+    '''
+    iteration_spec : LPAREN variable init step RPAREN
+                   | LPAREN variable init RPAREN
+    '''
+
+def p_with_multiple_iteration_specs(p):
+    '''
+    with_multiple_iteration_specs : with_multiple_iteration_specs iteration_spec
+                                  | empty
+    '''
+
+def p_init(p): 
+    '''
+    init : expression
+    '''
+
+def p_step(p):
+    '''
+    step : expression
     '''
 
 def p_datum(p):
     '''
-    datum : constant
-          | symbol
-          | list
+    datum : simple_datum
+          | compound_datum
+    '''
+
+def p_simple_datum(p):
+    '''
+    simple_datum : BOOLEAN
+                 | num10
+                 | CHAR
+                 | BANNER
+                 | symbol
+    '''
+
+def p_compound_datum(p):
+    '''
+    compound_datum : list
     '''
 
 def p_symbol(p):
