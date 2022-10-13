@@ -164,7 +164,7 @@ def p_derived_expression(p):
     derived_expression : LPAREN COND cond_clause with_multiple_cond_clause RPAREN
                        | LPAREN AND with_multiple_expr RPAREN
                        | LPAREN OR with_multiple_expr RPAREN
-                       | DO
+                       | LPAREN DO LPAREN with_multiple_iteration_specs RPAREN LPAREN test sequence RPAREN with_multiple_commands RPAREN
     '''
 
 def p_cond_clause(p):
@@ -197,6 +197,33 @@ def p_with_multiple_commands(p):
     '''
     with_multiple_commands : with_multiple_commands command
                            | empty  
+    '''
+
+# def p_do_expression(p):
+#     '''
+#      do_expression : LPAREN DO LPAREN with_multiple_iteration_specs RPAREN LPAREN test sequence RPAREN with_multiple_commands RPAREN
+#     '''
+
+def p_iteration_spec(p):
+    '''
+    iteration_spec : LPAREN variable init step RPAREN
+                   | LPAREN variable init RPAREN
+    '''
+
+def p_with_multiple_iteration_specs(p):
+    '''
+    with_multiple_iteration_specs : with_multiple_iteration_specs iteration_spec
+                                  | empty
+    '''
+
+def p_init(p): 
+    '''
+    init : expression
+    '''
+
+def p_step(p):
+    '''
+    step : expression
     '''
 
 def p_datum(p):
