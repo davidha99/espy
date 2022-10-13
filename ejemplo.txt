@@ -12,6 +12,13 @@
     (comparar 2 3)
 
     (display "Hola") % Imprimir hola
+
     (and true false)
     (or true false)
+
+    (cond 
+    ((< 3 2) (display "1st here"))
+    ((> 2 3) (display "2nd here"))
+    ((< 2 3) (display "Here"))
+      )
 )
