@@ -4,6 +4,7 @@ import ply.yacc as yacc
 import sys
 from espy_lexer import tokens
 
+# ---------- Initial definitions ----------
 def p_program(p):
     '''
     program : main
@@ -15,43 +16,21 @@ def p_main(p):
     main : LPAREN MAIN form with_multiple_forms RPAREN
     '''
 
-def p_with_multiple_forms(p):
-    '''
-    with_multiple_forms : with_multiple_forms form
-                        | empty
-    '''
-
 def p_form(p):
     '''
     form : variable_definition
          | expression
     '''
 
+def p_with_multiple_forms(p):
+    '''
+    with_multiple_forms : with_multiple_forms form
+                        | empty
+    '''
+
 def p_variable_definition(p):
     '''
     variable_definition : LPAREN DEFINE inside_var_def RPAREN
-    '''
-
-def p_inside_var_def(p):
-    '''
-    inside_var_def : variable expression
-                   | LPAREN variable with_multiple_vars RPAREN body
-    '''
-
-def p_with_multiple_vars(p):
-    '''
-    with_multiple_vars : with_multiple_vars variable
-                       | empty
-    '''
-
-def p_variable(p):
-    '''
-    variable : ID
-    '''
-
-def p_body(p):
-    '''
-    body : with_multiple_defs expression with_multiple_expr
     '''
 
 def p_with_multiple_defs(p):
@@ -60,12 +39,29 @@ def p_with_multiple_defs(p):
                        | empty
     '''
 
-def p_with_multiple_expr(p):
+def p_inside_var_def(p):
     '''
-    with_multiple_expr : with_multiple_expr expression
+    inside_var_def : variable expression
+                   | LPAREN variable with_multiple_vars RPAREN body
+    '''
+
+def p_variable(p):
+    '''
+    variable : ID
+    '''
+
+def p_with_multiple_vars(p):
+    '''
+    with_multiple_vars : with_multiple_vars variable
                        | empty
     '''
 
+def p_body(p):
+    '''
+    body : with_multiple_defs expression with_multiple_expr
+    '''
+
+# ---------- Expressions ----------
 def p_expression(p):
     '''
     expression : variable
@@ -78,25 +74,10 @@ def p_expression(p):
                | display
     '''
 
-def p_conditional_expression(p):
+def p_with_multiple_expr(p):
     '''
-    conditional_expression : LPAREN IF test consequent alternate RPAREN
-    '''
-
-def p_consequent(p):
-    '''
-    consequent : expression
-    '''
-
-def p_alternate(p):
-    '''
-    alternate : expression
-              | empty
-    '''
-
-def p_assignment(p):
-    '''
-    assignment : LPAREN SET variable expression RPAREN
+    with_multiple_expr : with_multiple_expr expression
+                       | empty
     '''
 
 def p_literal(p):
@@ -105,18 +86,18 @@ def p_literal(p):
             | self_evaluating
     '''
 
+def p_quotation(p):
+    '''
+    quotation : LPAREN QUOTE datum RPAREN
+              | SQUOTE datum
+    '''
+
 def p_self_evaluating(p):
     '''
     self_evaluating : BOOLEAN
                     | num10
                     | CHAR
                     | BANNER
-    '''
-
-def p_quotation(p):
-    '''
-    quotation : LPAREN QUOTE datum RPAREN
-              | SQUOTE datum
     '''
 
 def p_procedure_call(p):
@@ -151,6 +132,37 @@ def p_formals(p):
             | variable
     '''
 
+def p_conditional_expression(p):
+    '''
+    conditional_expression : LPAREN IF test consequent alternate RPAREN
+    '''
+
+def p_test(p):
+    '''
+    test : expression
+    '''
+
+def p_consequent(p):
+    '''
+    consequent : expression
+    '''
+
+def p_alternate(p):
+    '''
+    alternate : expression
+              | empty
+    '''
+
+def p_assignment(p):
+    '''
+    assignment : LPAREN SET variable expression RPAREN
+    '''
+
+def p_display(p):
+    '''
+    display : LPAREN DISPLAY datum RPAREN
+    '''
+
 # def p_constant(p):
 #     '''
 #     constant : BOOLEAN
@@ -159,12 +171,28 @@ def p_formals(p):
 #              | BANNER
 #     '''
 
+# ---------- Derived Expressions ----------
 def p_derived_expression(p):
     '''
-    derived_expression : LPAREN COND cond_clause with_multiple_cond_clause RPAREN
-                       | LPAREN AND with_multiple_expr RPAREN
-                       | LPAREN OR with_multiple_expr RPAREN
-                       | LPAREN DO LPAREN with_multiple_iteration_specs RPAREN LPAREN test sequence RPAREN with_multiple_commands RPAREN
+    derived_expression : and_expression
+                       | or_expression
+                       | cond_expression
+                       | do_expression
+    '''
+
+def p_and_expression(p):
+    '''
+    and_expression : LPAREN AND with_multiple_expr RPAREN
+    '''
+
+def p_or_expression(p):
+    '''
+    or_expression : LPAREN OR with_multiple_expr RPAREN
+    '''
+
+def p_cond_expression(p):
+    '''
+    cond_expression : LPAREN COND cond_clause with_multiple_cond_clause RPAREN
     '''
 
 def p_cond_clause(p):
@@ -176,11 +204,6 @@ def p_with_multiple_cond_clause(p):
     '''
     with_multiple_cond_clause : with_multiple_cond_clause cond_clause
                               | empty
-    '''
-
-def p_test(p):
-    '''
-    test : expression
     '''
 
 def p_sequence(p):
@@ -199,10 +222,10 @@ def p_with_multiple_commands(p):
                            | empty  
     '''
 
-# def p_do_expression(p):
-#     '''
-#      do_expression : LPAREN DO LPAREN with_multiple_iteration_specs RPAREN LPAREN test sequence RPAREN with_multiple_commands RPAREN
-#     '''
+def p_do_expression(p):
+    '''
+    do_expression : LPAREN DO LPAREN iteration_spec RPAREN LPAREN test sequence RPAREN with_multiple_commands RPAREN
+    '''
 
 def p_iteration_spec(p):
     '''
@@ -210,11 +233,11 @@ def p_iteration_spec(p):
                    | LPAREN variable init RPAREN
     '''
 
-def p_with_multiple_iteration_specs(p):
-    '''
-    with_multiple_iteration_specs : with_multiple_iteration_specs iteration_spec
-                                  | empty
-    '''
+# def p_with_multiple_iteration_specs(p):
+#     '''
+#     with_multiple_iteration_specs : with_multiple_iteration_specs iteration_spec
+#                                   | empty
+#     '''
 
 def p_init(p): 
     '''
@@ -226,6 +249,7 @@ def p_step(p):
     step : expression
     '''
 
+# ---------- Datums ----------
 def p_datum(p):
     '''
     datum : simple_datum
@@ -266,11 +290,6 @@ def p_num10(p):
     '''
     num10 : CTEINT
           | CTEFLOAT
-    '''
-
-def p_display(p):
-    '''
-    display : LPAREN DISPLAY datum RPAREN
     '''
 
 def p_empty(p):
