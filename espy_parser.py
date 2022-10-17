@@ -1,15 +1,18 @@
 # ESPY parser
 
 import ply.yacc as yacc
-import sys
+# import sys
 from espy_lexer import tokens
+from espy_symbol_table import *
+
+stack = Stack_ST()
 
 # ---------- Initial definitions ----------
 def p_program(p):
     '''
     program : main
     '''
-    p[0] = "COMPILED ESPY"
+    p[0] = p[1]
 
 def p_main(p):
     '''
@@ -41,9 +44,17 @@ def p_with_multiple_defs(p):
 
 def p_inside_var_def(p):
     '''
-    inside_var_def : variable expression
-                   | LPAREN variable with_multiple_vars RPAREN body
+    inside_var_def : variable add_func_no_params expression
+                   | LPAREN variable with_multiple_vars add_func_params RPAREN body
     '''
+
+def p_add_func_no_params(p):
+    "add_func_no_params :"
+    stack.scope_enter(p[-1])
+
+def p_add_func_params(p):
+    "add_func_params :"
+
 
 def p_variable(p):
     '''
@@ -134,13 +145,24 @@ def p_formals(p):
 
 def p_conditional_expression(p):
     '''
-    conditional_expression : LPAREN IF test consequent alternate RPAREN
+    conditional_expression : LPAREN IF test check_test consequent alternate RPAREN
     '''
 
 def p_test(p):
     '''
     test : expression
     '''
+
+def p_check_test(p):
+    "check_test :"
+    # Check if test is boolean
+    # condition = stack_operands.pop()
+    # condition_type = stack_types.pop()
+    # if condition_type != bool:
+    #   return Error.Type_Mismatch
+    # else:
+    #   generate_quadruple
+    print("Test checked")
 
 def p_consequent(p):
     '''
@@ -300,19 +322,31 @@ def p_empty(p):
 def p_error(p):
     print("Syntax error in input! - {}".format(p))
 
+# parser = yacc.yacc()
+
+# if __name__ == '__main__':
+
+#     if len(sys.argv) > 1:
+#         file = sys.argv[1]
+#         try:
+#             f = open(file, 'r')
+#             data = f.read()
+#             f.close()
+#             if parser.parse(data) == "COMPILED ESPY":
+#                 print("Valid input")
+#         except EOFError:
+#             print(EOFError)
+#     else:
+#         print("No file to test found")
+
+# Build the parser
 parser = yacc.yacc()
 
-if __name__ == '__main__':
-
-    if len(sys.argv) > 1:
-        file = sys.argv[1]
-        try:
-            f = open(file, 'r')
-            data = f.read()
-            f.close()
-            if parser.parse(data) == "COMPILED ESPY":
-                print("Valid input")
-        except EOFError:
-            print(EOFError)
-    else:
-        print("No file to test found")
+while True:
+   try:
+       s = input('espy > ')
+   except EOFError:
+       break
+   if not s: continue
+   result = parser.parse(s)
+   print(result)

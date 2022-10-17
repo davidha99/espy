@@ -1,4 +1,7 @@
 % Ejemplo.espy
+% GOTOs (Cuadruplos)
+% Scope (ProcDir)
+% IR (AST)
 
 (main 
     (if (> 1 2) 1 2)
@@ -8,6 +11,8 @@
     (define (comparar param1 param2)
         (+ param1 param2)
     )
+
+    (1 + 2)
 
     (comparar 2 3)
 
