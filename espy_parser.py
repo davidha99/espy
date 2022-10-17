@@ -1,11 +1,12 @@
 # ESPY parser
-
+from ast import main
 import ply.yacc as yacc
-# import sys
+import sys
 from espy_lexer import tokens
 from espy_symbol_table import *
 
-stack = Stack_ST()
+global_stack = Stack_ST()
+global_ids = {}
 
 # ---------- Initial definitions ----------
 def p_program(p):
@@ -16,14 +17,16 @@ def p_program(p):
 
 def p_main(p):
     '''
-    main : LPAREN MAIN form with_multiple_forms RPAREN
+    main : LPAREN MAIN pelos_1 form with_multiple_forms RPAREN
     '''
+    p[0] = p[4]
 
 def p_form(p):
     '''
     form : variable_definition
          | expression
     '''
+    p[0] = p[1]
 
 def p_with_multiple_forms(p):
     '''
@@ -35,6 +38,7 @@ def p_variable_definition(p):
     '''
     variable_definition : LPAREN DEFINE inside_var_def RPAREN
     '''
+    p[0] = p[3]
 
 def p_with_multiple_defs(p):
     '''
@@ -44,17 +48,12 @@ def p_with_multiple_defs(p):
 
 def p_inside_var_def(p):
     '''
-    inside_var_def : variable add_func_no_params expression
-                   | LPAREN variable with_multiple_vars add_func_params RPAREN body
+    inside_var_def : variable pelos_2 expression
+                   | LPAREN variable with_multiple_vars pelos_2 RPAREN body
     '''
-
-def p_add_func_no_params(p):
-    "add_func_no_params :"
-    stack.scope_enter(p[-1])
 
 def p_add_func_params(p):
     "add_func_params :"
-
 
 def p_variable(p):
     '''
@@ -84,6 +83,7 @@ def p_expression(p):
                | derived_expression
                | display
     '''
+    p[0] = p[1]
 
 def p_with_multiple_expr(p):
     '''
@@ -96,12 +96,19 @@ def p_literal(p):
     literal : quotation
             | self_evaluating
     '''
+    p[0] = p[1]
 
 def p_quotation(p):
     '''
     quotation : LPAREN QUOTE datum RPAREN
               | SQUOTE datum
     '''
+    if(len(p) == 5):
+        print(p[3])
+    else:
+        print(p[2])
+    
+    p[0] = p[1]
 
 def p_self_evaluating(p):
     '''
@@ -110,6 +117,8 @@ def p_self_evaluating(p):
                     | CHAR
                     | BANNER
     '''
+    print(p[1])
+    p[0] = p[1]
 
 def p_procedure_call(p):
     '''
@@ -184,6 +193,7 @@ def p_display(p):
     '''
     display : LPAREN DISPLAY datum RPAREN
     '''
+    print(p[3])     # Print at the end of the rule
 
 # def p_constant(p):
 #     '''
@@ -271,12 +281,32 @@ def p_step(p):
     step : expression
     '''
 
+# ---------- Pelambres (Puntos neuralgicos) ----------
+def p_pelos_1(p):
+    "pelos_1 :"
+    name = "Global"
+    global_stack.scope_enter(name)
+
+def p_pelos_2(p):
+    "pelos_2 :"
+    name = p[-1]
+    if(global_stack.scope_level == 1):
+        symbol_type = Symbol_t.SYMBOL_GLOBAL
+    else:
+        symbol_type = Symbol_t.SYMBOL_LOCAL
+
+    symbol = Symbol(symbol_type, Type_t.TYPE_FUNCTION, name)        
+
+    global_stack.scope_bind(name, symbol)
+    global_stack.scope_enter(name)
+
 # ---------- Datums ----------
 def p_datum(p):
     '''
     datum : simple_datum
           | compound_datum
     '''
+    p[0] = p[1]
 
 def p_simple_datum(p):
     '''
@@ -286,21 +316,25 @@ def p_simple_datum(p):
                  | BANNER
                  | symbol
     '''
+    p[0] = p[1]
 
 def p_compound_datum(p):
     '''
     compound_datum : list
     '''
+    p[0] = p[1]
 
 def p_symbol(p):
     '''
     symbol : ID
     '''
+    p[0] = p[1]
 
 def p_list(p):
     '''
     list : LPAREN with_multiple_datums RPAREN
     '''
+    p[0] = p[2]
 
 def p_with_multiple_datums(p):
     '''
@@ -313,6 +347,7 @@ def p_num10(p):
     num10 : CTEINT
           | CTEFLOAT
     '''
+    p[0] = p[1]
 
 def p_empty(p):
     'empty :'

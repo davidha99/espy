@@ -23,7 +23,7 @@ tokens = ['ID', 'SQUOTE', 'LPAREN', 'RPAREN', 'BOOLEAN', 'CTEINT',
           'CTEFLOAT', 'CHAR', 'BANNER', 'COMMENT'] + list(reservadas.values())
 
 # Tokens
-t_SQUOTE = r'\'.*\n'
+t_SQUOTE = r'\''
 t_LPAREN = r'\('
 t_RPAREN = r'\)'
 t_BANNER = r'".*"'
