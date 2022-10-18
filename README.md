@@ -1,6 +1,6 @@
 # ESPY
 
-## Avance 2
+## Avance 3
 
 ### Documentación
 - Se modificaron los respectivos diagramas de sintaxis de las reglas que se modificaron
@@ -11,5 +11,10 @@
 
 ### Parser
 - Se modificaron gramáticas
-- Ya está funcionando, y aceptando ejemplos de programas de ESPY
-    - Está incompleto: faltan gramáticas de expresiones derivadas como `cond`, `do`, etc.
+- Ya está funcionando, y aceptando ejemplos de programas de ESPY. 
+- Se agregaron funciones derivadas y se modulizaron funciones generales
+
+### Semántica
+- Se trabajó con la integración de reglas semánticas y puntos neurálgicos
+- Se implementaron primeras versiones de reglas semánticas
+    - Inicio de la fase, investigación y definiciones faltan por concretarse.
