@@ -342,11 +342,12 @@ def p_error(p):
 # Build the parser
 parser = yacc.yacc()
 
-while True:
-   try:
-       s = input('espy > ')
-   except EOFError:
-       break
-   if not s: continue
-   result = parser.parse(s)
-   print(result)
+if __name__ == "__main__":
+    while True:
+        try:
+            s = input('espy > ')
+        except EOFError:
+            break
+        if not s: continue
+        result = parser.parse(s)
+        print(result)

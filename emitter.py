@@ -6,7 +6,6 @@ def emit_function_header(func):
 	.globl	_%s
 _%s:
 LFB0:
-\t
 """ % (func,func,)
 
     return function_header
