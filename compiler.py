@@ -1,5 +1,5 @@
 import os
-from es_parser import parser
+from parser import parser
 
 def create_binary(program):
     """Given text of a scheme program, write assembly and link it into an
@@ -12,5 +12,5 @@ def create_binary(program):
 
     
 if __name__ == '__main__':
-    program = "(fixnum->char 40)"
+    program = "(fxadd1 0)"
     create_binary(program)
