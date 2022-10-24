@@ -1,7 +1,16 @@
 import ply.lex as lex
 
 primitives = {
-    'fxadd1' : 'PRIMITIVE'
+    'fxadd1' : 'FXADD1',
+    'fxsub1' : 'FXSUB1',
+    'char->fixnum' : 'CHARTOFIXNUM',
+    'fixnum->char' : 'FIXNUMTOCHAR',
+    'fxzero?' : 'ISFXZERO',
+    'null?' : 'ISNULL',
+    'not' : 'NOT',
+    'fixnum?' : 'ISFIXNUM',
+    'boolean?' : 'ISBOOLEAN',
+    'char?' : 'ISCHAR'
 }
 
 tokens = ['ID', 'LPAREN', 'RPAREN', 'FIXNUM', 'BOOLEAN', 'CHAR', 'NULL'] + list(primitives.values())
@@ -13,7 +22,7 @@ t_CHAR = r'\\\#[a-zA-Z0-9]'
 t_NULL = r'\(\)'
 
 def t_ID(t):
-    r'[a-zA-Z_][a-zA-Z_0-9]* | [+-/*><=] | !='
+    r'[a-zA-Z][a-zA-Z_0-9<>\-\?]*'
     t.type = primitives.get(t.value,'ID')
     return t
 
@@ -40,7 +49,16 @@ lexer = lex.lex()
 
 # For debugging lexer just run while in this file
 if __name__ == "__main__":
-    data = "fxadd1"
+    data = '''
+    char->fixnum
+    fixnum->char
+    boolean?
+    null?
+    char?
+    fixnum?
+    fxzero?
+    not
+    '''
 
     # Give the lexer some input
     lexer.input(data)

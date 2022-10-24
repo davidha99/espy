@@ -1,5 +1,5 @@
 from emitter import emit_immediate
-from immediates import immediate_repr
+from immediates import compile_fixnum, immediate_repr, compile_char, charshift, fxshift, chartag
 from utils import check_argument_number, check_argument_type
 
 primitives = {}
@@ -20,6 +20,39 @@ def add1(*argv):
     check_argument_type('fxadd1', argv, ("fixnum",))
     temp = argv[0] + 1
     asm = "\taddl    $%s, %%eax\n" % (immediate_repr(1))
+    return temp, asm
+
+@define_primitive('fxsub1')
+def sub1(*argv):
+    check_argument_number('fxsub1', argv, 1, 1)
+    check_argument_type('fxsub1', argv, ("fixnum",))
+    temp = argv[0] - 1
+    asm = "\tsubl   $%s, %%eax\n" % (immediate_repr(1))
+    return temp, asm
+
+@define_primitive('char->fixnum')
+def char_to_fixnum(*argv):
+    check_argument_number('char->fixnum', argv, 1, 1)
+    check_argument_type('char->finum', argv, ("char",))
+    given_char = argv[0]
+    temp = compile_char(given_char)
+    # Shift to the right by 6, explanation:
+    #   Fixnum tag: b'      00'
+    #   Char tag  : b'00001111'
+    temp = temp >> (charshift - fxshift + chartag)
+    asm = "\tshll\t$%s, %%eax\n" % (charshift - fxshift)
+    asm += "\torl   \t$%s, %%eax\n" % chartag
+    return temp, asm
+
+@define_primitive('fixnum->char')
+def fixnum_to_char(*argv):
+    check_argument_number('fixnum->char', argv, 1, 1)
+    check_argument_type('fixnum->char', argv, ("fixnum",))
+    given_fxnum = argv[0]
+    temp = compile_fixnum(given_fxnum)
+    temp = temp << (charshift - fxshift + chartag)
+    asm = "\tshll\t$%s, %%eax\n" % (charshift - fxshift)
+    asm += "\torl   \t$%s, %%eax\n" % chartag
     return temp, asm
 
 

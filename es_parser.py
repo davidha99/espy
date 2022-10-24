@@ -22,17 +22,32 @@ def p_program(p):
 def p_expr(p):
     '''
     expr : immediate
-         | LPAREN PRIMITIVE expr RPAREN
+         | LPAREN unary_primitive expr RPAREN
     '''
     global asm
     global operands_stack
     if len(p) > 2:
         prim_name = p[2]
         prim_function = primitives[prim_name]
-        temp1, asm_temp = prim_function(operands_stack[-1])
+        temp, asm_temp = prim_function(operands_stack[-1])
         asm += asm_temp
         operands_stack.pop()
-        operands_stack.append(temp1)
+        operands_stack.append(temp)
+
+def p_unary_primitive(p):
+    '''
+    unary_primitive : FXADD1
+                    | FXSUB1
+                    | CHARTOFIXNUM
+                    | FIXNUMTOCHAR
+                    | ISFXZERO
+                    | ISNULL
+                    | NOT
+                    | ISFIXNUM
+                    | ISBOOLEAN
+                    | ISCHAR
+    '''
+    p[0] = p[1]
 
 
 def p_immediate(p):
