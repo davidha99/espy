@@ -29,37 +29,35 @@ def is_immediate(x):
 
 def compile_fixnum(value):
     value = value << fxshift
-    return "\tmovl	$%s, %%eax\n" % value
+    return value
 
 def compile_boolean(value):
     if value == "#t":
         value = bool_t
     elif value == "#f":
         value = bool_f
-    return "\tmovl	$%s, %%eax\n" % int(value, 16)
+    return value
 
 def compile_char(value):
     # Make char int, and then shift 8 bits to the left
     char = value[2]
     to_int = ord(char)
     value = (to_int << charshift) + chartag
-    return "\tmovl	$%s, %%eax\n" % value
+    return value
 
 def compile_null(value):
     value = empty_list
-    return "\tmovl	$%s, %%eax\n" % int(value, 16)
+    return value
 
 def immediate_repr(code):
-    asm = ""
     if is_fixnum(code):
-        asm += compile_fixnum(code)
+        return compile_fixnum(code)
     elif is_boolean(code):
-        asm += compile_boolean(code)
+        return compile_boolean(code)
     elif is_char(code):
-        asm += compile_char(code)
+        return compile_char(code)
     elif is_null(code):
-        asm += compile_null(code)
+        return compile_null(code)
     else:
         print("Error")
         exit()
-    return asm

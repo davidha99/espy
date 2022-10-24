@@ -1,21 +1,39 @@
 import sys
 import ply.yacc as yacc
 from lexer import tokens
-from emitter import emit_program
+from immediates import immediate_repr
+from emitter import emit_function_header, emit_immediate
+from primitives import primitives
+
+asm = ""
+asm += emit_function_header("entry_point")
+operands_stack = []
 
 def p_program(p):
     '''
     program : expr
     '''
+    global asm
     # p[0] = p[1]
     with open("scheme.s", "w") as f:
-        f.write(emit_program(p[1]))
+        asm += "    ret"
+        f.write(asm)
 
 def p_expr(p):
     '''
     expr : immediate
+         | LPAREN PRIMITIVE expr RPAREN
     '''
-    p[0] = p[1]
+    global asm
+    global operands_stack
+    if len(p) > 2:
+        prim_name = p[2]
+        prim_function = primitives[prim_name]
+        temp1, asm_temp = prim_function(operands_stack[-1])
+        asm += asm_temp
+        operands_stack.pop()
+        operands_stack.append(temp1)
+
 
 def p_immediate(p):
     '''
@@ -24,7 +42,11 @@ def p_immediate(p):
               | CHAR
               | NULL
     '''
-    p[0] = p[1]
+    global asm
+    global operands_stack
+    operands_stack.append(p[1])
+    asm += emit_immediate(operands_stack[-1])
+
 
 # Error rule for syntax errors
 def p_error(p):
@@ -35,6 +57,6 @@ parser = yacc.yacc()
 # For debugging parser just run while in this file
 if __name__ == '__main__':
 
-    data = "32"
+    data = "1"
 
     print(parser.parse(data))

@@ -1,10 +1,10 @@
 import ply.lex as lex
 
-# primitives = {
+primitives = {
+    'fxadd1' : 'PRIMITIVE'
+}
 
-# }
-
-tokens = ['LPAREN', 'RPAREN', 'FIXNUM', 'BOOLEAN', 'CHAR', 'NULL']
+tokens = ['ID', 'LPAREN', 'RPAREN', 'FIXNUM', 'BOOLEAN', 'CHAR', 'NULL'] + list(primitives.values())
 
 t_LPAREN = r'\('
 t_RPAREN = r'\)'
@@ -12,13 +12,18 @@ t_BOOLEAN = r'\#t | \#f'
 t_CHAR = r'\\\#[a-zA-Z0-9]'
 t_NULL = r'\(\)'
 
+def t_ID(t):
+    r'[a-zA-Z_][a-zA-Z_0-9]* | [+-/*><=] | !='
+    t.type = primitives.get(t.value,'ID')
+    return t
+
 def t_FIXNUM(t):
     r'[+-]?[0-9]+'
     t.value = int(t.value)
     return t
 
 # Ignored characters
-# t_ignore = " \t"
+t_ignore = " \t"
 
 # Define a rule so we can track line numbers
 def t_newline(t):
@@ -35,7 +40,7 @@ lexer = lex.lex()
 
 # For debugging lexer just run while in this file
 if __name__ == "__main__":
-    data = "\#A"
+    data = "fxadd1"
 
     # Give the lexer some input
     lexer.input(data)

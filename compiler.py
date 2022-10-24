@@ -12,5 +12,5 @@ def create_binary(program):
 
     
 if __name__ == '__main__':
-    program = "\#0"
+    program = "(fxadd1 (fxadd1 (fxadd1 (fxadd1 (fxadd1 0)))))"
     create_binary(program)
