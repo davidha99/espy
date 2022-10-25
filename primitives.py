@@ -33,15 +33,16 @@ def sub1(*argv):
 @define_primitive('char->fixnum')
 def char_to_fixnum(*argv):
     check_argument_number('char->fixnum', argv, 1, 1)
-    check_argument_type('char->finum', argv, ("char",))
+    check_argument_type('char->fixnum', argv, ("char",))
     given_char = argv[0]
     temp = compile_char(given_char)
     # Shift to the right by 6, explanation:
     #   Fixnum tag: b'      00'
     #   Char tag  : b'00001111'
-    temp = temp >> (charshift - fxshift + chartag)
-    asm = "\tshll\t$%s, %%eax\n" % (charshift - fxshift)
-    asm += "\torl   \t$%s, %%eax\n" % chartag
+    temp -= chartag
+    temp = temp >> (charshift - fxshift)
+    asm = "\torl   \t$%s, %%eax\n" % fxshift
+    asm += "\tshrl\t$%s, %%eax\n" % (charshift - fxshift)
     return temp, asm
 
 @define_primitive('fixnum->char')
@@ -49,8 +50,8 @@ def fixnum_to_char(*argv):
     check_argument_number('fixnum->char', argv, 1, 1)
     check_argument_type('fixnum->char', argv, ("fixnum",))
     given_fxnum = argv[0]
-    temp = compile_fixnum(given_fxnum)
-    temp = temp << (charshift - fxshift + chartag)
+    temp = "\#"
+    temp += chr(given_fxnum)
     asm = "\tshll\t$%s, %%eax\n" % (charshift - fxshift)
     asm += "\torl   \t$%s, %%eax\n" % chartag
     return temp, asm
