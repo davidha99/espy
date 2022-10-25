@@ -12,6 +12,12 @@ def emit_function_header(func):
 
     return function_header
 
+def emit_function_footer():
+    function_footer = """     ret
+    .seh_endproc
+    """
+    return function_footer
+
 # .file	"ctest.c"
 # 	.text
 # 	.globl	entry_point

@@ -12,5 +12,5 @@ def create_binary(program):
 
     
 if __name__ == '__main__':
-    program = "(char->fixnum (fixnum->char 12))"
+    program = "(char->fixnum (fixnum->char 32))"
     create_binary(program)
