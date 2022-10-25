@@ -18,6 +18,8 @@ def p_program(p):
     with open("scheme.s", "w") as f:
         asm += "    ret"
         f.write(asm)
+        # Resetea el Assembly Code (esto para que se ejecuten correctamente los tests)
+        asm = emit_function_header("entry_point")
 
 def p_expr(p):
     '''
