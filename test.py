@@ -158,6 +158,182 @@ class ImmediateTest(TestCase):
     
     def test_char_Z(self):
         self.assertEvaluatesRepr("\#Z", "\#Z")
+    
+    def test_char_a(self):
+        self.assertEvaluatesRepr("\#a", "\#a")
+
+    def test_char_a(self):
+        self.assertEvaluatesRepr("\#b", "\#b")
+
+    def test_char_a(self):
+        self.assertEvaluatesRepr("\#c", "\#c")
+
+    def test_char_a(self):
+        self.assertEvaluatesRepr("\#d", "\#d")
+
+    def test_char_a(self):
+        self.assertEvaluatesRepr("\#f", "\#f")
+
+    def test_char_a(self):
+        self.assertEvaluatesRepr("\#g", "\#g")
+
+    def test_char_a(self):
+        self.assertEvaluatesRepr("\#h", "\#h")
+
+    def test_char_a(self):
+        self.assertEvaluatesRepr("\#i", "\#i")
+
+    def test_char_a(self):
+        self.assertEvaluatesRepr("\#j", "\#j")
+
+    def test_char_a(self):
+        self.assertEvaluatesRepr("\#k", "\#k")
+
+    def test_char_a(self):
+        self.assertEvaluatesRepr("\#l", "\#l")
+
+    def test_char_a(self):
+        self.assertEvaluatesRepr("\#m", "\#m")
+
+    def test_char_a(self):
+        self.assertEvaluatesRepr("\#n", "\#n")
+
+    def test_char_a(self):
+        self.assertEvaluatesRepr("\#o", "\#o")
+
+    def test_char_a(self):
+        self.assertEvaluatesRepr("\#p", "\#p")
+
+    def test_char_a(self):
+        self.assertEvaluatesRepr("\#q", "\#q")
+
+    def test_char_a(self):
+        self.assertEvaluatesRepr("\#r", "\#r")
+
+    def test_char_a(self):
+        self.assertEvaluatesRepr("\#s", "\#s")
+
+    def test_char_a(self):
+        self.assertEvaluatesRepr("\#t", "\#t")
+
+    def test_char_a(self):
+        self.assertEvaluatesRepr("\#u", "\#u")
+
+    def test_char_a(self):
+        self.assertEvaluatesRepr("\#v", "\#v")
+
+    def test_char_a(self):
+        self.assertEvaluatesRepr("\#w", "\#w")
+
+    def test_char_a(self):
+        self.assertEvaluatesRepr("\#x", "\#x")
+
+    def test_char_a(self):
+        self.assertEvaluatesRepr("\#y", "\#y")
+
+    def test_char_a(self):
+        self.assertEvaluatesRepr("\#z", "\#z")
+    
+    def test_fxadd1_0(self):
+        self.assertEvaluatesRepr("(fxadd1 0)", "1")
+    
+    def test_fxadd1_neg_1(self):
+        self.assertEvaluatesRepr("(fxadd1 -1)", "0")
+    
+    def test_fxadd1_1(self):
+        self.assertEvaluatesRepr("(fxadd1 1)", "2")
+    
+    def test_fxadd1_neg_100(self):
+        self.assertEvaluatesRepr("(fxadd1 -100)", "-99")
+    
+    def test_fxadd1_1000(self):
+        self.assertEvaluatesRepr("(fxadd1 1000)", "1001")
+    
+    def test_fxadd1_536870910(self):
+        self.assertEvaluatesRepr("(fxadd1 536870910)", "536870911")
+    
+    def test_fxadd1_neg_536870912(self):
+        self.assertEvaluatesRepr("(fxadd1 -536870912)", "-536870911")
+    
+    def test_2_fxadd1_0(self):
+        self.assertEvaluatesRepr("(fxadd1 (fxadd1 0))", "2")
+    
+    def test_6_fxadd1_12(self):
+        self.assertEvaluatesRepr("(fxadd1 (fxadd1 (fxadd1 (fxadd1 (fxadd1 (fxadd1 12))))))", "18")
+    
+    def test_fxsub1_0(self):
+        self.assertEvaluatesRepr("(fxsub1 0)", "-1")
+    
+    def test_fxsub1_neg_1(self):
+        self.assertEvaluatesRepr("(fxsub1 -1)", "-2")
+    
+    def test_fxsub1_1(self):
+        self.assertEvaluatesRepr("(fxsub1 1)", "0")
+    
+    def test_fxsub1_neg_100(self):
+        self.assertEvaluatesRepr("(fxsub1 -100)", "-101")
+    
+    def test_fxsub1_1000(self):
+        self.assertEvaluatesRepr("(fxsub1 1000)", "999")
+    
+    def test_fxsub1_536870911(self):
+        self.assertEvaluatesRepr("(fxsub1 536870911)", "536870910")
+    
+    def test_fxsub1_neg_536870911(self):
+        self.assertEvaluatesRepr("(fxsub1 -536870911)", "-536870912")
+    
+    def test_2_fxsub1_0(self):
+        self.assertEvaluatesRepr("(fxsub1 (fxsub1 0))", "-2")
+    
+    def test_6_fxsub1_12(self):
+        self.assertEvaluatesRepr("(fxsub1 (fxsub1 (fxsub1 (fxsub1 (fxsub1 (fxsub1 12))))))", "6")
+    
+    def test_fxsub1_fxadd1_0(self):
+        self.assertEvaluatesRepr("(fxsub1 (fxadd1 0))", "0")
+    
+    def test_fixnum_to_char_65(self):
+        self.assertEvaluatesRepr("(fixnum->char 65)", "\#A")
+    
+    def test_fixnum_to_char_97(self):
+        self.assertEvaluatesRepr("(fixnum->char 97)", "\#a")
+
+    def test_fixnum_to_char_122(self):
+        self.assertEvaluatesRepr("(fixnum->char 122)", "\#z")
+
+    def test_fixnum_to_char_90(self):
+        self.assertEvaluatesRepr("(fixnum->char 90)", "\#Z")
+
+    def test_fixnum_to_char_48(self):
+        self.assertEvaluatesRepr("(fixnum->char 48)", "\#0")
+
+    def test_fixnum_to_char_57(self):
+        self.assertEvaluatesRepr("(fixnum->char 57)", "\#9")
+
+    def test_char_to_fixnum_A(self):
+        self.assertEvaluatesRepr("(char->fixnum \#A)", "65")
+
+    def test_char_to_fixnum_a(self):
+        self.assertEvaluatesRepr("(char->fixnum \#a)", "97")
+
+    def test_char_to_fixnum_z(self):
+        self.assertEvaluatesRepr("(char->fixnum \#z)", "122")
+
+    def test_char_to_fixnum_Z(self):
+        self.assertEvaluatesRepr("(char->fixnum \#Z)", "90")
+
+    def test_char_to_fixnum_0(self):
+        self.assertEvaluatesRepr("(char->fixnum \#0)", "48")
+
+    def test_char_to_fixnum_9(self):
+        self.assertEvaluatesRepr("(char->fixnum \#9)", "57")
+
+    def test_char_to_fixnum_fixnum_to_char_12(self):
+        self.assertEvaluatesRepr("(char->fixnum (fixnum->char 12))", "12")
+
+    def test_fixnum_to_char_char_to_fixnum_x(self):
+        self.assertEvaluatesRepr("(fixnum->char (char->fixnum \#x))", "\#x")
+
+        
 
 
 if __name__ == '__main__':
