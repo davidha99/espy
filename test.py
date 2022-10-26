@@ -332,6 +332,55 @@ class ImmediateTest(TestCase):
 
     def test_fixnum_to_char_char_to_fixnum_x(self):
         self.assertEvaluatesRepr("(fixnum->char (char->fixnum \#x))", "\#x")
+    
+    def test_is_fixnum_0(self):
+        self.assertEvaluatesRepr("(fixnum? 0)", "#t")
+    
+    def test_is_fixnum_1(self):
+        self.assertEvaluatesRepr("(fixnum? 1)", "#t")
+    
+    def test_is_fixnum_neg_1(self):
+        self.assertEvaluatesRepr("(fixnum? -1)", "#t")
+    
+    def test_is_fixnum_37287(self):
+        self.assertEvaluatesRepr("(fixnum? 37287)", "#t")
+    
+    def test_is_fixnum_neg_23873(self):
+        self.assertEvaluatesRepr("(fixnum? -23873)", "#t")
+    
+    def test_is_fixnum_536870911(self):
+        self.assertEvaluatesRepr("(fixnum? 536870911)", "#t")
+    
+    def test_is_fixnum_neg_536870911(self):
+        self.assertEvaluatesRepr("(fixnum? -536870911", "#t")
+    
+    def test_is_fixnum_bool_t(self):
+        self.assertEvaluatesRepr("(fixnum? #t)", "#f")
+    
+    def test_is_fixnum_bool_f(self):
+        self.assertEvaluatesRepr("(fixnum? #f)", "#f")
+    
+    def test_is_fixnum_null(self):
+        self.assertEvaluatesRepr("(fixnum? ())", "#f")
+    
+    def test_is_fixnum_char_Q(self):
+        self.assertEvaluatesRepr("(fixnum? \#Q)", "#f")
+    
+    def test_2_is_fixnum_12(self):
+        self.assertEvaluatesRepr("(fixnum? (fixnum? 12))", "#f")
+    
+    def test_2_is_fixnum_bool_f(self):
+        self.assertEvaluatesRepr("(fixnum? (fixnum? #f))", "#f")
+    
+    def test_2_is_fixnum_char_a(self):
+        self.assertEvaluatesRepr("(fixnum? (fixnum? \#A))", "#f")
+    
+    def test_is_fixnum_char_to_fixnum_char_r(self):
+        self.assertEvaluatesRepr("(fixnum? (char->fixnum \#r))", "#t")
+    
+    def test_is_fixnum_fixnum_to_char_12(self):
+        self.assertEvaluatesRepr("(fixnum? (fixnum->char 12))", "#f")
+    
 
         
 

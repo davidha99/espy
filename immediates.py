@@ -1,4 +1,7 @@
 fxshift = 2
+fxmask = '%x' % int('00000011', 2)
+fxtag = '%x' % int('00000000', 2)
+bool_bit = 6 # '%x' % int('00000110', 2)
 boolshift = 7
 charshift = 8
 chartag = 15

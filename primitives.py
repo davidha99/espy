@@ -1,5 +1,16 @@
 from emitter import emit_immediate
-from immediates import compile_fixnum, immediate_repr, compile_char, charshift, fxshift, chartag
+from immediates import (
+    compile_fixnum, 
+    immediate_repr, 
+    compile_char,
+    is_fixnum,
+    charshift, 
+    fxshift, 
+    chartag, 
+    fxmask, 
+    fxtag,
+    bool_f,
+    bool_bit)
 from utils import check_argument_number, check_argument_type
 
 primitives = {}
@@ -56,7 +67,38 @@ def fixnum_to_char(*argv):
     asm += "\torl   \t$%s, %%eax\n" % chartag
     return temp, asm
 
+@define_primitive('fixnum?')
+def fixnum_(*argv):
+    temp = argv[0]
+    temp = "#t" if is_fixnum(temp) else "#f"
+    asm = ""
+    asm += "\tand $%s, %%al\n" % fxmask # Extracting lower 2 bits
+    asm += "\tcmp  $%s, %%al\n" % fxtag  # Comparing lower two bits with fxtag
+    asm += "\tsete  %al\n"
+    asm += "\tmovzbl    %al, %eax\n"
+    asm += "\tsal   $%s, %%al\n" % bool_bit
+    asm += "\tor    $%s, %%al\n" % 47
+    return temp, asm
 
+@define_primitive('boolean?')
+def is_boolean(*argv):
+    pass
+
+@define_primitive('char?')
+def is_char(*argv):
+    pass
+
+@define_primitive('null?')
+def is_null(*argv):
+    pass
+
+@define_primitive('not')
+def not_primitive(*argv):
+    pass
+
+@define_primitive('fxzero?')
+def is_fxzero(*argv):
+    pass
 
 # @define_primitive('define')
 # def define(arguments, environment):
