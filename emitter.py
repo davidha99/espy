@@ -3,12 +3,26 @@ from immediates import is_fixnum, is_boolean, is_char, is_null, is_immediate, im
 
 def emit_function_header(func):
     function_header = """	.text
-	.globl	_%s
-_%s:
-LFB0:
-""" % (func,func)
+	.globl	%s
+	.def	%s;	.scl	2;	.type	32;	.endef
+	.seh_proc	%s
+%s:
+    .seh_endprologue
+""" % (func,func, func, func)
 
     return function_header
+
+def emit_function_footer():
+    function_footer = """     ret
+    .seh_endproc
+    """
+    return function_footer
+
+# .file	"ctest.c"
+# 	.text
+# 	.globl	entry_point
+# 	.def	entry_point;	.scl	2;	.type	32;	.endef
+# 	.seh_proc	entry_point
 
 def emit_immediate(expr):
     asm = ""

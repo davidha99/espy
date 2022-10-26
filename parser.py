@@ -2,7 +2,7 @@ import sys
 import ply.yacc as yacc
 from lexer import tokens
 from immediates import immediate_repr
-from emitter import emit_function_header, emit_immediate
+from emitter import emit_function_header, emit_immediate, emit_function_footer
 from primitives import primitives
 
 asm = ""
@@ -16,7 +16,7 @@ def p_program(p):
     global asm
     # p[0] = p[1]
     with open("scheme.s", "w") as f:
-        asm += "    ret"
+        asm += emit_function_footer()
         f.write(asm)
         # Resetea el Assembly Code (esto para que se ejecuten correctamente los tests)
         asm = emit_function_header("entry_point")
@@ -74,6 +74,6 @@ parser = yacc.yacc()
 # For debugging parser just run while in this file
 if __name__ == '__main__':
 
-    data = "1"
+    data = "3"
 
     print(parser.parse(data))

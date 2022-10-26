@@ -8,7 +8,7 @@ def create_binary(program):
     """
     parser.parse(program)
 
-    os.system('gcc-12 scheme.s runtime.c -o main')
+    os.system('gcc scheme.s runtime.c -o main')
 
     
 if __name__ == '__main__':
