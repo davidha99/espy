@@ -9,6 +9,7 @@ class ImmediateTest(TestCase):
         result_repr to stdout.
 
         """
+        print(program)
         create_binary(program)
         self.assertEqual(check_output(['./main']).strip().decode('utf-8'), result_repr)
     
@@ -352,7 +353,7 @@ class ImmediateTest(TestCase):
         self.assertEvaluatesRepr("(fixnum? 536870911)", "#t")
     
     def test_is_fixnum_neg_536870911(self):
-        self.assertEvaluatesRepr("(fixnum? -536870911", "#t")
+        self.assertEvaluatesRepr("(fixnum? -536870911)", "#t")
     
     def test_is_fixnum_bool_t(self):
         self.assertEvaluatesRepr("(fixnum? #t)", "#f")

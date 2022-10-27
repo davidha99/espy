@@ -7,14 +7,18 @@ def create_binary(program):
     executable.
 
     """
-    parser.parse(program)
+    parser_status = parser.parse(program)
 
-    if system() == "Darwin":
-        os.system("gcc-12 scheme.s runtime.c -o main")
-    elif system() == "Windows":
-        os.system('gcc scheme.s runtime.c -o main')
+    if (parser_status == "Parsed"):
+        if system() == "Darwin":
+            os.system("gcc-12 scheme.s runtime.c -o main")
+        elif system() == "Windows":
+            os.system('gcc scheme.s runtime.c -o main')
+    else:
+        exit()
+
 
     
 if __name__ == '__main__':
-    program = "(fixnum? (fixnum? \#A))"
+    program = "(fixnum? ())"
     create_binary(program)

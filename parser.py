@@ -14,12 +14,12 @@ def p_program(p):
     program : expr
     '''
     global asm
-    # p[0] = p[1]
     with open("scheme.s", "w") as f:
         asm += emit_function_footer()
         f.write(asm)
         # Resetea el Assembly Code (esto para que se ejecuten correctamente los tests)
         asm = emit_function_header("entry_point")
+    p[0] = "Parsed"
 
 def p_expr(p):
     '''
