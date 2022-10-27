@@ -1,4 +1,5 @@
 import os
+from platform import system
 from parser import parser
 
 def create_binary(program):
@@ -8,7 +9,10 @@ def create_binary(program):
     """
     parser.parse(program)
 
-    os.system('gcc scheme.s runtime.c -o main')
+    if system() == "Darwin":
+        os.system("gcc-12 scheme.s runtime.c -o main")
+    elif system() == "Windows":
+        os.system('gcc scheme.s runtime.c -o main')
 
     
 if __name__ == '__main__':

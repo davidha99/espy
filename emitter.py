@@ -1,21 +1,32 @@
 from immediates import is_fixnum, is_boolean, is_char, is_null, is_immediate, immediate_repr
+from platform import system
 # from primitives import is_primitive
 
 def emit_function_header(func):
-    function_header = """	.text
-	.globl	%s
-	.def	%s;	.scl	2;	.type	32;	.endef
-	.seh_proc	%s
-%s:
-    .seh_endprologue
-""" % (func,func, func, func)
+    if system() == "Darwin":
+        function_header = """	.text
+	.globl	_%s
+_%s:
+LFB0:
+""" % (func,func)
+    elif system() == "Windows":
+        function_header = """	.text
+        .globl	%s
+        .def	%s;	.scl	2;	.type	32;	.endef
+        .seh_proc	%s
+    %s:
+        .seh_endprologue
+    """ % (func,func, func, func)
 
     return function_header
 
 def emit_function_footer():
-    function_footer = """     ret
-    .seh_endproc
-    """
+    if system() == "Darwin":
+        function_footer = " ret"
+    elif system() == "Windows":
+        function_footer = """     ret
+        .seh_endproc
+        """
     return function_footer
 
 # .file	"ctest.c"
