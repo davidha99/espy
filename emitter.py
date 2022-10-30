@@ -54,6 +54,9 @@ def emit_immediate(expr):
 def emit_primcall(expr):
     pass
 
+def emit_conditional_expr(expr):
+    pass
+
 # def emit_expr(expr):
 #     if is_immediate(expr):
 #         return emit_immediate(expr)

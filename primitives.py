@@ -44,7 +44,7 @@ def sub1(*argv):
 @define_primitive('char->fixnum')
 def char_to_fixnum(*argv):
     check_argument_number('char->fixnum', argv, 1, 1)
-    check_argument_type('char->fixnum', argv, ("char",))
+    check_argument_type('char->fixnum', argv, ('char',))
     given_char = argv[0]
     temp = compile_char(given_char)
     # Shift to the right by 6, explanation:
@@ -59,7 +59,7 @@ def char_to_fixnum(*argv):
 @define_primitive('fixnum->char')
 def fixnum_to_char(*argv):
     check_argument_number('fixnum->char', argv, 1, 1)
-    check_argument_type('fixnum->char', argv, ("fixnum",))
+    check_argument_type('fixnum->char', argv, ('fixnum',))
     given_fxnum = argv[0]
     temp = "\#"
     temp += chr(given_fxnum)
@@ -81,24 +81,62 @@ def fixnum_(*argv):
     return temp, asm
 
 @define_primitive('boolean?')
-def is_boolean(*argv):
+def boolean_(*argv):
     pass
 
 @define_primitive('char?')
-def is_char(*argv):
+def char_(*argv):
     pass
 
 @define_primitive('null?')
-def is_null(*argv):
+def null_(*argv):
     pass
 
 @define_primitive('not')
 def not_primitive(*argv):
-    pass
+    temp = argv[0]
+    temp = "#t" if temp == "#f" else "#f"
+    asm = ""
+    asm += "\tcmp  $%s, %%al\n" % 47 # bool_f value
+    asm += "\tsete  %al\n"
+    asm += "\tmovzbl    %al, %eax\n"
+    asm += "\tsal   $%s, %%al\n" % bool_bit
+    asm += "\tor    $%s, %%al\n" % 47 # bool_f value
+    return temp, asm
 
 @define_primitive('fxzero?')
 def is_fxzero(*argv):
     pass
+
+@define_primitive('if_test')
+def if_test_expression(test_expr, labels):
+    # Aquí tenemos la opción de que los IFs sólo acepten booleanos o
+    # que acepte cualquier otra cosa que no sea #f como verdadero.
+
+    # check_argument_type('if_test', (test_expr,), ('boolean',))
+    alt_label = labels[-2]
+    asm = ""
+    asm += "\tcmp $%s, %%al\n" % int(bool_f, 16)
+    asm += "\tje %s\n" % alt_label
+
+    return asm
+
+@define_primitive('if_consequent')
+def if_consequent_expression(labels):
+    alt_label = labels[-2]
+    end_label = labels[-1]
+    asm = ""
+    asm += "\t jmp %s\n" % end_label
+    asm += "%s:" % alt_label
+    asm += "\n"
+    return asm
+
+@define_primitive('if_alternate')
+def if_alterante_expression(labels):
+    end_label = labels[-1]
+    asm = "%s:" % end_label
+    asm += "\n"
+    return asm
 
 # @define_primitive('define')
 # def define(arguments, environment):
