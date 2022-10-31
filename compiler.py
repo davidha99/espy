@@ -20,5 +20,11 @@ def create_binary(program):
 
     
 if __name__ == '__main__':
-    program = "(fixnum? ())"
+    program = '''(if (not (if (if (not 1) 
+                                    (not 2) 
+                                    (not 3)) 
+                                4 
+                                5)) 
+                        6 
+                        7)'''
     create_binary(program)
