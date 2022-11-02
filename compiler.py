@@ -20,5 +20,5 @@ def create_binary(program):
 
     
 if __name__ == '__main__':
-    program = '''(boolean? #f)'''
+    program = '''(char? (fixnum->char 65))'''
     create_binary(program)

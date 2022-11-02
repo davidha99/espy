@@ -5,6 +5,7 @@ bool_bit = 6 # '%x' % int('00000110', 2)
 boolshift = 7
 charshift = 8
 chartag = 15
+charmask = int('11111111', 2)
 bool_f = '%x' % int('00101111', 2)
 bool_t = '%x' % int('01101111', 2)
 empty_list = '%x' % int('00111111', 2)
@@ -28,7 +29,7 @@ def is_boolean_f(x):
     return x == "#f"
 
 def is_char(x):
-    return "\#" in x
+    return "\#" in str(x)
 
 def is_null(x):
     return x == "()"

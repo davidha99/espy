@@ -13,6 +13,7 @@ from immediates import (
     charshift, 
     fxshift, 
     chartag, 
+    charmask,
     fxmask, 
     fxtag,
     bool_f,
@@ -101,7 +102,16 @@ def boolean_(*argv):
 
 @define_primitive('char?')
 def char_(*argv):
-    pass
+    temp = argv[0]
+    temp = "#t" if is_char(temp) else "#f"
+    asm = ""
+    asm += "\tand $%s, %%al\n" % charmask # Extracting lower 8 bits
+    asm += "\tcmp  $%s, %%al\n" % chartag  # Comparing lower 8 bits with char tag
+    asm += "\tsete  %al\n"
+    asm += "\tmovzbl    %al, %eax\n"
+    asm += "\tsal   $%s, %%al\n" % bool_bit
+    asm += "\tor    $%s, %%al\n" % 47
+    return temp, asm
 
 @define_primitive('null?')
 def null_(*argv):
