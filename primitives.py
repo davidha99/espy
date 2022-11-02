@@ -4,6 +4,10 @@ from immediates import (
     immediate_repr, 
     compile_char,
     is_fixnum,
+    is_boolean,
+    is_char,
+    is_null,
+    empty_list,
     charshift, 
     fxshift, 
     chartag, 
@@ -90,7 +94,15 @@ def char_(*argv):
 
 @define_primitive('null?')
 def null_(*argv):
-    pass
+    temp = argv[0]
+    temp = "#t" if is_null(temp) else "#f"
+    asm = ""
+    asm += "\tcmp  $%s, %%al\n" % 63 # Compare Empty list binary mask
+    asm += "\tsete  %al\n"
+    asm += "\tmovzbl    %al, %eax\n"
+    asm += "\tsal   $%s, %%al\n" % bool_bit
+    asm += "\tor    $%s, %%al\n" % 47
+    return temp, asm
 
 @define_primitive('not')
 def not_primitive(*argv):

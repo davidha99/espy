@@ -454,7 +454,31 @@ class ImmediateTest(TestCase):
         self.assertEvaluatesRepr("(if (char? \#a) 13 14)", "13")
     
     def test_if_15(self):
-        self.assertEvaluatesRepr("(fxadd1 (if (fxsub1 1) (fxsub1 13) 14))", "13")
+        self.assertEvaluatesRepr("(fxadd1 (if (fxsub1 1) (fxsub1 13) 14))", "13")    
+    
+    def test_is_null_0(self):
+        self.assertEvaluatesRepr("(null? ())", "#t")
+    
+    def test_is_null_1(self):
+        self.assertEvaluatesRepr("(null? ())", "#t")
+    
+    def test_is_null_2(self):
+        self.assertEvaluatesRepr("(null? ())", "#t")
+    
+    def test_is_null_3(self):
+        self.assertEvaluatesRepr("(null? ())", "#t")
+    
+    def test_is_null_4(self):
+        self.assertEvaluatesRepr("(null? ())", "#t")
+    
+    def test_is_null_5(self):
+        self.assertEvaluatesRepr("(null? ())", "#t")
+    
+    def test_is_null_6(self):
+        self.assertEvaluatesRepr("(null? ())", "#t")
+    
+    def test_is_null_7(self):
+        self.assertEvaluatesRepr("(null? ())", "#t")
 
 if __name__ == '__main__':
     main()
