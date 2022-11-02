@@ -1,4 +1,6 @@
 #include <stdio.h>
+#include <sys/mman.h>
+#include <unistd.h>
 
 /* define all scheme constants */
 #define bool_f          0x2F
@@ -31,8 +33,68 @@ static void print_ptr(ptr x) {
     printf("\n");
 }
 
+static char* allocate_protected_space(int size) {
+    int page = getpagesize(); // returns 4096
+    int status;
+    int aligned_size = ((size + page - 1) / page) * page;
+    /*
+    mmap()
+    We use this function to map the process address space and either the devices or files.
+    It takes six arguments:
+
+    void* mmap (
+        void *address,
+        size_t length,
+        int protect,
+        int flags,
+        int filedes,
+        off_t offset
+    )
+
+    1. address: It provides the preferred starting address used for mapping. If there is no other mapping, the kernel will pick the nearby page boundary, creating a mapping.
+    2. length: The bytes’ number is mapped.
+    3. protect: It controls what type of access is allowed. For instance, the PROT_READ for reading access, the PROT_WRITE for write access, and the PROT_EXEC for execution.
+    4. flags:  It is used for controlling the map’s nature. Some of the common and useful flags are listed below:
+        - MAP_SHARED - share mapping with other processes.
+        - MAP_FIXED - The system is forced to use the same mapping address given via the address parameter.
+        - MAP_ANONYMOUS / MAP_ANON - It creates anonymous mapping.
+        - MAP_PRIVATE - The mapping would be private and not visible to others while using this flag.
+    5. filedes: The file descriptor is supposed to be mapped.
+    6. offset: The file mapping starts from this offset.
+    */
+    char* p = mmap(0, aligned_size + 2 * page, PROT_READ | PROT_WRITE, MAP_ANONYMOUS | MAP_PRIVATE, 0, 0);
+    if (p == MAP_FAILED) {
+        printf("Mapping Failed\n");
+    }
+
+    
+    status = mprotect(p, page, PROT_NONE);
+    if (status != 0) {
+        // ---
+    }
+    status = mprotect(p + page + aligned_size, page, PROT_NONE);
+    if (status != 0) {
+        // ---
+    }
+
+    return (p + page);
+}
+
+static void deallocate_protected_space(char* p, int size) {
+    int page = getpagesize();
+    int status;
+    int aligned_size = ((size + page - 1) / page) * page;
+    status = munmap(p - page, aligned_size + 2 * page);
+    if (status != 0) {
+        // --
+    }
+}
+
 int main(int argc, char** argv) {
-    ptr val = entry_point();
-    print_ptr(val);
+    int stack_size = (16 * 4096); /* holds 16K cells */
+    char* stack_top = allocate_protected_space(stack_size);
+    char* stack_base = stack_top + stack_size;
+    print_ptr(entry_point(stack_base));
+    deallocate_protected_space(stack_top, stack_size);
     return 0;
 }

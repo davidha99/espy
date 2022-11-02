@@ -77,7 +77,7 @@ def fixnum_(*argv):
     asm += "\tsete  %al\n"
     asm += "\tmovzbl    %al, %eax\n"
     asm += "\tsal   $%s, %%al\n" % bool_bit
-    asm += "\tor    $%s, %%al\n" % 47
+    asm += "\tor    $%s, %%al\n" % bool_f
     return temp, asm
 
 @define_primitive('boolean?')
@@ -95,13 +95,13 @@ def null_(*argv):
 @define_primitive('not')
 def not_primitive(*argv):
     temp = argv[0]
-    temp = "#t" if temp == "#f" else "#f"
+    temp = "#t" if temp == "#f" or temp == 0 or temp == "()" else "#f"
     asm = ""
-    asm += "\tcmp  $%s, %%al\n" % 47 # bool_f value
+    asm += "\tcmp  $%s, %%al\n" % bool_f
     asm += "\tsete  %al\n"
     asm += "\tmovzbl    %al, %eax\n"
     asm += "\tsal   $%s, %%al\n" % bool_bit
-    asm += "\tor    $%s, %%al\n" % 47 # bool_f value
+    asm += "\tor    $%s, %%al\n" % bool_f
     return temp, asm
 
 @define_primitive('fxzero?')
@@ -116,7 +116,7 @@ def if_test_expression(test_expr, labels):
     # check_argument_type('if_test', (test_expr,), ('boolean',))
     alt_label = labels[-2]
     asm = ""
-    asm += "\tcmp $%s, %%al\n" % int(bool_f, 16)
+    asm += "\tcmp $%s, %%al\n" % bool_f
     asm += "\tje %s\n" % alt_label
 
     return asm
