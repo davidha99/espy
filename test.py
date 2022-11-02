@@ -506,36 +506,67 @@ class ImmediateTest(TestCase):
     
     def test_is_bool_7(self):
         self.assertEvaluatesRepr("(boolean? (fixnum? (boolean? 0)))", "#t")
+    
+    def test_is_char_0(self):
+        self.assertEvaluatesRepr("(char? \#a)", "#t")
+        
+    def test_is_char_1(self):
+        self.assertEvaluatesRepr("(char? \#Z)", "#t")
+        
+    def test_is_char_3(self):
+        self.assertEvaluatesRepr("(char? #t)", "#f")
+        
+    def test_is_char_4(self):
+        self.assertEvaluatesRepr("(char? #f)", "#f")
+        
+    def test_is_char_5(self):
+        self.assertEvaluatesRepr("(char? ())", "#f")
+        
+    def test_is_char_6(self):
+        self.assertEvaluatesRepr("(char? (char? #t))", "#f")
+        
+    def test_is_char_7(self):
+        self.assertEvaluatesRepr("(char? 0)", "#f")
+        
+    def test_is_char_8(self):
+        self.assertEvaluatesRepr("(char? 23870)", "#f")
+        
+    def test_is_char_9(self):
+        self.assertEvaluatesRepr("(char? -23789)", "#f")
 
 if __name__ == '__main__':
     main()
 
 '''
-("(boolean? #t)", "#t")
+("(char? #\a)", "#t")
 
 
-("(boolean? #f)", "#t")
+("(char? #\Z)", "#t")
 
 
-("(boolean? 0)", "#f")
+("(char? #\newline)", "#t")
 
 
-("(boolean? 1)", "#f")
+("(char? #t)", "#f")
 
 
-("(boolean? -1)", "#f")
+("(char? #f)", "#f")
 
 
-("(boolean? ())", "#f")
+("(char? ())", "#f")
 
 
-("(boolean? #\a)", "#f")
+("(char? (char? #t))", "#f")
 
 
-("(boolean? (boolean? 0))", "#t")
+("(char? 0)", "#f")
 
 
-("(boolean? (fixnum? (boolean? 0)))", "#t")
+("(char? 23870)", "#f")
+
+
+("(char? -23789)", "#f")
+
 
 
 '''
