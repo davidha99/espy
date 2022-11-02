@@ -25,7 +25,7 @@ def is_boolean_t(x):
     return x == "#t"
 
 def is_boolean_f(x):
-    return x == "#t"
+    return x == "#f"
 
 def is_char(x):
     return "\#" in x
