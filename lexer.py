@@ -1,6 +1,6 @@
 import ply.lex as lex
 
-primitives = {
+reserved = {
     'fxadd1' : 'FXADD1',
     'fxsub1' : 'FXSUB1',
     'char->fixnum' : 'CHARTOFIXNUM',
@@ -8,12 +8,15 @@ primitives = {
     'fxzero?' : 'ISFXZERO',
     'null?' : 'ISNULL',
     'not' : 'NOT',
+    'and' : 'AND',
+    'or' : 'OR',
     'fixnum?' : 'ISFIXNUM',
     'boolean?' : 'ISBOOLEAN',
-    'char?' : 'ISCHAR'
+    'char?' : 'ISCHAR',
+    'if' : 'IF'
 }
 
-tokens = ['ID', 'LPAREN', 'RPAREN', 'FIXNUM', 'BOOLEAN', 'CHAR', 'NULL'] + list(primitives.values())
+tokens = ['ID', 'LPAREN', 'RPAREN', 'FIXNUM', 'BOOLEAN', 'CHAR', 'NULL'] + list(reserved.values())
 
 t_LPAREN = r'\('
 t_RPAREN = r'\)'
@@ -23,7 +26,7 @@ t_NULL = r'\(\)'
 
 def t_ID(t):
     r'[a-zA-Z][a-zA-Z_0-9<>\-\?]*'
-    t.type = primitives.get(t.value,'ID')
+    t.type = reserved.get(t.value,'ID')
     return t
 
 def t_FIXNUM(t):
@@ -58,6 +61,9 @@ if __name__ == "__main__":
     fixnum?
     fxzero?
     not
+    or
+    and
+    (if (> 2 1))
     '''
 
     # Give the lexer some input

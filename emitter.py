@@ -41,17 +41,20 @@ def emit_immediate(expr):
     if is_fixnum(expr):
         asm += "\tmovl	$%s, %%eax\n" % value
     elif is_boolean(expr):
-        asm += "\tmovl	$%s, %%eax\n" % int(value, 16)
+        asm += "\tmovl	$%s, %%eax\n" % value
     elif is_char(expr):
         asm += "\tmovl	$%s, %%eax\n" % value
     elif is_null(expr):
-        asm += "\tmovl	$%s, %%eax\n" % int(value, 16)
+        asm += "\tmovl	$%s, %%eax\n" % value
     else:
         print("Error")
         exit()
     return asm
 
 def emit_primcall(expr):
+    pass
+
+def emit_conditional_expr(expr):
     pass
 
 # def emit_expr(expr):

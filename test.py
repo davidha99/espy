@@ -9,7 +9,6 @@ class ImmediateTest(TestCase):
         result_repr to stdout.
 
         """
-        print(program)
         create_binary(program)
         self.assertEqual(check_output(['./main']).strip().decode('utf-8'), result_repr)
     
@@ -382,9 +381,192 @@ class ImmediateTest(TestCase):
     def test_is_fixnum_fixnum_to_char_12(self):
         self.assertEvaluatesRepr("(fixnum? (fixnum->char 12))", "#f")
     
+    def test_not_t(self):
+        self.assertEvaluatesRepr("(not #t)", "#f")
 
+    def test_not_f(self):
+        self.assertEvaluatesRepr("(not #f)", "#t")
+
+    def test_not_15(self):
+        self.assertEvaluatesRepr("(not 15)", "#f")
+
+    def test_not_null(self):
+        self.assertEvaluatesRepr("(not ())", "#f")
+
+    def test_not_A(self):
+        self.assertEvaluatesRepr("(not \#A)", "#f")
+    
+    def test_2_not_t(self):
+        self.assertEvaluatesRepr("(not (not #t))", "#t")
+
+    def test_2_not_f(self):
+        self.assertEvaluatesRepr("(not (not #f))", "#f")
+
+    def test_2_not_15(self):
+        self.assertEvaluatesRepr("(not (not 15))", "#t")
+
+    def test_not_fixnum_15(self):
+        self.assertEvaluatesRepr("(not (fixnum? 15))", "#f")
+
+    def test_not_fixnum_f(self):
+        self.assertEvaluatesRepr("(not (fixnum? #f))", "#t")
+
+    def test_if_1(self):
+        self.assertEvaluatesRepr("(if #t 12 13)", "12")
+    
+    def test_if_2(self):
+        self.assertEvaluatesRepr("(if #f 12 13)", "13")
+    
+    def test_if_3(self):
+        self.assertEvaluatesRepr("(if 0 12 13)", "12")
+    
+    def test_if_4(self):
+        self.assertEvaluatesRepr("(if () 43 ())", "43")
+    
+    def test_if_5(self):
+        self.assertEvaluatesRepr("(if #t (if 12 13 4) 17)", "13")
+    
+    def test_if_6(self):
+        self.assertEvaluatesRepr("(if #f 12 (if #f 13 4))", "4")
+    
+    def test_if_7(self):
+        self.assertEvaluatesRepr("(if \#X (if 1 2 3) (if 4 5 6))", "2")
+    
+    # def test_if_8(self):
+    #     self.assertEvaluatesRepr("(if (not (boolean? #t)) 15 (boolean? #f))", "#t")
+    
+    # def test_if_9(self):
+    #     self.assertEvaluatesRepr("(if (if (char? \#a) (boolean? \#b) (fixnum? \#c)) 119 -23)", "-23")
+    
+    def test_if_10(self):
+        self.assertEvaluatesRepr("(if (if (if (not 1) (not 2) (not 3)) 4 5) 6 7)", "6")
+    
+    def test_if_11(self):
+        self.assertEvaluatesRepr("(if (not (if (if (not 1) (not 2) (not 3)) 4 5)) 6 7)", "7")
+    
+    def test_if_12(self):
+        self.assertEvaluatesRepr("(not (if (not (if (if (not 1) (not 2) (not 3)) 4 5)) 6 7))", "#f")
+    
+    # def test_if_13(self):
+    #     self.assertEvaluatesRepr("(if (char? 12) 13 14)", "14")
+    
+    # def test_if_14(self):
+    #     self.assertEvaluatesRepr("(if (char? \#a) 13 14)", "13")
+    
+    def test_if_15(self):
+        self.assertEvaluatesRepr("(fxadd1 (if (fxsub1 1) (fxsub1 13) 14))", "13")    
+    
+    def test_is_null_0(self):
+        self.assertEvaluatesRepr("(null? ())", "#t")
+    
+    def test_is_null_1(self):
+        self.assertEvaluatesRepr("(null? ())", "#t")
+    
+    def test_is_null_2(self):
+        self.assertEvaluatesRepr("(null? ())", "#t")
+    
+    def test_is_null_3(self):
+        self.assertEvaluatesRepr("(null? ())", "#t")
+    
+    def test_is_null_4(self):
+        self.assertEvaluatesRepr("(null? ())", "#t")
+    
+    def test_is_null_5(self):
+        self.assertEvaluatesRepr("(null? ())", "#t")
+    
+    def test_is_null_6(self):
+        self.assertEvaluatesRepr("(null? ())", "#t")
+    
+    def test_is_null_7(self):
+        self.assertEvaluatesRepr("(null? ())", "#t")
+
+    def test_is_bool_0_0(self):
+        self.assertEvaluatesRepr("(boolean? #t)", "#t")
+    
+    def test_is_bool_0_1(self):
+        self.assertEvaluatesRepr("(boolean? #f)", "#t")
+    
+    def test_is_bool_1(self):
+        self.assertEvaluatesRepr("(boolean? 0)", "#f")
+    
+    def test_is_bool_2(self):
+        self.assertEvaluatesRepr("(boolean? 1)", "#f")
+    
+    def test_is_bool_3(self):
+        self.assertEvaluatesRepr("(boolean? -1)", "#f")
+    
+    def test_is_bool_4(self):
+        self.assertEvaluatesRepr("(boolean? ())", "#f")
+    
+    def test_is_bool_5(self):
+        self.assertEvaluatesRepr("(boolean? \#a)", "#f")
+    
+    def test_is_bool_6(self):
+        self.assertEvaluatesRepr("(boolean? (boolean? 0))", "#t")
+    
+    def test_is_bool_7(self):
+        self.assertEvaluatesRepr("(boolean? (fixnum? (boolean? 0)))", "#t")
+    
+    def test_is_char_0(self):
+        self.assertEvaluatesRepr("(char? \#a)", "#t")
         
-
+    def test_is_char_1(self):
+        self.assertEvaluatesRepr("(char? \#Z)", "#t")
+        
+    def test_is_char_3(self):
+        self.assertEvaluatesRepr("(char? #t)", "#f")
+        
+    def test_is_char_4(self):
+        self.assertEvaluatesRepr("(char? #f)", "#f")
+        
+    def test_is_char_5(self):
+        self.assertEvaluatesRepr("(char? ())", "#f")
+        
+    def test_is_char_6(self):
+        self.assertEvaluatesRepr("(char? (char? #t))", "#f")
+        
+    def test_is_char_7(self):
+        self.assertEvaluatesRepr("(char? 0)", "#f")
+        
+    def test_is_char_8(self):
+        self.assertEvaluatesRepr("(char? 23870)", "#f")
+        
+    def test_is_char_9(self):
+        self.assertEvaluatesRepr("(char? -23789)", "#f")
 
 if __name__ == '__main__':
     main()
+
+'''
+("(char? #\a)", "#t")
+
+
+("(char? #\Z)", "#t")
+
+
+("(char? #\newline)", "#t")
+
+
+("(char? #t)", "#f")
+
+
+("(char? #f)", "#f")
+
+
+("(char? ())", "#f")
+
+
+("(char? (char? #t))", "#f")
+
+
+("(char? 0)", "#f")
+
+
+("(char? 23870)", "#f")
+
+
+("(char? -23789)", "#f")
+
+
+
+'''

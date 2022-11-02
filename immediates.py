@@ -1,13 +1,14 @@
 fxshift = 2
-fxmask = '%x' % int('00000011', 2)
-fxtag = '%x' % int('00000000', 2)
+fxmask = 3 #'%x' % int('00000011', 2)
+fxtag = 0 #'%x' % int('00000000', 2)
 bool_bit = 6 # '%x' % int('00000110', 2)
 boolshift = 7
 charshift = 8
-chartag = 15
-bool_f = '%x' % int('00101111', 2)
-bool_t = '%x' % int('01101111', 2)
-empty_list = '%x' % int('00111111', 2)
+chartag = 15 #'%x' % int('00001111', 2)
+charmask = 255 # int('11111111', 2)
+bool_f = 47 #'%x' % int('00101111', 2)
+bool_t = 111 # '%x' % int('01101111', 2)
+empty_list = 63 #'%x' % int('00111111', 2)
 wordsize = 4 # bytes
 
 
@@ -19,10 +20,16 @@ def is_fixnum(x):
     return isinstance(x, int) and fxlower <= x and x <= fxupper
 
 def is_boolean(x):
-    return x == "#t" or x == "#f"
+    return is_boolean_t(x) or is_boolean_f(x)
+
+def is_boolean_t(x):
+    return x == "#t"
+
+def is_boolean_f(x):
+    return x == "#f"
 
 def is_char(x):
-    return "\#" in x
+    return "\#" in str(x)
 
 def is_null(x):
     return x == "()"
