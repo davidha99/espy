@@ -19,7 +19,13 @@ def is_fixnum(x):
     return isinstance(x, int) and fxlower <= x and x <= fxupper
 
 def is_boolean(x):
-    return x == "#t" or x == "#f"
+    return is_boolean_t(x) or is_boolean_f(x)
+
+def is_boolean_t(x):
+    return x == "#t"
+
+def is_boolean_f(x):
+    return x == "#t"
 
 def is_char(x):
     return "\#" in x

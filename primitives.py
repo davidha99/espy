@@ -5,6 +5,8 @@ from immediates import (
     compile_char,
     is_fixnum,
     is_boolean,
+    is_boolean_t,
+    is_boolean_f,
     is_char,
     is_null,
     empty_list,
@@ -86,7 +88,16 @@ def fixnum_(*argv):
 
 @define_primitive('boolean?')
 def boolean_(*argv):
-    pass
+    temp = argv[0]
+    value = 111 if is_boolean_t(temp) else 47
+    temp = "#t" if is_boolean(temp) else "#f"
+    asm = ""
+    asm += "\tcmp  $%s, %%al\n" % value # Compare the true or false mask
+    asm += "\tsete  %al\n"
+    asm += "\tmovzbl    %al, %eax\n"
+    asm += "\tsal   $%s, %%al\n" % bool_bit
+    asm += "\tor    $%s, %%al\n" % 47
+    return temp, asm
 
 @define_primitive('char?')
 def char_(*argv):

@@ -20,5 +20,5 @@ def create_binary(program):
 
     
 if __name__ == '__main__':
-    program = '''(null? (fixnum? 1))'''
+    program = '''(boolean? #t)'''
     create_binary(program)
