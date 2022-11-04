@@ -2,6 +2,7 @@ import os
 from platform import system
 from parser import parser
 
+
 def create_binary(program):
     """Given text of a scheme program, write assembly and link it into an
     executable.
@@ -18,7 +19,6 @@ def create_binary(program):
         exit()
 
 
-    
 if __name__ == '__main__':
-    program = '''(char? \#t)'''
+    program = '''(sub1 10)'''
     create_binary(program)
