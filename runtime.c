@@ -5,9 +5,9 @@
 /* define all scheme constants */
 #define bool_f          0x2F
 #define bool_t          0x6F
-#define fx_mask         0x03
-#define fx_tag          0x00
-#define fx_shift           2
+#define num_mask        0x03
+#define num_tag         0x00
+#define num_shift          2
 #define char_mask       0xFF
 #define char_tag        0x0F
 #define char_shift         8
@@ -17,8 +17,8 @@
 typedef unsigned int ptr;
 
 static void print_ptr(ptr x) {
-    if ((x & fx_mask) == fx_tag) {
-        printf("%d", ((int)x) >> fx_shift);
+    if ((x & num_mask) == num_tag) {
+        printf("%d", ((int)x) >> num_shift);
     } else if (x == bool_f) {
         printf("#f");
     } else if (x == bool_t) {
@@ -67,14 +67,27 @@ static char* allocate_protected_space(int size) {
         printf("Mapping Failed\n");
     }
 
-    
+    /*
+    The mprotect() function changes the access protections on the mappings specified by the len up 
+    to the next multiple of the page size
+
+        PROT_READ  — page can be read
+        PROT_WRITE — page can be written
+        PROT_EXEC  — page can be executed
+        PROT_NONE  — page cannot be accessed
+
+    Return value
+    If successful, mprotect() returns 0.
+    If unsuccessful, mprotect() returns -1 and sets errno to one of the following values:
+    */
     status = mprotect(p, page, PROT_NONE);
     if (status != 0) {
-        // ---
+        printf("Low Stack Page Protection Failed\n");
     }
-    status = mprotect(p + page + aligned_size, page, PROT_NONE);
+
+    status = mprotect(p + page + size, page, PROT_NONE);
     if (status != 0) {
-        // ---
+        printf("High Stack Page Protection Failed\n");
     }
 
     return (p + page);
@@ -86,7 +99,7 @@ static void deallocate_protected_space(char* p, int size) {
     int aligned_size = ((size + page - 1) / page) * page;
     status = munmap(p - page, aligned_size + 2 * page);
     if (status != 0) {
-        // --
+        printf("Deallocation failed.\n");
     }
 }
 
@@ -94,7 +107,7 @@ int main(int argc, char** argv) {
     int stack_size = (16 * 4096); /* holds 16K cells */
     char* stack_top = allocate_protected_space(stack_size);
     char* stack_base = stack_top + stack_size;
-    print_ptr(entry_point(stack_base));
+    print_ptr(L_entry_point(stack_base));
     deallocate_protected_space(stack_top, stack_size);
     return 0;
 }
