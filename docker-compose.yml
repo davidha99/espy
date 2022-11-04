@@ -1,0 +1,10 @@
+version: "3.9"
+services:
+  espy:
+    image: "espy:latest"
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - ./src:/app/src
+    command: python3 /app/src/compiler.py

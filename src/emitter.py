@@ -4,38 +4,25 @@ from platform import system
 
 
 def emit_function_header(func):
-    if system() == "Darwin":
-        function_header = """	.text
-	.globl	_%s
-_%s:
-""" % (func, func)
-    elif system() == "Windows":
-        function_header = """	.text
-        .globl	%s
-        .def	%s;	.scl	2;	.type	32;	.endef
-        .seh_proc	%s
-    %s:
-        .seh_endprologue
-    """ % (func, func, func, func)
+    function_header = """	.text
+    .globl L_entry_point
+    .type L_entry_point, @function
+%s:
+""" % (func)
 
     return function_header
 
 
 def emit_function_footer():
-    if system() == "Darwin":
-        function_footer = " ret\n"
-    elif system() == "Windows":
-        function_footer = """     ret
-        .seh_endproc
-        """
+    function_footer = " ret\n"
     return function_footer
 
 
 def emit_stack_header(func):
-    asm = '''_%s:
+    asm = '''%s:
     movl    %%esp, %%ecx
     movl    4(%%esp), %%esp
-    call    _L_entry_point
+    call    L_entry_point
     movl    %%ecx, %%esp
     ret
     ''' % func
