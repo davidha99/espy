@@ -2,7 +2,7 @@
 #include <sys/mman.h>
 #include <unistd.h>
 
-/* define all scheme constants */
+/* define all espy constants */
 #define bool_f          0x2F
 #define bool_t          0x6F
 #define num_mask        0x03
@@ -13,7 +13,7 @@
 #define char_shift         8
 #define empty_list      0x3F
 
-/* all scheme values are of types ptrs */
+/* all espy values are of types ptrs */
 typedef unsigned int ptr;
 
 static void print_ptr(ptr x) {
