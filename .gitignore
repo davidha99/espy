@@ -5,6 +5,7 @@
 /*.s
 /main.exe
 /ctest.c
+/ctest.exe
 /main
 /runtime.dSYM/*
 /.vscode/*
