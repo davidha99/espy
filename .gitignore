@@ -2,10 +2,11 @@
 /__pycache__/*
 /parser.out
 /parsetab.py
-/*.s
-/main.exe
-/ctest.c
-/ctest.exe
-/main
-/runtime.dSYM/*
+/src/*.s
+/src/main.exe
+/src/ctest.c
+/src/ctest.exe
+/src/main
+/src/runtime.dSYM/*
+LICENSE
 /.vscode/*

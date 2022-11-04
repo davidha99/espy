@@ -1,0 +1,935 @@
+Created by PLY version 3.11 (http://www.dabeaz.com/ply)
+
+Unused terminals:
+
+    ID
+
+Grammar
+
+Rule 0     S' -> program
+Rule 1     program -> expr
+Rule 2     expr -> literal
+Rule 3     expr -> unary_primitive
+Rule 4     expr -> conditional_expr
+Rule 5     expr -> binary_primitive
+Rule 6     literal -> NUM
+Rule 7     literal -> BOOLEAN
+Rule 8     literal -> CHAR
+Rule 9     literal -> NULL
+Rule 10    unary_primitive -> ( unary expr )
+Rule 11    unary -> ADD1
+Rule 12    unary -> SUB1
+Rule 13    unary -> CHARTONUM
+Rule 14    unary -> NUMTOCHAR
+Rule 15    unary -> ISZERO
+Rule 16    unary -> ISNULL
+Rule 17    unary -> NOT
+Rule 18    unary -> ISNUM
+Rule 19    unary -> ISBOOLEAN
+Rule 20    unary -> ISCHAR
+Rule 21    conditional_expr -> ( IF create_if_labels test seen_test expr seen_consequent expr seen_alternate )
+Rule 22    create_if_labels -> <empty>
+Rule 23    test -> ( boolean_op expr expr with_multiple_expr )
+Rule 24    test -> expr
+Rule 25    with_multiple_expr -> with_multiple_expr expr
+Rule 26    with_multiple_expr -> empty
+Rule 27    boolean_op -> AND
+Rule 28    boolean_op -> OR
+Rule 29    seen_test -> <empty>
+Rule 30    seen_consequent -> <empty>
+Rule 31    seen_alternate -> <empty>
+Rule 32    binary_primitive -> ( operator expr seen_operand expr )
+Rule 33    operator -> +
+Rule 34    operator -> -
+Rule 35    operator -> *
+Rule 36    operator -> /
+Rule 37    seen_operand -> <empty>
+Rule 38    empty -> <empty>
+
+Terminals, with rules where they appear
+
+(                    : 10 21 23 32
+)                    : 10 21 23 32
+*                    : 35
++                    : 33
+-                    : 34
+/                    : 36
+ADD1                 : 11
+AND                  : 27
+BOOLEAN              : 7
+CHAR                 : 8
+CHARTONUM            : 13
+ID                   : 
+IF                   : 21
+ISBOOLEAN            : 19
+ISCHAR               : 20
+ISNULL               : 16
+ISNUM                : 18
+ISZERO               : 15
+NOT                  : 17
+NULL                 : 9
+NUM                  : 6
+NUMTOCHAR            : 14
+OR                   : 28
+SUB1                 : 12
+error                : 
+
+Nonterminals, with rules where they appear
+
+binary_primitive     : 5
+boolean_op           : 23
+conditional_expr     : 4
+create_if_labels     : 21
+empty                : 26
+expr                 : 1 10 21 21 23 23 24 25 32 32
+literal              : 2
+operator             : 32
+program              : 0
+seen_alternate       : 21
+seen_consequent      : 21
+seen_operand         : 32
+seen_test            : 21
+test                 : 21
+unary                : 10
+unary_primitive      : 3
+with_multiple_expr   : 23 25
+
+Parsing method: LALR
+
+state 0
+
+    (0) S' -> . program
+    (1) program -> . expr
+    (2) expr -> . literal
+    (3) expr -> . unary_primitive
+    (4) expr -> . conditional_expr
+    (5) expr -> . binary_primitive
+    (6) literal -> . NUM
+    (7) literal -> . BOOLEAN
+    (8) literal -> . CHAR
+    (9) literal -> . NULL
+    (10) unary_primitive -> . ( unary expr )
+    (21) conditional_expr -> . ( IF create_if_labels test seen_test expr seen_consequent expr seen_alternate )
+    (32) binary_primitive -> . ( operator expr seen_operand expr )
+
+    NUM             shift and go to state 7
+    BOOLEAN         shift and go to state 8
+    CHAR            shift and go to state 9
+    NULL            shift and go to state 10
+    (               shift and go to state 11
+
+    program                        shift and go to state 1
+    expr                           shift and go to state 2
+    literal                        shift and go to state 3
+    unary_primitive                shift and go to state 4
+    conditional_expr               shift and go to state 5
+    binary_primitive               shift and go to state 6
+
+state 1
+
+    (0) S' -> program .
+
+
+
+state 2
+
+    (1) program -> expr .
+
+    $end            reduce using rule 1 (program -> expr .)
+
+
+state 3
+
+    (2) expr -> literal .
+
+    $end            reduce using rule 2 (expr -> literal .)
+    )               reduce using rule 2 (expr -> literal .)
+    NUM             reduce using rule 2 (expr -> literal .)
+    BOOLEAN         reduce using rule 2 (expr -> literal .)
+    CHAR            reduce using rule 2 (expr -> literal .)
+    NULL            reduce using rule 2 (expr -> literal .)
+    (               reduce using rule 2 (expr -> literal .)
+
+
+state 4
+
+    (3) expr -> unary_primitive .
+
+    $end            reduce using rule 3 (expr -> unary_primitive .)
+    )               reduce using rule 3 (expr -> unary_primitive .)
+    NUM             reduce using rule 3 (expr -> unary_primitive .)
+    BOOLEAN         reduce using rule 3 (expr -> unary_primitive .)
+    CHAR            reduce using rule 3 (expr -> unary_primitive .)
+    NULL            reduce using rule 3 (expr -> unary_primitive .)
+    (               reduce using rule 3 (expr -> unary_primitive .)
+
+
+state 5
+
+    (4) expr -> conditional_expr .
+
+    $end            reduce using rule 4 (expr -> conditional_expr .)
+    )               reduce using rule 4 (expr -> conditional_expr .)
+    NUM             reduce using rule 4 (expr -> conditional_expr .)
+    BOOLEAN         reduce using rule 4 (expr -> conditional_expr .)
+    CHAR            reduce using rule 4 (expr -> conditional_expr .)
+    NULL            reduce using rule 4 (expr -> conditional_expr .)
+    (               reduce using rule 4 (expr -> conditional_expr .)
+
+
+state 6
+
+    (5) expr -> binary_primitive .
+
+    $end            reduce using rule 5 (expr -> binary_primitive .)
+    )               reduce using rule 5 (expr -> binary_primitive .)
+    NUM             reduce using rule 5 (expr -> binary_primitive .)
+    BOOLEAN         reduce using rule 5 (expr -> binary_primitive .)
+    CHAR            reduce using rule 5 (expr -> binary_primitive .)
+    NULL            reduce using rule 5 (expr -> binary_primitive .)
+    (               reduce using rule 5 (expr -> binary_primitive .)
+
+
+state 7
+
+    (6) literal -> NUM .
+
+    $end            reduce using rule 6 (literal -> NUM .)
+    )               reduce using rule 6 (literal -> NUM .)
+    NUM             reduce using rule 6 (literal -> NUM .)
+    BOOLEAN         reduce using rule 6 (literal -> NUM .)
+    CHAR            reduce using rule 6 (literal -> NUM .)
+    NULL            reduce using rule 6 (literal -> NUM .)
+    (               reduce using rule 6 (literal -> NUM .)
+
+
+state 8
+
+    (7) literal -> BOOLEAN .
+
+    $end            reduce using rule 7 (literal -> BOOLEAN .)
+    )               reduce using rule 7 (literal -> BOOLEAN .)
+    NUM             reduce using rule 7 (literal -> BOOLEAN .)
+    BOOLEAN         reduce using rule 7 (literal -> BOOLEAN .)
+    CHAR            reduce using rule 7 (literal -> BOOLEAN .)
+    NULL            reduce using rule 7 (literal -> BOOLEAN .)
+    (               reduce using rule 7 (literal -> BOOLEAN .)
+
+
+state 9
+
+    (8) literal -> CHAR .
+
+    $end            reduce using rule 8 (literal -> CHAR .)
+    )               reduce using rule 8 (literal -> CHAR .)
+    NUM             reduce using rule 8 (literal -> CHAR .)
+    BOOLEAN         reduce using rule 8 (literal -> CHAR .)
+    CHAR            reduce using rule 8 (literal -> CHAR .)
+    NULL            reduce using rule 8 (literal -> CHAR .)
+    (               reduce using rule 8 (literal -> CHAR .)
+
+
+state 10
+
+    (9) literal -> NULL .
+
+    $end            reduce using rule 9 (literal -> NULL .)
+    )               reduce using rule 9 (literal -> NULL .)
+    NUM             reduce using rule 9 (literal -> NULL .)
+    BOOLEAN         reduce using rule 9 (literal -> NULL .)
+    CHAR            reduce using rule 9 (literal -> NULL .)
+    NULL            reduce using rule 9 (literal -> NULL .)
+    (               reduce using rule 9 (literal -> NULL .)
+
+
+state 11
+
+    (10) unary_primitive -> ( . unary expr )
+    (21) conditional_expr -> ( . IF create_if_labels test seen_test expr seen_consequent expr seen_alternate )
+    (32) binary_primitive -> ( . operator expr seen_operand expr )
+    (11) unary -> . ADD1
+    (12) unary -> . SUB1
+    (13) unary -> . CHARTONUM
+    (14) unary -> . NUMTOCHAR
+    (15) unary -> . ISZERO
+    (16) unary -> . ISNULL
+    (17) unary -> . NOT
+    (18) unary -> . ISNUM
+    (19) unary -> . ISBOOLEAN
+    (20) unary -> . ISCHAR
+    (33) operator -> . +
+    (34) operator -> . -
+    (35) operator -> . *
+    (36) operator -> . /
+
+    IF              shift and go to state 13
+    ADD1            shift and go to state 15
+    SUB1            shift and go to state 16
+    CHARTONUM       shift and go to state 17
+    NUMTOCHAR       shift and go to state 18
+    ISZERO          shift and go to state 19
+    ISNULL          shift and go to state 20
+    NOT             shift and go to state 21
+    ISNUM           shift and go to state 22
+    ISBOOLEAN       shift and go to state 23
+    ISCHAR          shift and go to state 24
+    +               shift and go to state 25
+    -               shift and go to state 26
+    *               shift and go to state 27
+    /               shift and go to state 28
+
+    unary                          shift and go to state 12
+    operator                       shift and go to state 14
+
+state 12
+
+    (10) unary_primitive -> ( unary . expr )
+    (2) expr -> . literal
+    (3) expr -> . unary_primitive
+    (4) expr -> . conditional_expr
+    (5) expr -> . binary_primitive
+    (6) literal -> . NUM
+    (7) literal -> . BOOLEAN
+    (8) literal -> . CHAR
+    (9) literal -> . NULL
+    (10) unary_primitive -> . ( unary expr )
+    (21) conditional_expr -> . ( IF create_if_labels test seen_test expr seen_consequent expr seen_alternate )
+    (32) binary_primitive -> . ( operator expr seen_operand expr )
+
+    NUM             shift and go to state 7
+    BOOLEAN         shift and go to state 8
+    CHAR            shift and go to state 9
+    NULL            shift and go to state 10
+    (               shift and go to state 11
+
+    expr                           shift and go to state 29
+    literal                        shift and go to state 3
+    unary_primitive                shift and go to state 4
+    conditional_expr               shift and go to state 5
+    binary_primitive               shift and go to state 6
+
+state 13
+
+    (21) conditional_expr -> ( IF . create_if_labels test seen_test expr seen_consequent expr seen_alternate )
+    (22) create_if_labels -> .
+
+    (               reduce using rule 22 (create_if_labels -> .)
+    NUM             reduce using rule 22 (create_if_labels -> .)
+    BOOLEAN         reduce using rule 22 (create_if_labels -> .)
+    CHAR            reduce using rule 22 (create_if_labels -> .)
+    NULL            reduce using rule 22 (create_if_labels -> .)
+
+    create_if_labels               shift and go to state 30
+
+state 14
+
+    (32) binary_primitive -> ( operator . expr seen_operand expr )
+    (2) expr -> . literal
+    (3) expr -> . unary_primitive
+    (4) expr -> . conditional_expr
+    (5) expr -> . binary_primitive
+    (6) literal -> . NUM
+    (7) literal -> . BOOLEAN
+    (8) literal -> . CHAR
+    (9) literal -> . NULL
+    (10) unary_primitive -> . ( unary expr )
+    (21) conditional_expr -> . ( IF create_if_labels test seen_test expr seen_consequent expr seen_alternate )
+    (32) binary_primitive -> . ( operator expr seen_operand expr )
+
+    NUM             shift and go to state 7
+    BOOLEAN         shift and go to state 8
+    CHAR            shift and go to state 9
+    NULL            shift and go to state 10
+    (               shift and go to state 11
+
+    expr                           shift and go to state 31
+    literal                        shift and go to state 3
+    unary_primitive                shift and go to state 4
+    conditional_expr               shift and go to state 5
+    binary_primitive               shift and go to state 6
+
+state 15
+
+    (11) unary -> ADD1 .
+
+    NUM             reduce using rule 11 (unary -> ADD1 .)
+    BOOLEAN         reduce using rule 11 (unary -> ADD1 .)
+    CHAR            reduce using rule 11 (unary -> ADD1 .)
+    NULL            reduce using rule 11 (unary -> ADD1 .)
+    (               reduce using rule 11 (unary -> ADD1 .)
+
+
+state 16
+
+    (12) unary -> SUB1 .
+
+    NUM             reduce using rule 12 (unary -> SUB1 .)
+    BOOLEAN         reduce using rule 12 (unary -> SUB1 .)
+    CHAR            reduce using rule 12 (unary -> SUB1 .)
+    NULL            reduce using rule 12 (unary -> SUB1 .)
+    (               reduce using rule 12 (unary -> SUB1 .)
+
+
+state 17
+
+    (13) unary -> CHARTONUM .
+
+    NUM             reduce using rule 13 (unary -> CHARTONUM .)
+    BOOLEAN         reduce using rule 13 (unary -> CHARTONUM .)
+    CHAR            reduce using rule 13 (unary -> CHARTONUM .)
+    NULL            reduce using rule 13 (unary -> CHARTONUM .)
+    (               reduce using rule 13 (unary -> CHARTONUM .)
+
+
+state 18
+
+    (14) unary -> NUMTOCHAR .
+
+    NUM             reduce using rule 14 (unary -> NUMTOCHAR .)
+    BOOLEAN         reduce using rule 14 (unary -> NUMTOCHAR .)
+    CHAR            reduce using rule 14 (unary -> NUMTOCHAR .)
+    NULL            reduce using rule 14 (unary -> NUMTOCHAR .)
+    (               reduce using rule 14 (unary -> NUMTOCHAR .)
+
+
+state 19
+
+    (15) unary -> ISZERO .
+
+    NUM             reduce using rule 15 (unary -> ISZERO .)
+    BOOLEAN         reduce using rule 15 (unary -> ISZERO .)
+    CHAR            reduce using rule 15 (unary -> ISZERO .)
+    NULL            reduce using rule 15 (unary -> ISZERO .)
+    (               reduce using rule 15 (unary -> ISZERO .)
+
+
+state 20
+
+    (16) unary -> ISNULL .
+
+    NUM             reduce using rule 16 (unary -> ISNULL .)
+    BOOLEAN         reduce using rule 16 (unary -> ISNULL .)
+    CHAR            reduce using rule 16 (unary -> ISNULL .)
+    NULL            reduce using rule 16 (unary -> ISNULL .)
+    (               reduce using rule 16 (unary -> ISNULL .)
+
+
+state 21
+
+    (17) unary -> NOT .
+
+    NUM             reduce using rule 17 (unary -> NOT .)
+    BOOLEAN         reduce using rule 17 (unary -> NOT .)
+    CHAR            reduce using rule 17 (unary -> NOT .)
+    NULL            reduce using rule 17 (unary -> NOT .)
+    (               reduce using rule 17 (unary -> NOT .)
+
+
+state 22
+
+    (18) unary -> ISNUM .
+
+    NUM             reduce using rule 18 (unary -> ISNUM .)
+    BOOLEAN         reduce using rule 18 (unary -> ISNUM .)
+    CHAR            reduce using rule 18 (unary -> ISNUM .)
+    NULL            reduce using rule 18 (unary -> ISNUM .)
+    (               reduce using rule 18 (unary -> ISNUM .)
+
+
+state 23
+
+    (19) unary -> ISBOOLEAN .
+
+    NUM             reduce using rule 19 (unary -> ISBOOLEAN .)
+    BOOLEAN         reduce using rule 19 (unary -> ISBOOLEAN .)
+    CHAR            reduce using rule 19 (unary -> ISBOOLEAN .)
+    NULL            reduce using rule 19 (unary -> ISBOOLEAN .)
+    (               reduce using rule 19 (unary -> ISBOOLEAN .)
+
+
+state 24
+
+    (20) unary -> ISCHAR .
+
+    NUM             reduce using rule 20 (unary -> ISCHAR .)
+    BOOLEAN         reduce using rule 20 (unary -> ISCHAR .)
+    CHAR            reduce using rule 20 (unary -> ISCHAR .)
+    NULL            reduce using rule 20 (unary -> ISCHAR .)
+    (               reduce using rule 20 (unary -> ISCHAR .)
+
+
+state 25
+
+    (33) operator -> + .
+
+    NUM             reduce using rule 33 (operator -> + .)
+    BOOLEAN         reduce using rule 33 (operator -> + .)
+    CHAR            reduce using rule 33 (operator -> + .)
+    NULL            reduce using rule 33 (operator -> + .)
+    (               reduce using rule 33 (operator -> + .)
+
+
+state 26
+
+    (34) operator -> - .
+
+    NUM             reduce using rule 34 (operator -> - .)
+    BOOLEAN         reduce using rule 34 (operator -> - .)
+    CHAR            reduce using rule 34 (operator -> - .)
+    NULL            reduce using rule 34 (operator -> - .)
+    (               reduce using rule 34 (operator -> - .)
+
+
+state 27
+
+    (35) operator -> * .
+
+    NUM             reduce using rule 35 (operator -> * .)
+    BOOLEAN         reduce using rule 35 (operator -> * .)
+    CHAR            reduce using rule 35 (operator -> * .)
+    NULL            reduce using rule 35 (operator -> * .)
+    (               reduce using rule 35 (operator -> * .)
+
+
+state 28
+
+    (36) operator -> / .
+
+    NUM             reduce using rule 36 (operator -> / .)
+    BOOLEAN         reduce using rule 36 (operator -> / .)
+    CHAR            reduce using rule 36 (operator -> / .)
+    NULL            reduce using rule 36 (operator -> / .)
+    (               reduce using rule 36 (operator -> / .)
+
+
+state 29
+
+    (10) unary_primitive -> ( unary expr . )
+
+    )               shift and go to state 32
+
+
+state 30
+
+    (21) conditional_expr -> ( IF create_if_labels . test seen_test expr seen_consequent expr seen_alternate )
+    (23) test -> . ( boolean_op expr expr with_multiple_expr )
+    (24) test -> . expr
+    (2) expr -> . literal
+    (3) expr -> . unary_primitive
+    (4) expr -> . conditional_expr
+    (5) expr -> . binary_primitive
+    (6) literal -> . NUM
+    (7) literal -> . BOOLEAN
+    (8) literal -> . CHAR
+    (9) literal -> . NULL
+    (10) unary_primitive -> . ( unary expr )
+    (21) conditional_expr -> . ( IF create_if_labels test seen_test expr seen_consequent expr seen_alternate )
+    (32) binary_primitive -> . ( operator expr seen_operand expr )
+
+    (               shift and go to state 33
+    NUM             shift and go to state 7
+    BOOLEAN         shift and go to state 8
+    CHAR            shift and go to state 9
+    NULL            shift and go to state 10
+
+    test                           shift and go to state 34
+    expr                           shift and go to state 35
+    literal                        shift and go to state 3
+    unary_primitive                shift and go to state 4
+    conditional_expr               shift and go to state 5
+    binary_primitive               shift and go to state 6
+
+state 31
+
+    (32) binary_primitive -> ( operator expr . seen_operand expr )
+    (37) seen_operand -> .
+
+    NUM             reduce using rule 37 (seen_operand -> .)
+    BOOLEAN         reduce using rule 37 (seen_operand -> .)
+    CHAR            reduce using rule 37 (seen_operand -> .)
+    NULL            reduce using rule 37 (seen_operand -> .)
+    (               reduce using rule 37 (seen_operand -> .)
+
+    seen_operand                   shift and go to state 36
+
+state 32
+
+    (10) unary_primitive -> ( unary expr ) .
+
+    $end            reduce using rule 10 (unary_primitive -> ( unary expr ) .)
+    )               reduce using rule 10 (unary_primitive -> ( unary expr ) .)
+    NUM             reduce using rule 10 (unary_primitive -> ( unary expr ) .)
+    BOOLEAN         reduce using rule 10 (unary_primitive -> ( unary expr ) .)
+    CHAR            reduce using rule 10 (unary_primitive -> ( unary expr ) .)
+    NULL            reduce using rule 10 (unary_primitive -> ( unary expr ) .)
+    (               reduce using rule 10 (unary_primitive -> ( unary expr ) .)
+
+
+state 33
+
+    (23) test -> ( . boolean_op expr expr with_multiple_expr )
+    (10) unary_primitive -> ( . unary expr )
+    (21) conditional_expr -> ( . IF create_if_labels test seen_test expr seen_consequent expr seen_alternate )
+    (32) binary_primitive -> ( . operator expr seen_operand expr )
+    (27) boolean_op -> . AND
+    (28) boolean_op -> . OR
+    (11) unary -> . ADD1
+    (12) unary -> . SUB1
+    (13) unary -> . CHARTONUM
+    (14) unary -> . NUMTOCHAR
+    (15) unary -> . ISZERO
+    (16) unary -> . ISNULL
+    (17) unary -> . NOT
+    (18) unary -> . ISNUM
+    (19) unary -> . ISBOOLEAN
+    (20) unary -> . ISCHAR
+    (33) operator -> . +
+    (34) operator -> . -
+    (35) operator -> . *
+    (36) operator -> . /
+
+    IF              shift and go to state 13
+    AND             shift and go to state 38
+    OR              shift and go to state 39
+    ADD1            shift and go to state 15
+    SUB1            shift and go to state 16
+    CHARTONUM       shift and go to state 17
+    NUMTOCHAR       shift and go to state 18
+    ISZERO          shift and go to state 19
+    ISNULL          shift and go to state 20
+    NOT             shift and go to state 21
+    ISNUM           shift and go to state 22
+    ISBOOLEAN       shift and go to state 23
+    ISCHAR          shift and go to state 24
+    +               shift and go to state 25
+    -               shift and go to state 26
+    *               shift and go to state 27
+    /               shift and go to state 28
+
+    boolean_op                     shift and go to state 37
+    unary                          shift and go to state 12
+    operator                       shift and go to state 14
+
+state 34
+
+    (21) conditional_expr -> ( IF create_if_labels test . seen_test expr seen_consequent expr seen_alternate )
+    (29) seen_test -> .
+
+    NUM             reduce using rule 29 (seen_test -> .)
+    BOOLEAN         reduce using rule 29 (seen_test -> .)
+    CHAR            reduce using rule 29 (seen_test -> .)
+    NULL            reduce using rule 29 (seen_test -> .)
+    (               reduce using rule 29 (seen_test -> .)
+
+    seen_test                      shift and go to state 40
+
+state 35
+
+    (24) test -> expr .
+
+    NUM             reduce using rule 24 (test -> expr .)
+    BOOLEAN         reduce using rule 24 (test -> expr .)
+    CHAR            reduce using rule 24 (test -> expr .)
+    NULL            reduce using rule 24 (test -> expr .)
+    (               reduce using rule 24 (test -> expr .)
+
+
+state 36
+
+    (32) binary_primitive -> ( operator expr seen_operand . expr )
+    (2) expr -> . literal
+    (3) expr -> . unary_primitive
+    (4) expr -> . conditional_expr
+    (5) expr -> . binary_primitive
+    (6) literal -> . NUM
+    (7) literal -> . BOOLEAN
+    (8) literal -> . CHAR
+    (9) literal -> . NULL
+    (10) unary_primitive -> . ( unary expr )
+    (21) conditional_expr -> . ( IF create_if_labels test seen_test expr seen_consequent expr seen_alternate )
+    (32) binary_primitive -> . ( operator expr seen_operand expr )
+
+    NUM             shift and go to state 7
+    BOOLEAN         shift and go to state 8
+    CHAR            shift and go to state 9
+    NULL            shift and go to state 10
+    (               shift and go to state 11
+
+    expr                           shift and go to state 41
+    literal                        shift and go to state 3
+    unary_primitive                shift and go to state 4
+    conditional_expr               shift and go to state 5
+    binary_primitive               shift and go to state 6
+
+state 37
+
+    (23) test -> ( boolean_op . expr expr with_multiple_expr )
+    (2) expr -> . literal
+    (3) expr -> . unary_primitive
+    (4) expr -> . conditional_expr
+    (5) expr -> . binary_primitive
+    (6) literal -> . NUM
+    (7) literal -> . BOOLEAN
+    (8) literal -> . CHAR
+    (9) literal -> . NULL
+    (10) unary_primitive -> . ( unary expr )
+    (21) conditional_expr -> . ( IF create_if_labels test seen_test expr seen_consequent expr seen_alternate )
+    (32) binary_primitive -> . ( operator expr seen_operand expr )
+
+    NUM             shift and go to state 7
+    BOOLEAN         shift and go to state 8
+    CHAR            shift and go to state 9
+    NULL            shift and go to state 10
+    (               shift and go to state 11
+
+    expr                           shift and go to state 42
+    literal                        shift and go to state 3
+    unary_primitive                shift and go to state 4
+    conditional_expr               shift and go to state 5
+    binary_primitive               shift and go to state 6
+
+state 38
+
+    (27) boolean_op -> AND .
+
+    NUM             reduce using rule 27 (boolean_op -> AND .)
+    BOOLEAN         reduce using rule 27 (boolean_op -> AND .)
+    CHAR            reduce using rule 27 (boolean_op -> AND .)
+    NULL            reduce using rule 27 (boolean_op -> AND .)
+    (               reduce using rule 27 (boolean_op -> AND .)
+
+
+state 39
+
+    (28) boolean_op -> OR .
+
+    NUM             reduce using rule 28 (boolean_op -> OR .)
+    BOOLEAN         reduce using rule 28 (boolean_op -> OR .)
+    CHAR            reduce using rule 28 (boolean_op -> OR .)
+    NULL            reduce using rule 28 (boolean_op -> OR .)
+    (               reduce using rule 28 (boolean_op -> OR .)
+
+
+state 40
+
+    (21) conditional_expr -> ( IF create_if_labels test seen_test . expr seen_consequent expr seen_alternate )
+    (2) expr -> . literal
+    (3) expr -> . unary_primitive
+    (4) expr -> . conditional_expr
+    (5) expr -> . binary_primitive
+    (6) literal -> . NUM
+    (7) literal -> . BOOLEAN
+    (8) literal -> . CHAR
+    (9) literal -> . NULL
+    (10) unary_primitive -> . ( unary expr )
+    (21) conditional_expr -> . ( IF create_if_labels test seen_test expr seen_consequent expr seen_alternate )
+    (32) binary_primitive -> . ( operator expr seen_operand expr )
+
+    NUM             shift and go to state 7
+    BOOLEAN         shift and go to state 8
+    CHAR            shift and go to state 9
+    NULL            shift and go to state 10
+    (               shift and go to state 11
+
+    expr                           shift and go to state 43
+    literal                        shift and go to state 3
+    unary_primitive                shift and go to state 4
+    conditional_expr               shift and go to state 5
+    binary_primitive               shift and go to state 6
+
+state 41
+
+    (32) binary_primitive -> ( operator expr seen_operand expr . )
+
+    )               shift and go to state 44
+
+
+state 42
+
+    (23) test -> ( boolean_op expr . expr with_multiple_expr )
+    (2) expr -> . literal
+    (3) expr -> . unary_primitive
+    (4) expr -> . conditional_expr
+    (5) expr -> . binary_primitive
+    (6) literal -> . NUM
+    (7) literal -> . BOOLEAN
+    (8) literal -> . CHAR
+    (9) literal -> . NULL
+    (10) unary_primitive -> . ( unary expr )
+    (21) conditional_expr -> . ( IF create_if_labels test seen_test expr seen_consequent expr seen_alternate )
+    (32) binary_primitive -> . ( operator expr seen_operand expr )
+
+    NUM             shift and go to state 7
+    BOOLEAN         shift and go to state 8
+    CHAR            shift and go to state 9
+    NULL            shift and go to state 10
+    (               shift and go to state 11
+
+    expr                           shift and go to state 45
+    literal                        shift and go to state 3
+    unary_primitive                shift and go to state 4
+    conditional_expr               shift and go to state 5
+    binary_primitive               shift and go to state 6
+
+state 43
+
+    (21) conditional_expr -> ( IF create_if_labels test seen_test expr . seen_consequent expr seen_alternate )
+    (30) seen_consequent -> .
+
+    NUM             reduce using rule 30 (seen_consequent -> .)
+    BOOLEAN         reduce using rule 30 (seen_consequent -> .)
+    CHAR            reduce using rule 30 (seen_consequent -> .)
+    NULL            reduce using rule 30 (seen_consequent -> .)
+    (               reduce using rule 30 (seen_consequent -> .)
+
+    seen_consequent                shift and go to state 46
+
+state 44
+
+    (32) binary_primitive -> ( operator expr seen_operand expr ) .
+
+    $end            reduce using rule 32 (binary_primitive -> ( operator expr seen_operand expr ) .)
+    )               reduce using rule 32 (binary_primitive -> ( operator expr seen_operand expr ) .)
+    NUM             reduce using rule 32 (binary_primitive -> ( operator expr seen_operand expr ) .)
+    BOOLEAN         reduce using rule 32 (binary_primitive -> ( operator expr seen_operand expr ) .)
+    CHAR            reduce using rule 32 (binary_primitive -> ( operator expr seen_operand expr ) .)
+    NULL            reduce using rule 32 (binary_primitive -> ( operator expr seen_operand expr ) .)
+    (               reduce using rule 32 (binary_primitive -> ( operator expr seen_operand expr ) .)
+
+
+state 45
+
+    (23) test -> ( boolean_op expr expr . with_multiple_expr )
+    (25) with_multiple_expr -> . with_multiple_expr expr
+    (26) with_multiple_expr -> . empty
+    (38) empty -> .
+
+    )               reduce using rule 38 (empty -> .)
+    NUM             reduce using rule 38 (empty -> .)
+    BOOLEAN         reduce using rule 38 (empty -> .)
+    CHAR            reduce using rule 38 (empty -> .)
+    NULL            reduce using rule 38 (empty -> .)
+    (               reduce using rule 38 (empty -> .)
+
+    with_multiple_expr             shift and go to state 47
+    empty                          shift and go to state 48
+
+state 46
+
+    (21) conditional_expr -> ( IF create_if_labels test seen_test expr seen_consequent . expr seen_alternate )
+    (2) expr -> . literal
+    (3) expr -> . unary_primitive
+    (4) expr -> . conditional_expr
+    (5) expr -> . binary_primitive
+    (6) literal -> . NUM
+    (7) literal -> . BOOLEAN
+    (8) literal -> . CHAR
+    (9) literal -> . NULL
+    (10) unary_primitive -> . ( unary expr )
+    (21) conditional_expr -> . ( IF create_if_labels test seen_test expr seen_consequent expr seen_alternate )
+    (32) binary_primitive -> . ( operator expr seen_operand expr )
+
+    NUM             shift and go to state 7
+    BOOLEAN         shift and go to state 8
+    CHAR            shift and go to state 9
+    NULL            shift and go to state 10
+    (               shift and go to state 11
+
+    expr                           shift and go to state 49
+    literal                        shift and go to state 3
+    unary_primitive                shift and go to state 4
+    conditional_expr               shift and go to state 5
+    binary_primitive               shift and go to state 6
+
+state 47
+
+    (23) test -> ( boolean_op expr expr with_multiple_expr . )
+    (25) with_multiple_expr -> with_multiple_expr . expr
+    (2) expr -> . literal
+    (3) expr -> . unary_primitive
+    (4) expr -> . conditional_expr
+    (5) expr -> . binary_primitive
+    (6) literal -> . NUM
+    (7) literal -> . BOOLEAN
+    (8) literal -> . CHAR
+    (9) literal -> . NULL
+    (10) unary_primitive -> . ( unary expr )
+    (21) conditional_expr -> . ( IF create_if_labels test seen_test expr seen_consequent expr seen_alternate )
+    (32) binary_primitive -> . ( operator expr seen_operand expr )
+
+    )               shift and go to state 51
+    NUM             shift and go to state 7
+    BOOLEAN         shift and go to state 8
+    CHAR            shift and go to state 9
+    NULL            shift and go to state 10
+    (               shift and go to state 11
+
+    expr                           shift and go to state 50
+    literal                        shift and go to state 3
+    unary_primitive                shift and go to state 4
+    conditional_expr               shift and go to state 5
+    binary_primitive               shift and go to state 6
+
+state 48
+
+    (26) with_multiple_expr -> empty .
+
+    )               reduce using rule 26 (with_multiple_expr -> empty .)
+    NUM             reduce using rule 26 (with_multiple_expr -> empty .)
+    BOOLEAN         reduce using rule 26 (with_multiple_expr -> empty .)
+    CHAR            reduce using rule 26 (with_multiple_expr -> empty .)
+    NULL            reduce using rule 26 (with_multiple_expr -> empty .)
+    (               reduce using rule 26 (with_multiple_expr -> empty .)
+
+
+state 49
+
+    (21) conditional_expr -> ( IF create_if_labels test seen_test expr seen_consequent expr . seen_alternate )
+    (31) seen_alternate -> .
+
+    )               reduce using rule 31 (seen_alternate -> .)
+
+    seen_alternate                 shift and go to state 52
+
+state 50
+
+    (25) with_multiple_expr -> with_multiple_expr expr .
+
+    )               reduce using rule 25 (with_multiple_expr -> with_multiple_expr expr .)
+    NUM             reduce using rule 25 (with_multiple_expr -> with_multiple_expr expr .)
+    BOOLEAN         reduce using rule 25 (with_multiple_expr -> with_multiple_expr expr .)
+    CHAR            reduce using rule 25 (with_multiple_expr -> with_multiple_expr expr .)
+    NULL            reduce using rule 25 (with_multiple_expr -> with_multiple_expr expr .)
+    (               reduce using rule 25 (with_multiple_expr -> with_multiple_expr expr .)
+
+
+state 51
+
+    (23) test -> ( boolean_op expr expr with_multiple_expr ) .
+
+    NUM             reduce using rule 23 (test -> ( boolean_op expr expr with_multiple_expr ) .)
+    BOOLEAN         reduce using rule 23 (test -> ( boolean_op expr expr with_multiple_expr ) .)
+    CHAR            reduce using rule 23 (test -> ( boolean_op expr expr with_multiple_expr ) .)
+    NULL            reduce using rule 23 (test -> ( boolean_op expr expr with_multiple_expr ) .)
+    (               reduce using rule 23 (test -> ( boolean_op expr expr with_multiple_expr ) .)
+
+
+state 52
+
+    (21) conditional_expr -> ( IF create_if_labels test seen_test expr seen_consequent expr seen_alternate . )
+
+    )               shift and go to state 53
+
+
+state 53
+
+    (21) conditional_expr -> ( IF create_if_labels test seen_test expr seen_consequent expr seen_alternate ) .
+
+    $end            reduce using rule 21 (conditional_expr -> ( IF create_if_labels test seen_test expr seen_consequent expr seen_alternate ) .)
+    )               reduce using rule 21 (conditional_expr -> ( IF create_if_labels test seen_test expr seen_consequent expr seen_alternate ) .)
+    NUM             reduce using rule 21 (conditional_expr -> ( IF create_if_labels test seen_test expr seen_consequent expr seen_alternate ) .)
+    BOOLEAN         reduce using rule 21 (conditional_expr -> ( IF create_if_labels test seen_test expr seen_consequent expr seen_alternate ) .)
+    CHAR            reduce using rule 21 (conditional_expr -> ( IF create_if_labels test seen_test expr seen_consequent expr seen_alternate ) .)
+    NULL            reduce using rule 21 (conditional_expr -> ( IF create_if_labels test seen_test expr seen_consequent expr seen_alternate ) .)
+    (               reduce using rule 21 (conditional_expr -> ( IF create_if_labels test seen_test expr seen_consequent expr seen_alternate ) .)
+
