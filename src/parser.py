@@ -8,11 +8,11 @@ from utils import create_unique_label
 
 asm = ""
 asm += emit_function_header("L_entry_point")
-operands_stack = []
+operand_stack = []
 operator_stack = []
 label_stack = []
 label_counter = 1
-stack_index = -4  # Start at byte 4
+stack_index = 0  # Start at byte 0
 
 
 def p_program(p):
@@ -47,10 +47,10 @@ def p_literal(p):
               | NULL
     '''
     global asm
-    global operands_stack
+    global operand_stack
     global stack_index
-    operands_stack.append(p[1])
-    asm += emit_literal(operands_stack[-1])
+    operand_stack.append(p[1])
+    asm += emit_literal(operand_stack[-1])
     p[0] = p[1]
 
 
@@ -59,13 +59,13 @@ def p_unary_primitive(p):
     unary_primitive : '(' unary expr ')'
     '''
     global asm
-    global operands_stack
+    global operand_stack
     prim_name = p[2]
     prim_function = primitives[prim_name]
-    temp, asm_temp = prim_function(operands_stack[-1])
+    temp, asm_temp = prim_function(operand_stack[-1])
     asm += asm_temp
-    operands_stack.pop()
-    operands_stack.append(temp)
+    operand_stack.pop()
+    operand_stack.append(temp)
 
 
 def p_unary(p):
@@ -134,10 +134,10 @@ def p_seen_test(p):
     "seen_test :"
     global label_stack
     global asm
-    global operands_stack
+    global operand_stack
     # Maybe take this from operands stack
-    test = operands_stack[-1]
-    operands_stack.pop()
+    test = operand_stack[-1]
+    operand_stack.pop()
     if_test_function = primitives["if_test"]
     asm += if_test_function(test, label_stack)
 
@@ -162,11 +162,37 @@ def p_binary_primitive(p):
     '''
     binary_primitive : '(' operator seen_operator operands ')'
     '''
-    global asm
-    global stack_index
     global operator_stack
-    op = p[2]
 
+    operator_stack.pop()
+
+def p_seen_operator(p):
+    "seen_operator :"
+    global operator_stack
+    operator_stack.append(p[-1])
+
+def p_operands(p):
+    '''
+    operands : expr seen_operand expr seen_operand more_expr
+    '''
+
+def p_more_expr(p):
+    '''
+    more_expr : more_expr expr seen_operand
+              | empty
+    '''
+
+def p_seen_operand(p):
+    "seen_operand :"
+    global operator_stack
+    global operand_stack
+    global stack_index
+
+    operand = p[-1]
+    operand_stack.append(operand)
+    n_operands = len(operand_stack)
+    op = operator_stack[-1]
+    
     if op == '+':
         operation = primitives["addition"]
     elif op == '-':
@@ -176,31 +202,16 @@ def p_binary_primitive(p):
     elif op == '/':
         operation = primitives["division"]
 
-    operand1 = operands_stack[-2]
-    operand2 = operands_stack[-1]
-    stack_index, tmp, asm_temp = operation(stack_index, operand1, operand2)
-    asm += asm_temp
-    operands_stack.pop()
-    operands_stack.pop()
-    operands_stack.append(tmp)
-    operator_stack.pop()
-
-def p_operands(p):
-    '''
-    operands : expr seen_operand expr seen_operand more_expr
-    '''
-
-def p_more_expr(p):
-    '''
-    more_expr : more_expr expr
-              | empty
-    '''
-
-def p_seen_operator(p):
-    "seen_operator :"
-    global operator_stack
-    operator_stack.append(p[-1])
-
+    if n_operands == 1:
+        stack_index -= 4
+        _, asm_temp = operation(stack_index, tuple(operand_stack))
+        asm += asm_temp
+    elif n_operands == 2:
+        temp, asm_temp = operation(stack_index, tuple(operand_stack))
+        operand_stack.pop()
+        operand_stack.pop()
+        operand_stack.append(temp)
+        stack_index += 4
 
 def p_operator(p):
     '''
@@ -212,13 +223,13 @@ def p_operator(p):
     p[0] = p[1]
 
 
-def p_seen_operand(p):
-    "seen_operand :"
-    global asm
-    global stack_index
-    global operands_stack
-    asm += "\tmovl %%eax, %s(%%esp)\n" % str(stack_index)
-    stack_index -= 4
+# def p_seen_operand(p):
+#     "seen_operand :"
+#     global asm
+#     global stack_index
+#     global operand_stack
+#     asm += "\tmovl %%eax, %s(%%esp)\n" % str(stack_index)
+#     stack_index -= 4
 
 # Error rule for syntax errors
 

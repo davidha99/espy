@@ -200,9 +200,13 @@ def if_alterante_expression(labels):
 @define_primitive('addition')
 def addition(*argv):
     si = argv[0]  # stack index
-    operand1 = argv[1]
-    operand2 = argv[2]
-    asm = "\taddl %s(%%esp), %%eax\n" % str(si)
-    temp = operand1 + operand2
-    si += 4
-    return si, temp, asm
+    operands = argv[1]
+    
+    if len(operands) == 1:
+        asm = "\tmovl %%eax, %s(%%esp)\n" % str(si)
+        return asm
+    else:
+        temp = operands[0] + operands[1]
+        asm = "\taddl %s(%%esp), %%eax\n" % str(si)
+        return temp, asm
+
