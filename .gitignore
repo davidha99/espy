@@ -1,7 +1,2 @@
-/src/ply/*
-/src/*.s
-/src/main.exe
-/src/ctest.c
-/src/ctest.exe
 LICENSE
 /.vscode/*
