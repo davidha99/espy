@@ -1,8 +1,0 @@
-% Ejemplo.espy
-% GOTOs (Cuadruplos)
-% Scope (ProcDir)
-% IR (AST)
-
-(main 
-    (display "Hola") % Imprimir hola
-)

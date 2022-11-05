@@ -1,6 +1,5 @@
 import os
 from parser import parser
-from errors import EspySyntaxError
 
 
 def create_binary(program):
@@ -17,5 +16,5 @@ def create_binary(program):
 
 
 if __name__ == '__main__':
-    program = '''(char->num \#9)'''
+    program = '''(zero? 0)'''
     create_binary(program)
