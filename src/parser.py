@@ -175,6 +175,8 @@ def p_binary_primitive(p):
         operation = primitives["multiplication"]
     elif op == '/':
         operation = primitives["division"]
+    # elif op == 'and':
+    #     operation = primitives["and"]
 
     operand1 = operands_stack[-2]
     operand2 = operands_stack[-1]
@@ -208,6 +210,7 @@ def p_operator(p):
              | '-'
              | '*'
              | '/'
+             | boolean_op
     '''
     p[0] = p[1]
 
