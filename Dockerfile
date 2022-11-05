@@ -8,3 +8,4 @@ RUN apt-get update -y && apt-get install -y \
 RUN mkdir -p /src
 WORKDIR /src
 COPY ./src .
+CMD /bin/bash
