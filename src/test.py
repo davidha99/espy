@@ -546,37 +546,3 @@ class ImmediateTest(TestCase):
 
 if __name__ == '__main__':
     main()
-
-'''
-("(char? #\a)", "#t")
-
-
-("(char? #\Z)", "#t")
-
-
-("(char? #\newline)", "#t")
-
-
-("(char? #t)", "#f")
-
-
-("(char? #f)", "#f")
-
-
-("(char? ())", "#f")
-
-
-("(char? (char? #t))", "#f")
-
-
-("(char? 0)", "#f")
-
-
-("(char? 23870)", "#f")
-
-
-("(char? -23789)", "#f")
-
-
-
-'''

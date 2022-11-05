@@ -9,6 +9,7 @@ from utils import create_unique_label
 asm = ""
 asm += emit_function_header("L_entry_point")
 operands_stack = []
+operator_stack = []
 label_stack = []
 label_counter = 1
 stack_index = -4  # Start at byte 4
@@ -19,12 +20,13 @@ def p_program(p):
     program : expr
     '''
     global asm
-    with open("scheme.s", "w") as f:
+    with open("espy.s", "w") as f:
         asm += emit_function_footer()
         asm += emit_stack_header("entry_point")
         f.write(asm)
-        # Resetea el Assembly Code (esto para que se ejecuten correctamente los tests)
+        # Resetea el Assembly Code y el counter (esto para que se ejecuten correctamente los tests)
         asm = emit_function_header("L_entry_point")
+        label_counter = 1
     p[0] = "Parsed"
 
 
@@ -158,10 +160,11 @@ def p_seen_alternate(p):
 
 def p_binary_primitive(p):
     '''
-    binary_primitive : '(' operator expr seen_operand expr ')'
+    binary_primitive : '(' operator seen_operator operands ')'
     '''
     global asm
     global stack_index
+    global operator_stack
     op = p[2]
 
     if op == '+':
@@ -180,6 +183,23 @@ def p_binary_primitive(p):
     operands_stack.pop()
     operands_stack.pop()
     operands_stack.append(tmp)
+    operator_stack.pop()
+
+def p_operands(p):
+    '''
+    operands : expr seen_operand expr seen_operand more_expr
+    '''
+
+def p_more_expr(p):
+    '''
+    more_expr : more_expr expr
+              | empty
+    '''
+
+def p_seen_operator(p):
+    "seen_operator :"
+    global operator_stack
+    operator_stack.append(p[-1])
 
 
 def p_operator(p):

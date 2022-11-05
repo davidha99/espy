@@ -1,4 +1,4 @@
-from errors import SchemeArityError
+from errors import EspyTypeError, InvalidArgumentNumber
 from literals import is_boolean, is_char, is_null, is_num
 
 
@@ -16,19 +16,19 @@ def check_argument_number(function_name, given_arguments,
 
     if not right_argument_number:
         if min_arguments == max_arguments:
-            raise SchemeArityError("%s requires exactly %d argument(s), but "
+            raise InvalidArgumentNumber("%s requires exactly %d argument(s), but "
                                    "received %d." % (function_name,
                                                      min_arguments,
                                                      len(given_arguments)))
         else:
             if max_arguments:
-                raise SchemeArityError("%s requires between %d and %d argument(s), but "
+                raise InvalidArgumentNumber("%s requires between %d and %d argument(s), but "
                                        "received %d." % (function_name,
                                                          min_arguments,
                                                          max_arguments,
                                                          len(given_arguments)))
             else:
-                raise SchemeArityError("%s requires at least %d argument(s), but "
+                raise InvalidArgumentNumber("%s requires at least %d argument(s), but "
                                        "received %d." % (function_name,
                                                          min_arguments,
                                                          len(given_arguments)))
@@ -68,7 +68,7 @@ def check_argument_type(function_name, given_arguments, function_argument_types)
     if not right_argument_type:
         required_arg_type = function_argument_types[i]
         given_arg_type = typeof(given_arguments[i])
-        raise SchemeArityError("%s requires %s type arguments, but "
+        raise EspyTypeError("%s requires %s type arguments, but "
                                "received type %s" % (function_name,
                                                      required_arg_type,
                                                      given_arg_type))
