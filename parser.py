@@ -19,7 +19,7 @@ def p_program(p):
     program : expr
     '''
     global asm
-    with open("scheme.s", "w") as f:
+    with open("espy.s", "w") as f:
         asm += emit_function_footer()
         asm += emit_stack_header("entry_point")
         f.write(asm)

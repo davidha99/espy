@@ -38,7 +38,7 @@ def define_primitive(function_name):
 @define_primitive('add1')
 def add1(*argv):
     check_argument_number('add1', argv, 1, 1)
-    check_argument_type('add1', argv, ("num",))
+    check_argument_type('add1', argv, ('num',))
     temp = argv[0] + 1
     asm = "\taddl    $%s, %%eax\n" % (literal_repr(1))
     return temp, asm
@@ -47,7 +47,7 @@ def add1(*argv):
 @define_primitive('sub1')
 def sub1(*argv):
     check_argument_number('sub1', argv, 1, 1)
-    check_argument_type('sub1', argv, ("num",))
+    check_argument_type('sub1', argv, ('num',))
     temp = argv[0] - 1
     asm = "\tsubl   $%s, %%eax\n" % (literal_repr(1))
     return temp, asm
@@ -73,9 +73,9 @@ def char_to_num(*argv):
 def num_to_char(*argv):
     check_argument_number('num->char', argv, 1, 1)
     check_argument_type('num->char', argv, ('num',))
-    given_fxnum = argv[0]
+    given_num = argv[0]
     temp = "\#"
-    temp += chr(given_fxnum)
+    temp += chr(given_num)
     asm = "\tshll\t$%s, %%eax\n" % (char_shift - num_shift)
     asm += "\torl   \t$%s, %%eax\n" % char_tag
     return temp, asm
@@ -149,9 +149,19 @@ def not_primitive(*argv):
     return temp, asm
 
 
-@define_primitive('fxzero?')
-def is_fxzero(*argv):
-    pass
+@define_primitive('zero?')
+def is_zero(*argv):
+    check_argument_number('zero?', argv, 1, 1)
+    check_argument_type('zero?', argv, ('num',))
+    temp = argv[0]
+    temp = "#t" if temp == 0 else "#f"
+    asm = ""
+    asm += "\tcmp   $%s, %%al\n" % 0
+    asm += "\tsete  %al\n"
+    asm += "\tmovzbl    %al, %eax\n"
+    asm += "\tsal   $%s, %%al\n" % bool_bit
+    asm += "\tor    $%s, %%al\n" % bool_f
+    return temp, asm
 
 
 @define_primitive('if_test')
