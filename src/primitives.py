@@ -203,24 +203,14 @@ def addition(*argv):
     operands = argv[1]
     
     if len(operands) == 1:
+        temp = operands[0]
         asm = "\tmovl %%eax, %s(%%esp)\n" % str(si)
-        return asm
+        return temp, asm
     else:
         temp = operands[0] + operands[1]
         asm = "\taddl %s(%%esp), %%eax\n" % str(si)
         return temp, asm
 
-
-@define_primitive('and')
-def and_expression(*argv):
-    si = argv[0]  # stack index
-    operand1 = argv[1]
-    operand2 = argv[2]
-    # asm = "\tmovzbl %s(%%esp), %%eax\n" % str(si)
-    asm = "\tand %s(%%esp), %%eax\n" % str(si)
-    temp = operand1 and operand2
-    si += 4
-    return si, temp, asm
 
 @define_primitive('and')
 def and_expression(*argv):

@@ -16,5 +16,5 @@ def create_binary(program):
 
 
 if __name__ == '__main__':
-    program = '''(and #t #f)'''
+    program = '''(+ 2 100)'''
     create_binary(program)

@@ -7,7 +7,9 @@ from primitives import if_consequent_expression, primitives
 from utils import create_unique_label
 
 asm = ""
-asm += emit_function_header("L_entry_point")
+asm += emit_function_header("entry_point")
+asm += emit_stack_header("entry_point")
+asm += "L_entry_point:\n"
 operand_stack = []
 operator_stack = []
 label_stack = []
@@ -22,10 +24,11 @@ def p_program(p):
     global asm
     with open("espy.s", "w") as f:
         asm += emit_function_footer()
-        asm += emit_stack_header("entry_point")
         f.write(asm)
         # Resetea el Assembly Code y el counter (esto para que se ejecuten correctamente los tests)
-        asm = emit_function_header("L_entry_point")
+        asm = emit_function_header("entry_point")
+        asm += emit_stack_header("entry_point")
+        asm += "L_entry_point:\n"
         label_counter = 1
     p[0] = "Parsed"
 
@@ -184,12 +187,11 @@ def p_more_expr(p):
 
 def p_seen_operand(p):
     "seen_operand :"
+    global asm
     global operator_stack
     global operand_stack
     global stack_index
 
-    operand = p[-1]
-    operand_stack.append(operand)
     n_operands = len(operand_stack)
     op = operator_stack[-1]
     
@@ -208,6 +210,7 @@ def p_seen_operand(p):
         asm += asm_temp
     elif n_operands == 2:
         temp, asm_temp = operation(stack_index, tuple(operand_stack))
+        asm += asm_temp
         operand_stack.pop()
         operand_stack.pop()
         operand_stack.append(temp)

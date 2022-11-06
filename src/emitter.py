@@ -7,8 +7,7 @@ def emit_function_header(func):
     function_header = """	.text
 	.globl	%s
     .type %s, @function
-%s:
-""" % (func, func, func)
+""" % (func, func)
 
     return function_header
 
