@@ -107,7 +107,7 @@ int main(int argc, char** argv) {
     int stack_size = (16 * 4096); /* holds 16K cells */
     char* stack_top = allocate_protected_space(stack_size);
     char* stack_base = stack_top + stack_size;
-    print_ptr(L_entry_point(stack_base));
+    print_ptr(entry_point(stack_base));
     deallocate_protected_space(stack_top, stack_size);
     return 0;
 }

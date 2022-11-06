@@ -201,7 +201,6 @@ def if_alterante_expression(labels):
 def addition(*argv):
     si = argv[0]  # stack index
     operands = argv[1]
-    print('Print operands ////' + str(operands) + str(len(operands)))
     
     if len(operands) == 1:
         temp = operands[0]
