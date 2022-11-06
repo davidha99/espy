@@ -85,7 +85,7 @@ static char* allocate_protected_space(int size) {
         printf("Low Stack Page Protection Failed\n");
     }
 
-    status = mprotect(p + page + size, page, PROT_NONE);
+    status = mprotect(p + page + aligned_size, page, PROT_NONE);
     if (status != 0) {
         printf("High Stack Page Protection Failed\n");
     }

@@ -173,7 +173,7 @@ def p_seen_operator(p):
 
 def p_operands(p):
     '''
-    operands : expr seen_operand expr seen_operand more_expr
+    operands : literal seen_operand literal seen_operand more_expr
     '''
 
 def p_more_expr(p):
@@ -184,13 +184,19 @@ def p_more_expr(p):
 
 def p_seen_operand(p):
     "seen_operand :"
+    global asm
     global operator_stack
     global operand_stack
     global stack_index
 
+    print('Print p////' + str(p))
     operand = p[-1]
-    operand_stack.append(operand)
+    print('Print operand////' + str(operand))
+    # operand_stack.append(operand)
+    print('Print operand_stack////' + str(operand_stack))
     n_operands = len(operand_stack)
+    print('Print n_operands////' + str(n_operands))
+
     op = operator_stack[-1]
     
     if op == '+':
@@ -208,6 +214,7 @@ def p_seen_operand(p):
         asm += asm_temp
     elif n_operands == 2:
         temp, asm_temp = operation(stack_index, tuple(operand_stack))
+        asm += asm_temp
         operand_stack.pop()
         operand_stack.pop()
         operand_stack.append(temp)
