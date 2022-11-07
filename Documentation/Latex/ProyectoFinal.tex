@@ -26,7 +26,60 @@
 \newpage
 \justify
 
-\section{Introducción}		
+\section{Descripción del proyecto}
+	\subsection{Propósito del lenguaje}
+	Propósito del lenguaje
+	\subsection{Alcance del proyecto}
+	Alcance del proyecto
+	\subsection{Análisis de requerimientos}
+	Análisis de requerimientos
+	\subsection{Principales \textsl{Test Cases}}
+	Principales \textsl{Test Cases}
+	\subsection{Desarrollo del proyecto}
+	Desarrollo del proyecto
+
+\section{Descripción del lenguaje}
+	\subsection{Descripción}
+	Descripción
+	\subsection{Posibles errores}
+	Posibles errores
+	\subsubsection{Compilación}
+	Compilación
+	\subsubsection{Ejecución}
+	Ejecución
+
+\section{Descripción del compilador}
+	\subsection{Entorno de desarrollo}
+	Entorno de desarrollo
+	\subsection{Análisis léxico}
+	Análisis léxico
+	\subsection{Análisis sintaxis}
+	Análisis sintaxis
+	\subsection{Análisis semántico}
+	Análisis semántico
+	\subsection{Administración de memoria}
+	Administración de memoria
+
+\section{Descripción de la máquina virtual}
+	\subsection{Entorno de desarrollo}
+	Entorno de desarrollo
+	\subsection{Administración de memoria}
+	Administración de memoria
+	
+% Probablemente no sea necesario en documento
+\section{Pruebas de funcionamiento}
+Pruebas de funcionamiento
+
+% Probablemente no sea necesario en documento
+\section{Documentación del código del proyecto}
+Documentación del código del proyecto
+
+% ---------------------- TEMPLATE ---------------------------------
+
+
+\section{Template}
+\appendix
+\subsection{Introducción}		
 La programación dinámica es una técnica para resolver problemas con subproblemas 
 superpuestos.\\
 \par\indent Por lo general, estos subproblemas surgen de una recurrencia que relaciona la 
@@ -36,13 +89,13 @@ dinámica sugiere resolver cada uno de los subproblemas más pequeños solo una 
 	
 \pagebreak	
 
-\section{Definición formal del problema}
+\subsection{Definición formal del problema}
 \par\indent Formalmente se plantea de la siguiente manera; dada una cantidad $N$, que es un entero 
 positivo, encontrar un conjunto finito de números enteros no negativos (las monedas) 
 ${x1, x2, ..., x_n}$, donde se busca minimizar el número total de monedas que se utilizan 
 para sumar $N$. (Kozen, D. et.al, s.f)
 
-\section{Descripción detallada}
+\subsection{Descripción detallada}
 \textbf{Algoritmo 1:} Dynamic Programming Coin Change
 \par\textbf{Autor:} Bernardo García, Carlos Arroyo
 \par\textbf{Input:} Número entero n con la cantidad de dinero que se espera, número entero q con la cantidad de monedas disponibles, y arreglo de enteros C[ ] con las cantidades de cada moneda disponible. 
@@ -59,7 +112,7 @@ para sumar $N$. (Kozen, D. et.al, s.f)
 		\par\indent if amount[n] = 0 $\rightarrow$  print “No full solution”
 		\par\indent else $\rightarrow$ Checar monedas
 	
-\section{Análisis de complejidad}
+\subsection{Análisis de complejidad}
 \underline{Algoritmo 1: Dynamic Programming Coin Change}\\
 \par Contemplando las siguientes observaciones:
 \begin{enumerate}
@@ -80,7 +133,7 @@ para sumar $N$. (Kozen, D. et.al, s.f)
 \par Contemplando el uso de un arreglo de montos, un arreglo de monedas iteradas, y un 
 arreglo de monedas usadas, la complejidad espacial es de orden: $O(2q + amount)$\\
 
-\section{Experimentación}
+\subsection{Experimentación}
 	\par Ambos algoritmos fueron probados con 15 diferentes instancias de tamaños incrementables, cada uno ejecutado 10 veces para llevar un registro de tiempo y operaciones menos variable. (Anexo 1)\\
 	\\
 	\textbf{Notación}
@@ -92,7 +145,7 @@ arreglo de monedas usadas, la complejidad espacial es de orden: $O(2q + amount)$
 	\par Los resultados son los siguientes:
 	\pagebreak
 
-	\subsection{Algoritmo 1: Dynamic Programming Coin Change}
+	\subsubsection{Algoritmo 1: Dynamic Programming Coin Change}
 		\subsubsection{\underline{Condiciones}}
 			\begin{itemize}
 				\item Lenguaje de programación: C++
@@ -119,10 +172,10 @@ arreglo de monedas usadas, la complejidad espacial es de orden: $O(2q + amount)$
 		\pagebreak
 		\subsubsection{\underline{Análisis de resultados}}
 			\par Es notable la enorme cantidad de operaciones que realiza este algoritmo conforme el tamaño de entrada de datos aumenta. Tomando esto en cuenta, el tiempo de ejecución es notablemente bajo en tamaños de entrada de menos de 130 datos, menor que los resultados del algoritmo Greedy aunque no por mucho, pero entradas mayores a dicho número su tiempo va creciendo exponencialmente (con una línea de tendencia polinómica).
-	\subsection{Video demostración}
+	\subsubsection{Video demostración}
 		\par Link al video de demostración del proyecto: https://youtu.be/-5Ckw4Ocauk \\
 		
-\section{Aportaciones}
+\subsection{Aportaciones}
 \begin{tabular}{ |p{3cm}|p{10cm}| }
 	\hline
 	\multicolumn{2}{|c|}{Aportaciones} \\
@@ -132,7 +185,8 @@ arreglo de monedas usadas, la complejidad espacial es de orden: $O(2q + amount)$
 	Bernardo & Planificación, desarrollo y depuración de códigos, pruebas de código, ejecuciones de algoritmos, tablas y análisis de resultados\\
 	\hline
 \end{tabular}
-\section{Aprendizajes}
+
+\subsection{Aprendizajes}
 \begin{tabular}{ |p{2cm}|p{4cm}|p{4cm}|p{4cm}| }
 	\hline
 	\multicolumn{4}{|c|}{Aprendizajes} \\
@@ -145,20 +199,19 @@ arreglo de monedas usadas, la complejidad espacial es de orden: $O(2q + amount)$
 	\hline
 \end{tabular}
 
-\section{Conclusiones}
+\subsection{Conclusiones}
 	
-\section{Referencias bibliográficas}
+\subsection{Referencias bibliográficas}
 	\par Rodriguez Eduardo, (2021). Técnicas para el diseño de algoritmos. Algoritmos voraces (greedy) Sesión 15, p 4.
 	\par Rodriguez Eduardo, (2021). Técnicas para el diseño de algoritmos. Programación dinámica Sesión 14, p 3.
 	\par Kozen, D. Zaks, S. (s.f) Optimal Bounds for the ChangeMaking Problem. Recuperado de: https://www.cs.cornell.edu/~kozen/Papers/change.pdf
 	\par Khov, Try (2020). Solving Minimum Coin change. Recuperado de: https://trykv.medium.com/how-to-solve-minimum-coin-change-f96a758ccade
 	\par Back To Back SWE (2019). The Change Making Problem - Fewest Coins To Make Change Dynamic Programming. Video from: \\https://www.youtube.com/watch?v=jgiZlGzXMBw
 
-\section{Anexos}
-	\subsection{Anexo 1}
+\subsection{Anexos}
+	\subsubsection{Anexo 1}
 		\par Tabla de tiempos de ejecución
 		\par Programación dinámica\\
 		\includegraphics[width= 130mm]{img/TiemposDP.png}
 
-% End of document
 \end{document}

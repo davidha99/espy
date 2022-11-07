@@ -1,5 +1,8 @@
 /.vscode/
 /ply/*
+*.docx
+
+# Latex auxiliar files
 *.aux
 *.fdb_latexmk
 *.fls
