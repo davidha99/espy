@@ -165,22 +165,30 @@ def p_arithmetic_primitive(p):
     '''
     arithmetic_primitive : '(' seen_paren operator seen_operator operands ')'
     '''
+    global asm
     global operator_stack
     global operand_stack
+    global stack_index
 
     operator_stack.pop()
     operator_stack.pop()
+    asm += "\tmovl %s(%%esp), %%eax\n" % str(stack_index)
+    stack_index += 4
+
     # operand_stack.pop()
 
 def p_seen_paren(p):
     "seen_paren :"
     global operator_stack
+    global stack_index
     operator_stack.append(p[-1])
+    stack_index -= 4
 
-def p_remove_paren(p):
-    "remove_paren :"
-    global operator_stack
-    operator_stack.pop()
+# def p_remove_paren(p):
+#     "remove_paren :"
+#     global operator_stack
+#     global stack_index
+#     # operator_stack.pop()
 
 def p_seen_operator(p):
     "seen_operator :"
@@ -223,18 +231,14 @@ def p_seen_operand(p):
         operation = primitives["division"]
 
     if indv_operand:
-        stack_index -= 4
-        _, asm_temp = operation(stack_index, tuple(operand_stack))
+        _, asm_temp = operation(stack_index, tuple(operand_stack), indv_operand)
         asm += asm_temp
-    # elif n_operands == 2:
     else:
-        stack_index -= 4
-        temp, asm_temp = operation(stack_index, tuple(operand_stack))
+        temp, asm_temp = operation(stack_index, tuple(operand_stack), indv_operand)
         asm += asm_temp
         operand_stack.pop()
         operand_stack.pop()
         operand_stack.append(temp)
-    stack_index += 4
 
 def p_operator(p):
     '''
@@ -245,15 +249,6 @@ def p_operator(p):
              | boolean_op
     '''
     p[0] = p[1]
-
-
-# def p_seen_operand(p):
-#     "seen_operand :"
-#     global asm
-#     global stack_index
-#     global operand_stack
-#     asm += "\tmovl %%eax, %s(%%esp)\n" % str(stack_index)
-#     stack_index -= 4
 
 # Error rule for syntax errors
 

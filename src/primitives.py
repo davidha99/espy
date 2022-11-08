@@ -201,13 +201,14 @@ def if_alterante_expression(labels):
 def addition(*argv):
     si = argv[0]  # stack index
     operands = argv[1]
+    indv_operand = argv[2]
     
-    if len(operands) == 1:
-        temp = operands[0]
+    if indv_operand:
+        temp = operands[-1]
         asm = "\tmovl %%eax, %s(%%esp)\n" % str(si)
         return temp, asm
     else:
-        temp = operands[0] + operands[1]
+        temp = operands[-2] + operands[-1]
         asm = "\taddl %s(%%esp), %%eax\n" % str(si)
         asm += "\tmovl %%eax, %s(%%esp)\n" % str(si)
         return temp, asm
@@ -216,15 +217,16 @@ def addition(*argv):
 def addition(*argv):
     si = argv[0]  # stack index
     operands = argv[1]
+    indv_operand = argv[2]
     
-    if len(operands) == 1:
-        temp = operands[0]
+    if indv_operand:
+        temp = operands[-1]
         asm = "\tmovl %%eax, %s(%%esp)\n" % str(si)
         return temp, asm
     else:
-        temp = operands[0] - operands[1]
-        asm = "\tsubl %s(%%esp), %%eax\n" % str(si)
-        asm += "\tmovl %%eax, %s(%%esp)\n" % str(si)
+        temp = operands[-2] - operands[-1]
+        asm = "\tsubl %%eax, %s(%%esp) \n" % str(si)
+        # asm += "\tmovl %%eax, %s(%%esp)\n" % str(si)
         return temp, asm
 
 
