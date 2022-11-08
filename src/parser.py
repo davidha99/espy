@@ -163,7 +163,7 @@ def p_seen_alternate(p):
 
 def p_arithmetic_primitive(p):
     '''
-    arithmetic_primitive : '(' seen_paren operator seen_operator operands ')'
+    arithmetic_primitive : '(' seen_paren operator seen_operator operands ')' remove_paren
     '''
     global operator_stack
     global operand_stack
@@ -173,8 +173,13 @@ def p_arithmetic_primitive(p):
 
 def p_seen_paren(p):
     "seen_paren :"
-    global operand_stack
-    operand_stack.append(p[-1])
+    global operator_stack
+    operator_stack.append(p[-1])
+
+def p_remove_paren(p):
+    "remove_paren :"
+    global operator_stack
+    operator_stack.pop()
 
 def p_seen_operator(p):
     "seen_operator :"
@@ -216,12 +221,13 @@ def p_seen_operand(p):
         _, asm_temp = operation(stack_index, tuple(operand_stack))
         asm += asm_temp
     elif n_operands == 2:
+        stack_index -= 4
         temp, asm_temp = operation(stack_index, tuple(operand_stack))
         asm += asm_temp
         operand_stack.pop()
         operand_stack.pop()
         operand_stack.append(temp)
-        stack_index += 4
+    stack_index += 4
 
 def p_operator(p):
     '''

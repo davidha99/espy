@@ -209,6 +209,7 @@ def addition(*argv):
     else:
         temp = operands[0] + operands[1]
         asm = "\taddl %s(%%esp), %%eax\n" % str(si)
+        asm += "\tmovl %%eax, %s(%%esp)\n" % str(si)
         return temp, asm
 
 
