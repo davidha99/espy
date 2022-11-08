@@ -209,8 +209,8 @@ def addition(*argv):
         return temp, asm
     else:
         temp = operands[-2] + operands[-1]
-        asm = "\taddl %s(%%esp), %%eax\n" % str(si)
-        asm += "\tmovl %%eax, %s(%%esp)\n" % str(si)
+        asm = "\taddl %%eax, %s(%%esp) \n" % str(si)
+        # asm += "\tmovl %%eax, %s(%%esp)\n" % str(si)
         return temp, asm
 
 @define_primitive('substraction')
@@ -226,7 +226,6 @@ def addition(*argv):
     else:
         temp = operands[-2] - operands[-1]
         asm = "\tsubl %%eax, %s(%%esp) \n" % str(si)
-        # asm += "\tmovl %%eax, %s(%%esp)\n" % str(si)
         return temp, asm
 
 
