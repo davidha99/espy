@@ -172,8 +172,8 @@ def p_arithmetic_primitive(p):
 
     operator_stack.pop()
     operator_stack.pop()
-    asm += "\tmovl %s(%%esp), %%eax\n" % str(stack_index)
-    stack_index += 4
+    asm += "\tmovl %s(%%esp), %%eax\n" % str(stack_index)   # We must get the value from n-1(esp) to eax, so that we can continue working with it
+    stack_index += 4                                        # Update the asm stack index every time we close a \paren
 
     # operand_stack.pop()
 

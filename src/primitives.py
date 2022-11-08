@@ -205,12 +205,11 @@ def addition(*argv):
     
     if indv_operand:
         temp = operands[-1]
-        asm = "\tmovl %%eax, %s(%%esp)\n" % str(si)
+        asm = "\tmovl %%eax, %s(%%esp)\n" % str(si)     # This means n(esp) = eax
         return temp, asm
     else:
         temp = operands[-2] + operands[-1]
-        asm = "\taddl %%eax, %s(%%esp) \n" % str(si)
-        # asm += "\tmovl %%eax, %s(%%esp)\n" % str(si)
+        asm = "\taddl %%eax, %s(%%esp) \n" % str(si)    # This means n(esp) = n(esp) + eax
         return temp, asm
 
 @define_primitive('substraction')
@@ -221,11 +220,11 @@ def addition(*argv):
     
     if indv_operand:
         temp = operands[-1]
-        asm = "\tmovl %%eax, %s(%%esp)\n" % str(si)
+        asm = "\tmovl %%eax, %s(%%esp)\n" % str(si)     # This means n(esp) = eax
         return temp, asm
     else:
         temp = operands[-2] - operands[-1]
-        asm = "\tsubl %%eax, %s(%%esp) \n" % str(si)
+        asm = "\tsubl %%eax, %s(%%esp) \n" % str(si)    # This means n(esp) = n(esp) - eax
         return temp, asm
 
 

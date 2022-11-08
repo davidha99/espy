@@ -16,5 +16,5 @@ def create_binary(program):
 
 
 if __name__ == '__main__':
-    program = '''(+ 1 2 (+ 4 1) 5 6)'''
+    program = '''(+ 10 20 (+ 5 5) 10 (- 40 10) (+ 5 (+ 5 10 (-  10 5) 5)))'''
     create_binary(program)
