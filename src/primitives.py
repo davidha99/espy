@@ -264,3 +264,19 @@ def and_expression(*argv):
         asm = "\tand %s(%%esp), %%eax\n" % str(si)
         asm += "\tmovl %%eax, %s(%%esp)\n" % str(si)
         return temp, asm
+
+@define_primitive('or')
+def or_expression(*argv):
+    si = argv[0]  # stack index
+    operands = argv[1]
+    indv_operand = argv[2]
+    
+    if indv_operand:
+        temp = operands[-1]
+        asm = "\tmovl %%eax, %s(%%esp)\n" % str(si)     # This means n(esp) = eax
+        return temp, asm
+    else:
+        temp = operands[-2] and operands[-1]
+        asm = "\tor %s(%%esp), %%eax\n" % str(si)
+        asm += "\tmovl %%eax, %s(%%esp)\n" % str(si)
+        return temp, asm

@@ -238,6 +238,8 @@ def p_seen_operand(p):
         operation = primitives["division"]
     elif op == 'and':
         operation = primitives["and"]
+    elif op == 'or':
+        operation = primitives["or"]
 
     #If is a indvidual operand, we just evaluate it as a literal value and move it to stack_index(esp)
     if indv_operand:
