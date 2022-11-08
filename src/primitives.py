@@ -213,7 +213,7 @@ def addition(*argv):
         return temp, asm
 
 @define_primitive('substraction')
-def addition(*argv):
+def substraction(*argv):
     si = argv[0]  # stack index
     operands = argv[1]
     indv_operand = argv[2]
@@ -225,6 +225,27 @@ def addition(*argv):
     else:
         temp = operands[-2] - operands[-1]
         asm = "\tsubl %%eax, %s(%%esp) \n" % str(si)    # This means n(esp) = n(esp) - eax
+        return temp, asm
+
+@define_primitive('multiplication')
+def multiplication(*argv):
+    si = argv[0]  # stack index
+    operands = argv[1]
+    indv_operand = argv[2]
+    
+    if indv_operand:
+        temp = operands[-1]
+        asm = "\tmovl %%eax, %s(%%esp)\n" % str(si)     # This means n(esp) = eax
+        return temp, asm
+    else:
+        temp = operands[-2] * operands[-1]
+        # asm = "\tsubl $%s, %s(%%esp) \n" % (num_tag, str(si))
+        asm = "\tmovl $%s, %%edx \n" % num_tag
+        asm += "\tmovl %s(%%esp), %%ebx\n" % str(si)  # Multiplicatiopn works different
+        asm += "\tmul %ebx\n"   # This means n(esp) = n(esp) * eax
+        # asm += "\tmovl %%edx, %%eax\n" % str(si)
+        asm += "\tmovl %%eax, %s(%%esp)\n" % str(si)
+
         return temp, asm
 
 
