@@ -216,7 +216,14 @@ def p_seen_operand(p):
     indv_operand = False
 
     n_operands = len(operand_stack)
-    if(n_operands == 1 or (n_operands == 2 and len(operator_stack) > 2)):
+    n_operators = len(operator_stack)
+    
+    #The first condition for the operand to be a literal representation is that the n_operands and n_operators are in a relation 2:1
+    indv_condition_index_1 = n_operands/(n_operators/2)
+    #The second condition for the operand to be a literal representation is a nested operation, which will be related by the stack level and n_operators
+    indv_condition_index_2 = (-1 * stack_index / n_operators)
+
+    if(indv_condition_index_1 == 1 or (n_operands == indv_condition_index_2 and n_operators > 2)):
         indv_operand = True
 
     op = operator_stack[-1]
@@ -230,6 +237,7 @@ def p_seen_operand(p):
     elif op == '/':
         operation = primitives["division"]
 
+    #If is a indvidual operand, we just evaluate it as a literal value and move it to stack_index(esp)
     if indv_operand:
         _, asm_temp = operation(stack_index, tuple(operand_stack), indv_operand)
         asm += asm_temp
