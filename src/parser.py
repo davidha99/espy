@@ -163,13 +163,14 @@ def p_seen_alternate(p):
 
 def p_arithmetic_primitive(p):
     '''
-    arithmetic_primitive : '(' seen_paren operator seen_operator operands ')' remove_paren
+    arithmetic_primitive : '(' seen_paren operator seen_operator operands ')'
     '''
     global operator_stack
     global operand_stack
 
     operator_stack.pop()
-    operand_stack.pop()
+    operator_stack.pop()
+    # operand_stack.pop()
 
 def p_seen_paren(p):
     "seen_paren :"
@@ -203,6 +204,10 @@ def p_seen_operand(p):
     global operator_stack
     global operand_stack
     global stack_index
+
+    # ind_operand = True
+
+    # if(operand_stack == 1 )
 
     n_operands = len(operand_stack)
     op = operator_stack[-1]
