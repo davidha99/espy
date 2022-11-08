@@ -205,11 +205,12 @@ def p_seen_operand(p):
     global operand_stack
     global stack_index
 
-    # ind_operand = True
-
-    # if(operand_stack == 1 )
+    indv_operand = False
 
     n_operands = len(operand_stack)
+    if(n_operands == 1 or (n_operands == 2 and len(operator_stack) > 2)):
+        indv_operand = True
+
     op = operator_stack[-1]
     
     if op == '+':
@@ -221,11 +222,12 @@ def p_seen_operand(p):
     elif op == '/':
         operation = primitives["division"]
 
-    if n_operands == 1:
+    if indv_operand:
         stack_index -= 4
         _, asm_temp = operation(stack_index, tuple(operand_stack))
         asm += asm_temp
-    elif n_operands == 2:
+    # elif n_operands == 2:
+    else:
         stack_index -= 4
         temp, asm_temp = operation(stack_index, tuple(operand_stack))
         asm += asm_temp

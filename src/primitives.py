@@ -212,6 +212,21 @@ def addition(*argv):
         asm += "\tmovl %%eax, %s(%%esp)\n" % str(si)
         return temp, asm
 
+@define_primitive('substraction')
+def addition(*argv):
+    si = argv[0]  # stack index
+    operands = argv[1]
+    
+    if len(operands) == 1:
+        temp = operands[0]
+        asm = "\tmovl %%eax, %s(%%esp)\n" % str(si)
+        return temp, asm
+    else:
+        temp = operands[0] - operands[1]
+        asm = "\tsubl %s(%%esp), %%eax\n" % str(si)
+        asm += "\tmovl %%eax, %s(%%esp)\n" % str(si)
+        return temp, asm
+
 
 @define_primitive('and')
 def and_expression(*argv):
