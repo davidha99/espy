@@ -38,7 +38,7 @@ def p_expr(p):
     expr : literal
          | unary_primitive
          | conditional_expr
-         | binary_primitive
+         | arithmetic_primitive
     '''
 
 
@@ -161,13 +161,20 @@ def p_seen_alternate(p):
     asm += if_alternate_function(label_stack)
 
 
-def p_binary_primitive(p):
+def p_arithmetic_primitive(p):
     '''
-    binary_primitive : '(' operator seen_operator operands ')'
+    arithmetic_primitive : '(' seen_paren operator seen_operator operands ')'
     '''
     global operator_stack
+    global operand_stack
 
     operator_stack.pop()
+    operand_stack.pop()
+
+def p_seen_paren(p):
+    "seen_paren :"
+    global operand_stack
+    operand_stack.append(p[-1])
 
 def p_seen_operator(p):
     "seen_operator :"
