@@ -218,12 +218,13 @@ def p_seen_operand(p):
     n_operands = len(operand_stack)
     n_operators = len(operator_stack)
     
-    #The first condition for the operand to be a literal representation is that the n_operands and n_operators are in a relation 2:1
+    #The first condition for the operand to be a literal representation is that there's only 1 operand
+    #The second condition for the operand to be a literal representation is that the n_operands and n_operators are in a relation 2:1
     indv_condition_index_1 = n_operands/(n_operators/2)
-    #The second condition for the operand to be a literal representation is a nested operation, which will be related by the stack level and n_operators
+    #The third condition for the operand to be a literal representation is a nested operation, which will be related by the stack level and n_operators
     indv_condition_index_2 = (-1 * stack_index / n_operators)
 
-    if(indv_condition_index_1 == 1 or (n_operands == indv_condition_index_2 and n_operators > 2)):
+    if(n_operands == 1 or indv_condition_index_1 == 1 or (n_operands == indv_condition_index_2 and n_operators > 2)):
         indv_operand = True
 
     op = operator_stack[-1]
