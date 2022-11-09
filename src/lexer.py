@@ -13,7 +13,8 @@ reserved = {
     'num?': 'ISNUM',
     'boolean?': 'ISBOOLEAN',
     'char?': 'ISCHAR',
-    'if': 'IF'
+    'if': 'IF', 
+    'define': 'DEFINE'
 }
 
 literals = ['(', ')', '+', '-', '*', '/']

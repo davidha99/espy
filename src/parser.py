@@ -10,8 +10,8 @@ asm = ""
 asm += emit_function_header("entry_point")
 asm += emit_stack_header("entry_point")
 asm += "L_entry_point:\n"
-operand_stack = []
-operator_stack = []
+global_operand_stack = []
+global_operator_stack = []
 label_stack = []
 label_counter = 1
 stack_index = 0  # Start at byte 0
@@ -32,15 +32,14 @@ def p_program(p):
         label_counter = 1
     p[0] = "Parsed"
 
-
 def p_expr(p):
     '''
     expr : literal
          | unary_primitive
          | conditional_expr
          | arithmetic_primitive
+         | definition
     '''
-
 
 def p_literal(p):
     '''
@@ -48,28 +47,27 @@ def p_literal(p):
               | BOOLEAN
               | CHAR
               | NULL
+              | ID
     '''
     global asm
-    global operand_stack
+    global global_operand_stack
     global stack_index
-    operand_stack.append(p[1])
-    asm += emit_literal(operand_stack[-1])
+    global_operand_stack.append(p[1])
+    asm += emit_literal(global_operand_stack[-1])
     p[0] = p[1]
-
 
 def p_unary_primitive(p):
     '''
     unary_primitive : '(' unary expr ')'
     '''
     global asm
-    global operand_stack
+    global global_operand_stack
     prim_name = p[2]
     prim_function = primitives[prim_name]
-    temp, asm_temp = prim_function(operand_stack[-1])
+    temp, asm_temp = prim_function(global_operand_stack[-1])
     asm += asm_temp
-    operand_stack.pop()
-    operand_stack.append(temp)
-
+    global_operand_stack.pop()
+    global_operand_stack.append(temp)
 
 def p_unary(p):
     '''
@@ -86,9 +84,6 @@ def p_unary(p):
     '''
     p[0] = p[1]
 
-# (if <test> <consequent> <alternate>)
-
-
 def p_conditional_expr(p):
     '''
     conditional_expr : '(' IF create_if_labels test seen_test expr seen_consequent expr seen_alternate ')'
@@ -97,7 +92,6 @@ def p_conditional_expr(p):
     global label_stack
     label_stack.pop()
     label_stack.pop()
-
 
 def p_create_if_labels(p):
     "create_if_labels :"
@@ -110,20 +104,17 @@ def p_create_if_labels(p):
     label_stack.append(alt_label)
     label_stack.append(end_label)
 
-
 def p_test(p):
     '''
     test : '(' boolean_op expr expr with_multiple_expr ')'
          | expr
     '''
 
-
 def p_with_multiple_expr(p):
     '''
     with_multiple_expr : with_multiple_expr expr
                        | empty
     '''
-
 
 def p_boolean_op(p):
     '''
@@ -132,18 +123,16 @@ def p_boolean_op(p):
     '''
     p[0] = p[1]
 
-
 def p_seen_test(p):
     "seen_test :"
     global label_stack
     global asm
-    global operand_stack
+    global global_operand_stack
     # Maybe take this from operands stack
-    test = operand_stack[-1]
-    operand_stack.pop()
+    test = global_operand_stack[-1]
+    global_operand_stack.pop()
     if_test_function = primitives["if_test"]
     asm += if_test_function(test, label_stack)
-
 
 def p_seen_consequent(p):
     "seen_consequent :"
@@ -152,7 +141,6 @@ def p_seen_consequent(p):
     if_consequent_function = primitives["if_consequent"]
     asm += if_consequent_function(label_stack)
 
-
 def p_seen_alternate(p):
     "seen_alternate :"
     global label_stack
@@ -160,43 +148,34 @@ def p_seen_alternate(p):
     if_alternate_function = primitives["if_alternate"]
     asm += if_alternate_function(label_stack)
 
-
 def p_arithmetic_primitive(p):
     '''
     arithmetic_primitive : '(' seen_paren operator seen_operator operands ')'
     '''
     global asm
-    global operator_stack
-    global operand_stack
+    global global_operator_stack
+    global global_operand_stack
     global stack_index
 
-    operator_stack.pop()
-    operator_stack.pop()
-    operand_stack.pop(-2)
+    global_operator_stack.pop()
+    global_operator_stack.pop()
+    global_operand_stack.pop(-2)
     asm += "\tmovl %s(%%esp), %%eax\n" % str(stack_index)   # We must get the value from n-1(esp) to eax, so that we can continue working with it
     stack_index += 4                                        # Update the asm stack index every time we close a \paren
 
-    # operand_stack.pop()
-
 def p_seen_paren(p):
     "seen_paren :"
-    global operator_stack
-    global operand_stack
+    global global_operator_stack
+    global global_operand_stack
     global stack_index
-    operator_stack.append(p[-1])
-    operand_stack.append(p[-1])
+    global_operator_stack.append(p[-1])
+    global_operand_stack.append(p[-1])
     stack_index -= 4
-
-# def p_remove_paren(p):
-#     "remove_paren :"
-#     global operator_stack
-#     global stack_index
-#     # operator_stack.pop()
 
 def p_seen_operator(p):
     "seen_operator :"
-    global operator_stack
-    operator_stack.append(p[-1])
+    global global_operator_stack
+    global_operator_stack.append(p[-1])
 
 def p_operands(p):
     '''
@@ -212,14 +191,14 @@ def p_more_expr(p):
 def p_seen_operand(p):
     "seen_operand :"
     global asm
-    global operator_stack
-    global operand_stack
+    global global_operator_stack
+    global global_operand_stack
     global stack_index
 
     #The first condition for the operand to be a literal representation is that there's a flag ('(') in the operand stack
-    indv_operand = True if operand_stack[-2] == '(' else False
+    indv_operand = True if global_operand_stack[-2] == '(' else False
 
-    op = operator_stack[-1]
+    op = global_operator_stack[-1]
     
     if op == '+':
         operation = primitives["addition"]
@@ -236,14 +215,14 @@ def p_seen_operand(p):
 
     #If is a indvidual operand, we just evaluate it as a literal value and move it to stack_index(esp)
     if indv_operand:
-        _, asm_temp = operation(stack_index, tuple(operand_stack), indv_operand)
+        _, asm_temp = operation(stack_index, tuple(global_operand_stack), indv_operand)
         asm += asm_temp
     else:
-        temp, asm_temp = operation(stack_index, tuple(operand_stack), indv_operand)
+        temp, asm_temp = operation(stack_index, tuple(global_operand_stack), indv_operand)
         asm += asm_temp
-        operand_stack.pop()
-        operand_stack.pop()
-        operand_stack.append(temp)
+        global_operand_stack.pop()
+        global_operand_stack.pop()
+        global_operand_stack.append(temp)
 
 def p_operator(p):
     '''
@@ -255,9 +234,29 @@ def p_operator(p):
     '''
     p[0] = p[1]
 
+def p_definition(p):
+    '''
+    definition : '(' DEFINE def_definition expr with_multiple_expr ')' 
+    '''
+
+def p_def_definition(p):
+    '''
+    def_definition : '(' ID with_arguments ')'
+    '''
+
+def p_with_arguments(p):
+    '''
+    with_arguments : with_multiple_chars
+    '''
+
+def p_with_multiple_chars(p):
+    '''
+    with_multiple_chars : ID with_multiple_chars
+                        | empty
+    '''
+
+
 # Error rule for syntax errors
-
-
 def p_error(p):
     print("Syntax error in input! - {}".format(p))
 
@@ -272,6 +271,6 @@ parser = yacc.yacc()
 # For debugging parser just run while in this file
 if __name__ == '__main__':
 
-    data = "3"
+    data = "(define (sum x y) (+ 2 3))"
 
     print(parser.parse(data))

@@ -765,8 +765,41 @@ class ImmediateTest(TestCase):
         self.assertEvaluatesRepr("(not (num? #f))", "#t")
     
     '''
-    Boolean: And
+    Boolean: And/Or
     '''
+    # def test_and_1(self):
+    #     self.assertEvaluatesRepr("(and)", "#t")
+
+
+    # def test_and_2(self):
+    #     self.assertEvaluatesRepr("(and 5)", "5")
+
+
+    # def test_and_3(self):
+    #     self.assertEvaluatesRepr("(and #f)", "#f")
+
+
+    # def test_and_4(self):
+    #     self.assertEvaluatesRepr("(and 5 6)", "6")
+
+
+    # def test_or_1(self):
+    #     self.assertEvaluatesRepr("(or)", "#f")
+
+
+    # def test_or_2(self):
+    #     self.assertEvaluatesRepr("(or #t)", "#t")
+
+
+    # def test_or_3(self):
+    #     self.assertEvaluatesRepr("(or 5)", "5")
+
+
+    # def test_or_4(self):
+    #     self.assertEvaluatesRepr("(or 1 2 3)", "1")
+    
+
+
 
 if __name__ == '__main__':
     main()
