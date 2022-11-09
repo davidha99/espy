@@ -172,6 +172,7 @@ def p_arithmetic_primitive(p):
 
     operator_stack.pop()
     operator_stack.pop()
+    operand_stack.pop(-2)
     asm += "\tmovl %s(%%esp), %%eax\n" % str(stack_index)   # We must get the value from n-1(esp) to eax, so that we can continue working with it
     stack_index += 4                                        # Update the asm stack index every time we close a \paren
 
@@ -180,8 +181,10 @@ def p_arithmetic_primitive(p):
 def p_seen_paren(p):
     "seen_paren :"
     global operator_stack
+    global operand_stack
     global stack_index
     operator_stack.append(p[-1])
+    operand_stack.append(p[-1])
     stack_index -= 4
 
 # def p_remove_paren(p):
@@ -213,19 +216,8 @@ def p_seen_operand(p):
     global operand_stack
     global stack_index
 
-    indv_operand = False
-
-    n_operands = len(operand_stack)
-    n_operators = len(operator_stack)
-    
-    #The first condition for the operand to be a literal representation is that there's only 1 operand
-    #The second condition for the operand to be a literal representation is that the n_operands and n_operators are in a relation 2:1
-    indv_condition_index_1 = n_operands/(n_operators/2)
-    #The third condition for the operand to be a literal representation is a nested operation, which will be related by the stack level and n_operators
-    indv_condition_index_2 = (-1 * stack_index / n_operators)
-
-    if(n_operands == 1 or indv_condition_index_1 == 1 or (n_operands == indv_condition_index_2 and n_operators > 2)):
-        indv_operand = True
+    #The first condition for the operand to be a literal representation is that there's a flag ('(') in the operand stack
+    indv_operand = True if operand_stack[-2] == '(' else False
 
     op = operator_stack[-1]
     
