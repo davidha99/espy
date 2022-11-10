@@ -150,8 +150,9 @@ def p_seen_alternate(p):
 
 def p_arithmetic_primitive(p):
     '''
-    arithmetic_primitive : '(' seen_paren operator seen_operator operands ')'
+    arithmetic_primitive : '(' np_arithm_seen_paren operator np_arithm_seen_operator operands ')'
     '''
+    #NP End of arithmetic_primitive
     global asm
     global global_operator_stack
     global global_operand_stack
@@ -163,8 +164,9 @@ def p_arithmetic_primitive(p):
     asm += "\tmovl %s(%%esp), %%eax\n" % str(stack_index)   # We must get the value from n-1(esp) to eax, so that we can continue working with it
     stack_index += 4                                        # Update the asm stack index every time we close a \paren
 
-def p_seen_paren(p):
-    "seen_paren :"
+#NP After parenthesis lecture
+def p_np_arithm_seen_paren(p):
+    "np_arithm_seen_paren :"
     global global_operator_stack
     global global_operand_stack
     global stack_index
@@ -172,24 +174,26 @@ def p_seen_paren(p):
     global_operand_stack.append(p[-1])
     stack_index -= 4
 
-def p_seen_operator(p):
-    "seen_operator :"
+#NP After operator lecture
+def p_np_arithm_seen_operator(p):
+    "np_arithm_seen_operator :"
     global global_operator_stack
     global_operator_stack.append(p[-1])
 
 def p_operands(p):
     '''
-    operands : expr seen_operand expr seen_operand more_expr
+    operands : expr np_operands_seen_operand expr np_operands_seen_operand more_expr
     '''
 
 def p_more_expr(p):
     '''
-    more_expr : more_expr expr seen_operand
+    more_expr : more_expr expr np_operands_seen_operand
               | empty
     '''
 
-def p_seen_operand(p):
-    "seen_operand :"
+#NP After operand lecture
+def p_np_operands_seen_operand(p):
+    "np_operands_seen_operand :"
     global asm
     global global_operator_stack
     global global_operand_stack
