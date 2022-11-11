@@ -74,10 +74,15 @@ def check_argument_type(function_name, given_arguments, function_argument_types)
                                                      given_arg_type))
 
 
-def create_unique_label(n):
+def create_unique_if_labels(n):
     # Maybe here we need to add a check for platform support
     # MacOS or Windows
-    return "_L_%s" % n
+    return "_IF_L_%s" % n
+
+def create_unique_func_labels(n):
+    # Maybe here we need to add a check for platform support
+    # MacOS or Windows
+    return "_FUNC_L_%s" % n
 
 
 def typeof(arg):
