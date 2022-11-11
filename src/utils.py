@@ -1,5 +1,6 @@
-from errors import SchemeArityError
-from immediates import is_boolean, is_char, is_null, is_fixnum
+from errors import EspyTypeError, InvalidArgumentNumber
+from literals import is_boolean, is_char, is_null, is_num
+
 
 def check_argument_number(function_name, given_arguments,
                           min_arguments, max_arguments=None):
@@ -15,22 +16,23 @@ def check_argument_number(function_name, given_arguments,
 
     if not right_argument_number:
         if min_arguments == max_arguments:
-            raise SchemeArityError("%s requires exactly %d argument(s), but "
-                                  "received %d." % (function_name,
-                                                    min_arguments,
-                                                    len(given_arguments)))
+            raise InvalidArgumentNumber("%s requires exactly %d argument(s), but "
+                                   "received %d." % (function_name,
+                                                     min_arguments,
+                                                     len(given_arguments)))
         else:
             if max_arguments:
-                raise SchemeArityError("%s requires between %d and %d argument(s), but "
-                                      "received %d." % (function_name,
-                                                        min_arguments,
-                                                        max_arguments,
-                                                        len(given_arguments)))
+                raise InvalidArgumentNumber("%s requires between %d and %d argument(s), but "
+                                       "received %d." % (function_name,
+                                                         min_arguments,
+                                                         max_arguments,
+                                                         len(given_arguments)))
             else:
-                raise SchemeArityError("%s requires at least %d argument(s), but "
-                                      "received %d." % (function_name,
-                                                        min_arguments,
-                                                        len(given_arguments)))
+                raise InvalidArgumentNumber("%s requires at least %d argument(s), but "
+                                       "received %d." % (function_name,
+                                                         min_arguments,
+                                                         len(given_arguments)))
+
 
 def check_argument_type(function_name, given_arguments, function_argument_types):
     '''
@@ -38,19 +40,19 @@ def check_argument_type(function_name, given_arguments, function_argument_types)
         function_name           : the name of the function as a str
         given_arguments         : the given arguments as a tuple
         function_argument_types : the types of every argument as a tuple
-    
+
     It raises an exception if there is a type mismatch of any argument
 
     Example:
 
-    check_argument_type('fixnum->char', (arg1, arg2, arg3), (type1, type2, type3))
+    check_argument_type('num->char', (arg1, arg2, arg3), (type1, type2, type3))
 
     The function checks the types as the following:
     arg1 -> type1
     arg2 -> type2
     arg3 -> type3
 
-    The types should be specified as: "boolean", "fixnum", "char", "null", so if you want to
+    The types should be specified as: "boolean", "num", "char", "null", so if you want to
     check if some argument is of type "boolean" you could do the following:
 
     check_argument_type('if', (test_expr,), ('boolean',))
@@ -62,23 +64,30 @@ def check_argument_type(function_name, given_arguments, function_argument_types)
         if typeof(given_arguments[i]) != function_argument_types[i]:
             right_argument_type = False
             break
-    
+
     if not right_argument_type:
         required_arg_type = function_argument_types[i]
         given_arg_type = typeof(given_arguments[i])
-        raise SchemeArityError("%s requires %s type arguments, but "
+        raise EspyTypeError("%s requires %s type arguments, but "
                                "received type %s" % (function_name,
-                                                    required_arg_type,
-                                                    given_arg_type))
+                                                     required_arg_type,
+                                                     given_arg_type))
 
-def create_unique_label(n):
+
+def create_unique_if_labels(n):
     # Maybe here we need to add a check for platform support
     # MacOS or Windows
-    return "_L_%s" % n
+    return "_IF_L_%s" % n
+
+def create_unique_func_labels(n):
+    # Maybe here we need to add a check for platform support
+    # MacOS or Windows
+    return "_FUNC_L_%s" % n
+
 
 def typeof(arg):
-    if is_fixnum(arg):
-        return "fixnum"
+    if is_num(arg):
+        return "num"
     elif is_boolean(arg):
         return "boolean"
     elif is_char(arg):

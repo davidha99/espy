@@ -1,10 +1,2 @@
-/ply/*
-/__pycache__/*
-/parser.out
-/parsetab.py
-/*.s
-/main.exe
-/ctest.c
-/main
-/runtime.dSYM/*
+LICENSE
 /.vscode/*

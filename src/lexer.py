@@ -1,51 +1,60 @@
 import ply.lex as lex
 
 reserved = {
-    'fxadd1' : 'FXADD1',
-    'fxsub1' : 'FXSUB1',
-    'char->fixnum' : 'CHARTOFIXNUM',
-    'fixnum->char' : 'FIXNUMTOCHAR',
-    'fxzero?' : 'ISFXZERO',
-    'null?' : 'ISNULL',
-    'not' : 'NOT',
-    'and' : 'AND',
-    'or' : 'OR',
-    'fixnum?' : 'ISFIXNUM',
-    'boolean?' : 'ISBOOLEAN',
-    'char?' : 'ISCHAR',
-    'if' : 'IF'
+    'add1': 'ADD1',
+    'sub1': 'SUB1',
+    'char->num': 'CHARTONUM',
+    'num->char': 'NUMTOCHAR',
+    'zero?': 'ISZERO',
+    'null?': 'ISNULL',
+    'not': 'NOT',
+    'and': 'AND',
+    'or': 'OR',
+    'num?': 'ISNUM',
+    'boolean?': 'ISBOOLEAN',
+    'char?': 'ISCHAR',
+    'if': 'IF', 
+    'define': 'DEFINE'
 }
 
-tokens = ['ID', 'LPAREN', 'RPAREN', 'FIXNUM', 'BOOLEAN', 'CHAR', 'NULL'] + list(reserved.values())
+literals = ['(', ')', '+', '-', '*', '/']
 
-t_LPAREN = r'\('
-t_RPAREN = r'\)'
+tokens = ['ID', 'NUM', 'BOOLEAN', 'CHAR', 'NULL'] + list(reserved.values())
+
 t_BOOLEAN = r'\#t | \#f'
 t_CHAR = r'\\\#[a-zA-Z0-9]'
 t_NULL = r'\(\)'
 
+
 def t_ID(t):
     r'[a-zA-Z][a-zA-Z_0-9<>\-\?]*'
-    t.type = reserved.get(t.value,'ID')
+    t.type = reserved.get(t.value, 'ID')
     return t
 
-def t_FIXNUM(t):
+
+def t_NUM(t):
     r'[+-]?[0-9]+'
     t.value = int(t.value)
     return t
+
 
 # Ignored characters
 t_ignore = " \t"
 
 # Define a rule so we can track line numbers
+
+
 def t_newline(t):
     r'\n+'
     t.lexer.lineno += t.value.count("\n")
 
 # Error handling rule
+
+
 def t_error(t):
     print("Illegal character '%s'" % t.value[0])
     t.lexer.skip(1)
+
 
 # Build the lexer
 lexer = lex.lex()
@@ -53,17 +62,21 @@ lexer = lex.lex()
 # For debugging lexer just run while in this file
 if __name__ == "__main__":
     data = '''
-    char->fixnum
-    fixnum->char
+    char->num
+    num->char
     boolean?
     null?
     char?
-    fixnum?
-    fxzero?
+    num?
+    zero?
     not
     or
     and
     (if (> 2 1))
+    *
+    /
+    +
+    -
     '''
 
     # Give the lexer some input
