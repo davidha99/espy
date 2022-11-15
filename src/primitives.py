@@ -303,7 +303,7 @@ def less_equal(*argv):
         asm += "\tmov %%al, %s(%%esp)\n" % str(si)     # Save the boolean in memory stack
         return temp, asm
 
-@define_primitive('greatequal')
+@define_primitive('greaterequal')
 def greater_equal(*argv):
     si = argv[0]  # stack index
     operands = argv[1]
@@ -323,4 +323,26 @@ def greater_equal(*argv):
         asm += "\tsal   $%s, %%al\n" % bool_bit     # Shift the 0/1 byte value to its representation as boolean #f/#t
         asm += "\tor    $%s, %%al\n" % bool_f       
         asm += "\tmov %%al, %s(%%esp)\n" % str(si)     # Save the boolean in memory stack
+        return temp, asm
+
+@define_primitive('equal')
+def greater_equal(*argv):
+    si = argv[0]  # stack index
+    operands = argv[1]
+    indv_operand = argv[2]
+    
+    if indv_operand:
+        temp = operands[-1]
+        asm = "\tmovl %%eax, %s(%%esp)\n" % str(si)     # This means si(esp) = eax
+        return temp, asm
+    else:
+        temp = operands[-2] == operands[-1]
+        asm = ""
+        asm += "\tmovl %s(%%esp), %%ebx\n" % str(si)
+        asm += "\tcmp %ebx, %eax\n"     # Compare operands as: 'ebx >= eax'
+        asm += "\tsete %al\n"          # After comparing, the result is safed in 'al', memory section that safes #t or #f as 8 bits (1 byte)
+        asm += "\tmovzbl    %al, %eax\n"
+        asm += "\tsal   $%s, %%al\n" % bool_bit     # Shift the 0/1 byte value to its representation as boolean #f/#t
+        asm += "\tor    $%s, %%al\n" % bool_f       
+        asm += "\tmov %%al, %s(%%esp)\n" % str(si)    # Save the boolean in memory stack
         return temp, asm

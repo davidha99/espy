@@ -130,7 +130,10 @@ def p_boolean_op(p):
 def p_comparison_op(p):
     '''
     comparison_op : LESSEQUAL
-                  | GREATEQUAL
+                  | GREATEREQUAL
+                  | LESSTHAN
+                  | GREATERTHAN
+                  | EQUAL
     '''
     p[0] = p[1]
 
@@ -269,7 +272,14 @@ def p_np_operands_seen_operand(p):
     elif op == '<=':
         operation = primitives["lessequal"]
     elif op == '>=':
-        operation = primitives["greatequal"]
+        operation = primitives["greaterequal"]
+    elif op == '==':
+        operation = primitives["equal"]
+    elif op == '<':
+        operation = primitives["lessthan"]
+    elif op == '>':
+        operation = primitives["greaterthan"]
+    
 
     #If is a indvidual operand, we just evaluate it as a literal value and move it to memory_stack_index(esp)
     if indv_operand:

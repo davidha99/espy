@@ -19,13 +19,16 @@ reserved = {
 
 literals = ['(', ')', '+', '-', '*', '/', '>', '<']
 
-tokens = ['ID', 'NUM', 'BOOLEAN', 'CHAR', 'NULL', 'LESSEQUAL', 'GREATEQUAL'] + list(reserved.values())
+tokens = ['ID', 'NUM', 'BOOLEAN', 'CHAR', 'NULL', 'LESSEQUAL', 'GREATEREQUAL', 'LESSTHAN', 'GREATERTHAN', 'EQUAL'] + list(reserved.values())
 
 t_BOOLEAN = r'\#t | \#f'
 t_CHAR = r'\\\#[a-zA-Z0-9]'
 t_NULL = r'\(\)'
+t_LESSTHAN = r'\<'
+t_GREATERTHAN = r'\>'
+t_EQUAL = r'\=\='
 t_LESSEQUAL = r'\<\='
-t_GREATEQUAL = r'\>\='
+t_GREATEREQUAL = r'\>\='
 
 
 def t_ID(t):
