@@ -205,11 +205,11 @@ def addition(*argv):
     
     if indv_operand:
         temp = operands[-1]
-        asm = "\tmovl %%eax, %s(%%esp)\n" % str(si)     # This means n(esp) = eax
+        asm = "\tmovl %%eax, %s(%%esp)\n" % str(si)     # This means si(esp) = eax
         return temp, asm
     else:
         temp = operands[-2] + operands[-1]
-        asm = "\taddl %%eax, %s(%%esp) \n" % str(si)    # This means n(esp) = n(esp) + eax
+        asm = "\taddl %%eax, %s(%%esp) \n" % str(si)    # This means si(esp) = n(esp) + eax
         return temp, asm
 
 @define_primitive('substraction')
@@ -220,11 +220,11 @@ def substraction(*argv):
     
     if indv_operand:
         temp = operands[-1]
-        asm = "\tmovl %%eax, %s(%%esp)\n" % str(si)     # This means n(esp) = eax
+        asm = "\tmovl %%eax, %s(%%esp)\n" % str(si)     # This means si(esp) = eax
         return temp, asm
     else:
         temp = operands[-2] - operands[-1]
-        asm = "\tsubl %%eax, %s(%%esp) \n" % str(si)    # This means n(esp) = n(esp) - eax
+        asm = "\tsubl %%eax, %s(%%esp) \n" % str(si)    # This means si(esp) = n(esp) - eax
         return temp, asm
 
 # @define_primitive('multiplication')
@@ -235,14 +235,14 @@ def substraction(*argv):
     
 #     if indv_operand:
 #         temp = operands[-1]
-#         asm = "\tmovl %%eax, %s(%%esp)\n" % str(si)     # This means n(esp) = eax
+#         asm = "\tmovl %%eax, %s(%%esp)\n" % str(si)     # This means si(esp) = eax
 #         return temp, asm
 #     else:
 #         temp = operands[-2] * operands[-1]
 #         # asm = "\tsubl $%s, %s(%%esp) \n" % (num_tag, str(si))
 #         asm = "\tmovl $%s, %%edx \n" % (num_tag)
 #         asm += "\tmovl %s(%%esp), %%ebx\n" % str(si)  # Multiplicatiopn works different
-#         asm += "\tmul %ebx\n"   # This means n(esp) = n(esp) * eax
+#         asm += "\tmul %ebx\n"   # This means si(esp) = n(esp) * eax
 #         # asm += "\tmovl %%edx, %%eax\n" % str(si)
 #         asm += "\tmovl %%eax, %s(%%esp)\n" % str(si)
 
@@ -257,7 +257,7 @@ def and_expression(*argv):
     
     if indv_operand:
         temp = operands[-1]
-        asm = "\tmovl %%eax, %s(%%esp)\n" % str(si)     # This means n(esp) = eax
+        asm = "\tmovl %%eax, %s(%%esp)\n" % str(si)     # This means si(esp) = eax
         return temp, asm
     else:
         temp = operands[-2] and operands[-1]
@@ -273,10 +273,32 @@ def or_expression(*argv):
     
     if indv_operand:
         temp = operands[-1]
-        asm = "\tmovl %%eax, %s(%%esp)\n" % str(si)     # This means n(esp) = eax
+        asm = "\tmovl %%eax, %s(%%esp)\n" % str(si)     # This means si(esp) = eax
         return temp, asm
     else:
         temp = operands[-2] and operands[-1]
         asm = "\tor %s(%%esp), %%eax\n" % str(si)
         asm += "\tmovl %%eax, %s(%%esp)\n" % str(si)
+        return temp, asm
+
+@define_primitive('lessequal')
+def or_expression(*argv):
+    si = argv[0]  # stack index
+    operands = argv[1]
+    indv_operand = argv[2]
+    
+    if indv_operand:
+        temp = operands[-1]
+        asm = "\tmovl %%eax, %s(%%esp)\n" % str(si)     # This means si(esp) = eax
+        return temp, asm
+    else:
+        temp = operands[-2] <= operands[-1]
+        asm = ""
+        asm += "\tmovl %s(%%esp), %%ebx\n" % str(si)
+        asm += "\tcmp %eax, %ebx\n"     # Compare operands as: 'ebx <= eax'
+        asm += "\tsetle %al\n"          # After comparing, the result is safed in 'al', memory section that safes #t or #f as 8 bits (1 byte)
+        asm += "\tmovzbl    %al, %eax\n"
+        asm += "\tsal   $%s, %%al\n" % bool_bit     # Shift the 0/1 byte value to its representation as boolean #f/#t
+        asm += "\tor    $%s, %%al\n" % bool_f       
+        asm += "\tmov %%al, %s(%%esp)\n" % str(si)     # Save the boolean in memory stack
         return temp, asm

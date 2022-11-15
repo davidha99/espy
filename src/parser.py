@@ -40,6 +40,7 @@ def p_expr(p):
          | unary_primitive
          | conditional_expr
          | arithmetic_primitive
+         | comparison_primitive
          | definition
     '''
 
@@ -126,6 +127,12 @@ def p_boolean_op(p):
     '''
     p[0] = p[1]
 
+def p_comparison_op(p):
+    '''
+    comparison_op : LESSEQUAL
+    '''
+    p[0] = p[1]
+
 #NP After IF conditional expression lecture
 def p_np_seen_test(p):
     "np_seen_test :"
@@ -153,6 +160,42 @@ def p_np_seen_alternate(p):
     global asm
     if_alternate_function = primitives["if_alternate"]
     asm += if_alternate_function(cond_label_stack)
+def p_comparison_primitive(p):
+    '''
+    comparison_primitive : '(' np_compar_seen_paren comparison_op np_compar_seen_operator compar_operands ')'
+    '''
+    #NP End of comparison_primitive
+    global asm
+    global global_operator_stack
+    global global_operand_stack
+    global memory_stack_index
+
+    global_operator_stack.pop()     # Pop the operator
+    global_operator_stack.pop()     # Pop the operator flag ('(')
+    global_operand_stack.pop(-2)    # Pop the operand flag ('(')
+    asm += "\tmovl %s(%%esp), %%eax\n" % str(memory_stack_index)   # We must get the value from n-1(esp) to eax, so that we can continue working with it
+    memory_stack_index += 4         # Reset the memory index to 0
+
+#NP After parenthesis lecture
+def p_np_compar_seen_paren(p):
+    "np_compar_seen_paren :"
+    global global_operator_stack
+    global global_operand_stack
+    global memory_stack_index
+    global_operator_stack.append(p[-1])
+    global_operand_stack.append(p[-1])
+    memory_stack_index -= 4  
+
+#NP After operator lecture
+def p_np_compar_seen_operator(p):
+    "np_compar_seen_operator :"
+    global global_operator_stack
+    global_operator_stack.append(p[-1])
+
+def p_compar_operands(p):
+    '''
+    compar_operands : expr np_operands_seen_operand expr np_operands_seen_operand
+    '''
 
 def p_arithmetic_primitive(p):
     '''
@@ -164,11 +207,11 @@ def p_arithmetic_primitive(p):
     global global_operand_stack
     global memory_stack_index
 
-    global_operator_stack.pop()
-    global_operator_stack.pop()
-    global_operand_stack.pop(-2)
+    global_operator_stack.pop()     # Pop the operator
+    global_operator_stack.pop()     # Pop the operator flag ('(')
+    global_operand_stack.pop(-2)        # Pop the operand flag ('(')
     asm += "\tmovl %s(%%esp), %%eax\n" % str(memory_stack_index)   # We must get the value from n-1(esp) to eax, so that we can continue working with it
-    memory_stack_index += 4                                        # Update the asm stack index every time we close a \paren
+    memory_stack_index += 4         # Reset the memory index to 0                                     # Update the asm stack index every time we close a \paren
 
 #NP After parenthesis lecture
 def p_np_arithm_seen_paren(p):
@@ -222,6 +265,8 @@ def p_np_operands_seen_operand(p):
         operation = primitives["and"]
     elif op == 'or':
         operation = primitives["or"]
+    elif op == '<=':
+        operation = primitives["lessequal"]
 
     #If is a indvidual operand, we just evaluate it as a literal value and move it to memory_stack_index(esp)
     if indv_operand:

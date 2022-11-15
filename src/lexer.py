@@ -17,13 +17,14 @@ reserved = {
     'define': 'DEFINE'
 }
 
-literals = ['(', ')', '+', '-', '*', '/']
+literals = ['(', ')', '+', '-', '*', '/', '>', '<']
 
-tokens = ['ID', 'NUM', 'BOOLEAN', 'CHAR', 'NULL'] + list(reserved.values())
+tokens = ['ID', 'NUM', 'BOOLEAN', 'CHAR', 'NULL', 'LESSEQUAL'] + list(reserved.values())
 
 t_BOOLEAN = r'\#t | \#f'
 t_CHAR = r'\\\#[a-zA-Z0-9]'
 t_NULL = r'\(\)'
+t_LESSEQUAL = r'\<\='
 
 
 def t_ID(t):
