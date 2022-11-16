@@ -730,7 +730,77 @@ class ImmediateTest(TestCase):
     
     def test_sub_34(self):
         self.assertEvaluatesRepr("(- 1 (- 2 (- 3 (- 4 (- 5 (- 6 (- 7 (- 8 9))))))))", "5")
+    
+    '''
+    Aritmethic operations: *
+    '''
+    def test_mult_1(self):
+        self.assertEvaluatesRepr("(* 2 3)", "6")
+    
+    def test_mult_2(self):
+        self.assertEvaluatesRepr("(* 2 -3)", "-6")
+    
+    def test_mult_3(self):
+        self.assertEvaluatesRepr("(* -2 3)", "-6")
+    
+    def test_mult_4(self):
+        self.assertEvaluatesRepr("(* -2 -3)", "6")
+    
+    # def test_mult_5(self):
+    #     self.assertEvaluatesRepr("(* 536870911 1)", "536870911")
+    
+    # def test_mult_6(self):
+    #     self.assertEvaluatesRepr("(* 536870911 -1)", "-536870911")
+    
+    # def test_mult_7(self):
+    #     self.assertEvaluatesRepr("(* -536870912 1)", "-536870912")
+    
+    # def test_mult_8(self):
+    #     self.assertEvaluatesRepr("(* -536870911 -1)", "536870911")
+    
+    def test_mult_9(self):
+        self.assertEvaluatesRepr("(* 2 (* 3 4))", "24")
+    
+    def test_mult_10(self):
+        self.assertEvaluatesRepr("(* (* 2 3) 4)", "24")
+    
+    def test_mult_11(self):
+        self.assertEvaluatesRepr("(* (* (* (* (* 2 3) 4) 5) 6) 7)", "5040")
+    
+    def test_mult_12(self):
+        self.assertEvaluatesRepr("(* 2 (* 3 (* 4 (* 5 (* 6 7)))))", "5040"    )
+    
+    '''
+    Aritmethic operations: /
+    '''
 
+    def test_div_1(self):
+        self.assertEvaluatesRepr("(/ 10 2)", "5")
+    
+    def test_div_2(self):
+        self.assertEvaluatesRepr("(/ 100 50)", "2")
+    
+    def test_div_3(self):
+        self.assertEvaluatesRepr("(/ 1000 30)", "33")
+    
+    # def test_div_4(self):
+    #     self.assertEvaluatesRepr("(/ 248 -2)", "124")
+    
+    def test_div_5(self):
+        self.assertEvaluatesRepr("(/ 536870911 1)", "536870911")
+    
+    def test_div_7(self):
+        self.assertEvaluatesRepr("(/ -536870912 1)", "-536870912")
+    
+    def test_div_9(self):
+        self.assertEvaluatesRepr("(/ 33 (/ 12 4))", "11")
+    
+    def test_div_10(self):
+        self.assertEvaluatesRepr("(/ (/ 3 1) 1)", "3")
+    
+    def test_div_11(self):
+        self.assertEvaluatesRepr("(/ (/ (/ (/ (/ 1000 2) 5) 3) 3) 11)", "1")
+    
     '''
     Boolean: Not
     '''
