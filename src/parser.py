@@ -164,6 +164,7 @@ def p_np_seen_alternate(p):
     global asm
     if_alternate_function = primitives["if_alternate"]
     asm += if_alternate_function(cond_label_stack)
+
 def p_comparison_primitive(p):
     '''
     comparison_primitive : '(' np_compar_seen_paren comparison_op np_compar_seen_operator compar_operands ')'

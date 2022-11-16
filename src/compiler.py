@@ -16,5 +16,5 @@ def create_binary(program):
 
 
 if __name__ == '__main__':
-    program = '''(< 30 50)'''
+    program = '''(/ 5 10)'''
     create_binary(program)

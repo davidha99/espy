@@ -227,26 +227,45 @@ def substraction(*argv):
         asm = "\tsubl %%eax, %s(%%esp) \n" % str(si)    # This means si(esp) = n(esp) - eax
         return temp, asm
 
-# @define_primitive('multiplication')
-# def multiplication(*argv):
-#     si = argv[0]  # stack index
-#     operands = argv[1]
-#     indv_operand = argv[2]
+@define_primitive('multiplication')
+def multiplication(*argv):
+    si = argv[0]  # stack index
+    operands = argv[1]
+    indv_operand = argv[2]
     
-#     if indv_operand:
-#         temp = operands[-1]
-#         asm = "\tmovl %%eax, %s(%%esp)\n" % str(si)     # This means si(esp) = eax
-#         return temp, asm
-#     else:
-#         temp = operands[-2] * operands[-1]
-#         # asm = "\tsubl $%s, %s(%%esp) \n" % (num_tag, str(si))
-#         asm = "\tmovl $%s, %%edx \n" % (num_tag)
-#         asm += "\tmovl %s(%%esp), %%ebx\n" % str(si)  # Multiplicatiopn works different
-#         asm += "\tmul %ebx\n"   # This means si(esp) = n(esp) * eax
-#         # asm += "\tmovl %%edx, %%eax\n" % str(si)
-#         asm += "\tmovl %%eax, %s(%%esp)\n" % str(si)
+    if indv_operand:
+        temp = operands[-1]
+        asm = "\tmovl %%eax, %s(%%esp)\n" % str(si)     # This means si(esp) = eax
+        return temp, asm
+    else:
+        temp = operands[-2] * operands[-1]
+        asm = ""
+        asm += "\tmovl %s(%%esp), %%ebx\n" % str(si)
+        asm += "\timul %ebx, %eax\n"                    # This means eax *= ebx
+        asm += "\tmovl %%eax, %s(%%esp)\n" % str(si)
 
-#         return temp, asm
+        return temp, asm
+
+@define_primitive('division')
+def division(*argv):
+    si = argv[0]  # stack index
+    operands = argv[1]
+    indv_operand = argv[2]
+    
+    if indv_operand:
+        temp = operands[-1]
+        asm = "\tmovl %%eax, %s(%%esp)\n" % str(si)     # This means si(esp) = eax
+        return temp, asm
+    else:
+        temp = operands[-2] * operands[-1]
+        asm = ""
+        asm += "\tmovl $0, %edx\n"                           # Clear remainder
+        asm += "\tmovl %s(%%esp), %%ebx\n" % str(si)        # Divisor
+        asm += "\tdiv %ebx\n"                    # This means eax /= ebx, the remainder is set in edx
+        asm += "\tsal   $%s, %%eax\n" % num_shift
+        asm += "\tmovl %%eax, %s(%%esp)\n" % str(si)
+
+        return temp, asm
 
 
 @define_primitive('and')
