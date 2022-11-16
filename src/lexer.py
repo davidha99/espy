@@ -14,10 +14,11 @@ reserved = {
     'boolean?': 'ISBOOLEAN',
     'char?': 'ISCHAR',
     'if': 'IF', 
-    'define': 'DEFINE'
+    'define': 'DEFINE',
+    'let': 'LET'
 }
 
-literals = ['(', ')', '+', '-', '*', '/']
+literals = ['(', ')', '+', '-', '*', '/', '[', ']']
 
 tokens = ['ID', 'NUM', 'BOOLEAN', 'CHAR', 'NULL'] + list(reserved.values())
 
@@ -77,6 +78,9 @@ if __name__ == "__main__":
     /
     +
     -
+    let
+    [
+    ]
     '''
 
     # Give the lexer some input
