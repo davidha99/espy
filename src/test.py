@@ -763,7 +763,93 @@ class ImmediateTest(TestCase):
 
     def test_not_num_f(self):
         self.assertEvaluatesRepr("(not (num? #f))", "#t")
-    
+    '''
+    Comparison: >
+    '''
+    def test_gt_1(self):
+        self.assertEvaluatesRepr("(> 2 4)", "#f")
+    # def test_gt_2(self):
+    #     self.assertEvaluatesRepr("(> 800 450)", "#t")   ##<unknown 0x00000c2f>
+    # def test_gt_3(self):
+        # self.assertEvaluatesRepr("(> -1 -2)", "#t")
+    def test_gt_4(self):
+        self.assertEvaluatesRepr("(> 10 10)", "#f")
+    # def test_gt_5(self):
+    #     self.assertEvaluatesRepr("(> #t 1)", "#t")
+    # def test_gt_6(self):
+    #     self.assertEvaluatesRepr("(> #t #f)", "#f")
+    # def test_gt_7(self):
+    #     self.assertEvaluatesRepr("(> \#A \#B)", "#f")
+    '''
+    Comparison: <
+    '''
+    def test_lt_1(self):
+        self.assertEvaluatesRepr("(< 2 4)", "#t")
+    # def test_lt_2(self):
+    #     self.assertEvaluatesRepr("(< 800 450)", "#f")   ##<unknown 0x00000c2f>
+    # def test_lt_3(self):
+    #     self.assertEvaluatesRepr("(< -1 -2)", "#f")
+    def test_lt_4(self):
+        self.assertEvaluatesRepr("(< 10 10)", "#f")
+    # def test_lt_5(self):
+        # self.assertEvaluatesRepr("(< #t 1)", "#f")
+    # def test_lt_6(self):
+    #     self.assertEvaluatesRepr("(< #t #f)", "#f")
+    # def test_lt_7(self):
+    #     self.assertEvaluatesRepr("(< \#A \#B)", "#f")
+    '''
+    Comparison: >=
+    '''
+    def test_ge_1(self):
+        self.assertEvaluatesRepr("(>= 2 4)", "#f")
+    # def test_ge_2(self):
+    #     self.assertEvaluatesRepr("(>= 800 450)", "#t")    ##<unknown 0x00000c2f>
+    # def test_ge_3(self):
+        # self.assertEvaluatesRepr("(>= -1 -2)", "#t")
+    def test_ge_4(self):
+        self.assertEvaluatesRepr("(>= 10 10)", "#t")
+    # def test_ge_5(self):
+        # self.assertEvaluatesRepr("(>= #f 0)", "#f")
+    # def test_ge_6(self):
+    #     self.assertEvaluatesRepr("(>= #t #f)", "#t")
+    # def test_ge_7(self):
+    #     self.assertEvaluatesRepr("(>= \#A \#B)", "#f")
+    '''
+    Comparison: <=
+    '''
+    def test_le_1(self):
+        self.assertEvaluatesRepr("(<= 2 4)", "#t")
+    # def test_le_2(self):
+        # self.assertEvaluatesRepr("(<= 800 450)", "#f")
+    # def test_le_3(self):
+        # self.assertEvaluatesRepr("(<= -1 -2)", "#f")
+    def test_le_4(self):
+        self.assertEvaluatesRepr("(<= 10 10)", "#t")
+    # # def test_le_5(self):
+    #     self.assertEvaluatesRepr("(<= #t 1)", "#f")
+    # def test_le_6(self):
+    #     self.assertEvaluatesRepr("(<= #t #f)", "#f")
+    # def test_le_7(self):
+    #     self.assertEvaluatesRepr("(<= \#A \#B)", "#f")
+    '''
+    Comparison: ==
+    '''
+    def test_eq_1(self):
+        self.assertEvaluatesRepr("(== 2 4)", "#f")
+    # def test_eq_2(self):
+    #     self.assertEvaluatesRepr("(== 800 450)", "#f")  ##<unknown 0x00000c2f>
+    # def test_eq_3(self):
+        # self.assertEvaluatesRepr("(== -5 -5)", "#t")
+    def test_eq_4(self):
+        self.assertEvaluatesRepr("(== 10 10)", "#t")
+    # def test_eq_5(self):
+        # self.assertEvaluatesRepr("(== #f 0)", "#f")
+    # def test_eq_6(self):
+    #     self.assertEvaluatesRepr("(== #t #t)", "#t")
+    # def test_eq_7(self):
+    #     self.assertEvaluatesRepr("(== \#A \#A)", "#t")
+    # def test_eq_8(self):
+    #     self.assertEvaluatesRepr("(== \#A \#B)", "#f")
     '''
     Boolean: And/Or
     '''
