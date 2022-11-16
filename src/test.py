@@ -167,76 +167,76 @@ class ImmediateTest(TestCase):
     def test_char_a(self):
         self.assertEvaluatesRepr("\#a", "\#a")
 
-    def test_char_a(self):
+    def test_char_b(self):
         self.assertEvaluatesRepr("\#b", "\#b")
 
-    def test_char_a(self):
+    def test_char_c(self):
         self.assertEvaluatesRepr("\#c", "\#c")
 
-    def test_char_a(self):
+    def test_char_d(self):
         self.assertEvaluatesRepr("\#d", "\#d")
 
-    def test_char_a(self):
+    def test_char_f(self):
         self.assertEvaluatesRepr("\#f", "\#f")
 
-    def test_char_a(self):
+    def test_char_g(self):
         self.assertEvaluatesRepr("\#g", "\#g")
 
-    def test_char_a(self):
+    def test_char_h(self):
         self.assertEvaluatesRepr("\#h", "\#h")
 
-    def test_char_a(self):
+    def test_char_i(self):
         self.assertEvaluatesRepr("\#i", "\#i")
 
-    def test_char_a(self):
+    def test_char_j(self):
         self.assertEvaluatesRepr("\#j", "\#j")
 
-    def test_char_a(self):
+    def test_char_k(self):
         self.assertEvaluatesRepr("\#k", "\#k")
 
-    def test_char_a(self):
+    def test_char_l(self):
         self.assertEvaluatesRepr("\#l", "\#l")
 
-    def test_char_a(self):
+    def test_char_m(self):
         self.assertEvaluatesRepr("\#m", "\#m")
 
-    def test_char_a(self):
+    def test_char_n(self):
         self.assertEvaluatesRepr("\#n", "\#n")
 
-    def test_char_a(self):
+    def test_char_o(self):
         self.assertEvaluatesRepr("\#o", "\#o")
 
-    def test_char_a(self):
+    def test_char_p(self):
         self.assertEvaluatesRepr("\#p", "\#p")
 
-    def test_char_a(self):
+    def test_char_q(self):
         self.assertEvaluatesRepr("\#q", "\#q")
 
-    def test_char_a(self):
+    def test_char_r(self):
         self.assertEvaluatesRepr("\#r", "\#r")
 
-    def test_char_a(self):
+    def test_char_s(self):
         self.assertEvaluatesRepr("\#s", "\#s")
 
-    def test_char_a(self):
+    def test_char_t(self):
         self.assertEvaluatesRepr("\#t", "\#t")
 
-    def test_char_a(self):
+    def test_char_u(self):
         self.assertEvaluatesRepr("\#u", "\#u")
 
-    def test_char_a(self):
+    def test_char_v(self):
         self.assertEvaluatesRepr("\#v", "\#v")
 
-    def test_char_a(self):
+    def test_char_w(self):
         self.assertEvaluatesRepr("\#w", "\#w")
 
-    def test_char_a(self):
+    def test_char_x(self):
         self.assertEvaluatesRepr("\#x", "\#x")
 
-    def test_char_a(self):
+    def test_char_y(self):
         self.assertEvaluatesRepr("\#y", "\#y")
 
-    def test_char_a(self):
+    def test_char_z(self):
         self.assertEvaluatesRepr("\#z", "\#z")
     
     '''

@@ -22,6 +22,8 @@ class EspyTypeError(CompilerException):
     # 'TypeError' is a built-in Python exception
     pass
 
+class EspyNameError(CompilerException):
+    pass
 
 class EspySyntaxError(CompilerException):
     # SyntaxError is also a built-in Python exception

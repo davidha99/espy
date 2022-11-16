@@ -17,8 +17,13 @@ from literals import (
     num_mask,
     num_tag,
     bool_f,
-    bool_bit)
-from utils import check_argument_number, check_argument_type
+    bool_bit
+    )
+
+from utils import (
+    check_argument_number, 
+    check_argument_type, 
+    )
 
 primitives = {}
 

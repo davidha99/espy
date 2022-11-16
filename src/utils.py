@@ -1,4 +1,4 @@
-from errors import EspyTypeError, InvalidArgumentNumber
+from errors import EspyTypeError, InvalidArgumentNumber, EspyNameError
 from literals import is_boolean, is_char, is_null, is_num
 
 
@@ -94,3 +94,31 @@ def typeof(arg):
         return "char"
     elif is_null(arg):
         return "null"
+    else:
+        return "variable"
+
+
+# def check_defined_variable(variable_name, environment):
+#     if variable_name not in environment.keys():
+#         raise EspyNameError("Variable %s is not defined" % variable_name)
+
+    
+# def load_from_memory(memory_idx=None, variable_name=None, environment=None):
+#     if memory_idx is not None:
+#         return "\tmovl %s(%%esp), %%eax\n" % memory_idx
+#     elif variable_name is not None and environment is not None:
+#         variable_index = environment[variable_name]
+#         check_defined_variable(variable_name, environment)
+#         return "\tmovl %s(%%esp), %%eax\n" % str(variable_index)
+
+def save_in_memory(memory_idx):
+    return "\tmovl %%eax, %s(%%esp)\n" % memory_idx
+    
+# def load_variable_from_memory(variable_name, environment):
+#     variable_index = environment[variable_name]
+#     check_defined_variable(variable_name, environment)
+#     return "\tmovl %s(%%esp), %%eax\n" % str(variable_index)
+
+
+# def is_variable(x):
+#     return typeof(x) == "variable"

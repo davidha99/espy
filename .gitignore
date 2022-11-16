@@ -1,2 +1,3 @@
 LICENSE
 /.vscode/*
+src/ply/__pycache__/*
