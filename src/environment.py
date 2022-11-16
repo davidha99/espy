@@ -5,8 +5,9 @@ class Symbol:
         self.value = value
 
 class Environment:
-    def __init__(self) -> None:
+    def __init__(self, name = None) -> None:
         self.environment = {}
+        self.name = name
 
     # def add_entry(self, name, memory_idx):
     #     symbol = Symbol(name, memory_idx)
@@ -19,11 +20,11 @@ class Environment_Stack:
     def __init__(self) -> None:
         self.stack = []
 
-    def scope_enter(self):
+    def scope_enter(self, name = None):
         '''
         Causes a new environment to be pushed on the top of the stack, representing a new scope
         '''
-        new_environment = Environment()
+        new_environment = Environment(name)
         self.stack.append(new_environment)
         
 
@@ -48,16 +49,6 @@ class Environment_Stack:
             sym = Symbol(name, memory_idx)
         topmost_scope = self.stack[-1]
         topmost_scope.add_entry(name, sym)
-        # La siguiente línea tal vez se puede quitar
-        self.stack[-1] = topmost_scope
-    
-    def scope_update(self, name, sym):
-        '''
-        Updates the topmost environment of the stack, mapping <name> to the symbol structure <sym>.
-        '''
-        topmost_scope = self.stack[-1]
-        topmost_scope.environment[name] = sym
-        self.stack[-1] = topmost_scope
 
     def scope_lookup(self, name):
         '''

@@ -16,5 +16,6 @@ def create_binary(program):
 
 
 if __name__ == '__main__':
-    program = '''(+ 1 (- 1 2 3) 3)'''
+    program = '''(let ([x 1]) (let ([y 2]) (let ([z 3]) (* x y (+ z x)))))'''
     create_binary(program)
+    

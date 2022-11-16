@@ -38,11 +38,12 @@ func_label_counter = 1
 memory_stack_index = 0  # Start at byte 0
 environment_stack = Environment_Stack()
 binding_stack = []
+scope_counter = 1
 
 
 def p_program(p):
     '''
-    program : expr
+    program : np_gbl_scope expr
     '''
     global asm
     with open("espy.s", "w") as f:
@@ -53,7 +54,14 @@ def p_program(p):
         asm += emit_stack_header("entry_point")
         asm += "L_entry_point:\n"
         cond_label_counter = 1
+    environment_stack.scope_exit()  # Erase Global scope
     p[0] = "Parsed"
+
+def p_np_gbl_scope(p):
+    "np_gbl_scope :"
+    global environment_stack
+    global scope_counter
+    environment_stack.scope_enter("global")    # Global scope
 
 def p_expr(p):
     '''
@@ -385,14 +393,20 @@ def p_let_binding(p):
     '''
     global environment_stack
     global memory_stack_index
-    memory_stack_index = 0
+    global scope_counter
+    memory_stack_index += 4
     environment_stack.scope_exit()
+    scope_counter -= 1
+
 
 #NP After LET lecture
-def p_seen_let(p):
+def p_np_seen_let(p):
     "np_seen_let :"
     global environment_stack
-    environment_stack.scope_enter()
+    global scope_counter
+    environment_stack.scope_enter(scope_counter)
+    scope_counter += 1
+    
 
 def p_binding_list(p):
     '''
@@ -419,7 +433,6 @@ def p_np_seen_bind_expr(p):
     var = binding_stack.pop()
     symbol = environment_stack.scope_lookup_current(var)
     symbol.value = global_operand_stack.pop()
-    environment_stack.scope_update(var, symbol)
 
 #NP After '[' lecture inside let_binding
 def p_np_let_seen_bracket(p):
