@@ -2,14 +2,33 @@ import sys
 import ply.yacc as yacc
 from lexer import tokens
 from literals import literal_repr
-from emitter import emit_function_header, emit_literal, emit_function_footer, emit_stack_header
-from primitives import if_consequent_expression, primitives
-from utils import create_unique_if_labels, create_unique_func_labels
+
+from emitter import (
+    emit_function_header, 
+    emit_literal,
+    emit_function_footer, 
+    emit_stack_header 
+    )
+
+from primitives import (
+    if_consequent_expression, 
+    primitives
+    )
+
+from utils import (
+    create_unique_if_labels, 
+    create_unique_func_labels, 
+    save_in_memory,
+    )
+
+from environment import Environment_Stack
+from errors import EspyNameError
 
 asm = ""
 asm += emit_function_header("entry_point")
 asm += emit_stack_header("entry_point")
 asm += "L_entry_point:\n"
+environment = {}
 global_operand_stack = []
 global_operator_stack = []
 cond_label_stack = []
@@ -17,6 +36,8 @@ cond_label_counter = 1
 func_label_stack = []
 func_label_counter = 1
 memory_stack_index = 0  # Start at byte 0
+environment_stack = Environment_Stack()
+binding_stack = []
 
 
 def p_program(p):
@@ -37,12 +58,15 @@ def p_program(p):
 def p_expr(p):
     '''
     expr : literal
+         | variable
          | unary_primitive
          | conditional_expr
          | arithmetic_primitive
          | comparison_primitive
          | definition
+         | let_binding
     '''
+    # p[0] = p[1]
 
 def p_literal(p):
     '''
@@ -50,13 +74,35 @@ def p_literal(p):
               | BOOLEAN
               | CHAR
               | NULL
-              | ID
     '''
     global asm
     global global_operand_stack
-    global memory_stack_index
     global_operand_stack.append(p[1])
     asm += emit_literal(global_operand_stack[-1])
+    p[0] = p[1]
+
+def p_variable(p):
+    '''
+    variable : ID
+    '''
+    global global_operand_stack
+    global environment_stack
+    global asm
+    var = p[1]
+
+    # Check if variable is in the environment
+    # .scope_lookup() returns all information of the variable (the symbol)
+    symbol = environment_stack.scope_lookup(var)
+
+    # If it is, push the value of the variable to the operand stack
+    if symbol is not None:
+        global_operand_stack.append(symbol.value)
+    else:
+        raise EspyNameError("Variable '%s' is not defined" % var)
+
+    # Generate intel assembly code to load value of variable into register
+    asm += emit_literal(global_operand_stack[-1])
+    
     p[0] = p[1]
 
 def p_unary_primitive(p):
@@ -216,7 +262,7 @@ def p_arithmetic_primitive(p):
     global_operator_stack.pop()     # Pop the operator flag ('(')
     global_operand_stack.pop(-2)        # Pop the operand flag ('(')
     asm += "\tmovl %s(%%esp), %%eax\n" % str(memory_stack_index)   # We must get the value from n-1(esp) to eax, so that we can continue working with it
-    memory_stack_index += 4         # Reset the memory index to 0                                     # Update the asm stack index every time we close a \paren
+    memory_stack_index += 4         # Update the asm stack index every time we close a \paren
 
 #NP After parenthesis lecture
 def p_np_arithm_seen_paren(p):
@@ -333,6 +379,77 @@ def p_with_multiple_chars(p):
                         | empty
     '''
 
+def p_let_binding(p):
+    '''
+    let_binding : '(' LET np_seen_let binding_list expr ')'
+    '''
+    global environment_stack
+    global memory_stack_index
+    memory_stack_index = 0
+    environment_stack.scope_exit()
+
+#NP After LET lecture
+def p_seen_let(p):
+    "np_seen_let :"
+    global environment_stack
+    environment_stack.scope_enter()
+
+def p_binding_list(p):
+    '''
+    binding_list : '(' with_multiple_bindings ')'
+    '''
+    
+def p_with_multiple_bindings(p):
+    '''
+    with_multiple_bindings : '[' np_let_seen_bracket ID np_seen_variable expr np_seen_bind_expr ']'
+                           | empty
+    '''
+    global environment_stack
+    global asm
+    var = p[3]
+    symbol = environment_stack.scope_lookup(var)
+    asm += save_in_memory(symbol.memory_idx)
+
+#NP After expression lecture in let binding
+def p_np_seen_bind_expr(p):
+    "np_seen_bind_expr :"
+    global global_operand_stack
+    global environment_stack
+    global binding_stack
+    var = binding_stack.pop()
+    symbol = environment_stack.scope_lookup_current(var)
+    symbol.value = global_operand_stack.pop()
+    environment_stack.scope_update(var, symbol)
+
+#NP After '[' lecture inside let_binding
+def p_np_let_seen_bracket(p):
+    "np_let_seen_bracket :"
+    global memory_stack_index
+    memory_stack_index -= 4
+
+def p_np_seen_variable(p):
+    "np_seen_variable :"
+    global environment_stack
+    global memory_stack_index
+    global binding_stack
+    variable = p[-1]
+    binding_stack.append(variable)
+    environment_stack.scope_bind(name=variable, memory_idx=memory_stack_index)
+
+# def p_expr_binding(p):
+#     '''
+#     expr_binding : literal
+#                  | variable
+#                  | unary_primitive
+#                  | conditional_expr
+#                  | arithmetic_primitive
+#                  | definition
+#                  | let_binding
+#     '''
+#     global asm
+#     global memory_stack_index
+#     asm += save_to_memory(str(memory_stack_index))
+#     p[0] = p[1]
 
 # Error rule for syntax errors
 def p_error(p):
