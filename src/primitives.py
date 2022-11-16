@@ -259,8 +259,9 @@ def division(*argv):
     else:
         temp = operands[-2] * operands[-1]
         asm = ""
+        asm += "\tmovl %eax, %ebx\n"
         asm += "\tmovl $0, %edx\n"                           # Clear remainder
-        asm += "\tmovl %s(%%esp), %%ebx\n" % str(si)        # Divisor
+        asm += "\tmovl %s(%%esp), %%eax\n" % str(si)        # Divisor
         asm += "\tdiv %ebx\n"                    # This means eax /= ebx, the remainder is set in edx
         asm += "\tsal   $%s, %%eax\n" % num_shift
         asm += "\tmovl %%eax, %s(%%esp)\n" % str(si)
