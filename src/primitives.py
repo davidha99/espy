@@ -242,6 +242,7 @@ def multiplication(*argv):
         asm = ""
         asm += "\tmovl %s(%%esp), %%ebx\n" % str(si)
         asm += "\timul %ebx, %eax\n"                    # This means eax *= ebx
+        asm += "\tsar   $%s, %%eax\n" % num_shift       # Shift to the right the hex answer
         asm += "\tmovl %%eax, %s(%%esp)\n" % str(si)
 
         return temp, asm
@@ -259,11 +260,11 @@ def division(*argv):
     else:
         temp = operands[-2] * operands[-1]
         asm = ""
-        asm += "\tmovl %eax, %ebx\n"
+        asm += "\tmovl %eax, %ebx\n"                        # Divisor
         asm += "\tmovl $0, %edx\n"                           # Clear remainder
-        asm += "\tmovl %s(%%esp), %%eax\n" % str(si)        # Divisor
+        asm += "\tmovl %s(%%esp), %%eax\n" % str(si)        # Dividend
         asm += "\tdiv %ebx\n"                    # This means eax /= ebx, the remainder is set in edx
-        asm += "\tsal   $%s, %%eax\n" % num_shift
+        asm += "\tsal   $%s, %%eax\n" % num_shift   # Shift to the left the hex answer
         asm += "\tmovl %%eax, %s(%%esp)\n" % str(si)
 
         return temp, asm
