@@ -245,9 +245,11 @@ def multiplication(*argv):
     else:
         temp = operands[-2] * operands[-1]
         asm = ""
-        asm += "\tmovl %s(%%esp), %%ebx\n" % str(si)
-        asm += "\timul %ebx, %eax\n"                    # This means eax *= ebx
-        asm += "\tsar   $%s, %%eax\n" % num_shift       # Shift to the right the hex answer
+        asm += "\tmovl %s(%%esp), %%edx\n" % str(si)
+        asm += "\tsar $%s, %%edx\n" % num_shift
+        asm += "\tsar $%s, %%eax\n" % num_shift
+        asm += "\timul %edx, %eax\n"                    # This means eax *= ebx
+        asm += "\tsal   $%s, %%eax\n" % num_shift       # Shift to the left the hex answer
         asm += "\tmovl %%eax, %s(%%esp)\n" % str(si)
 
         return temp, asm

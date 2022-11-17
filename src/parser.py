@@ -415,12 +415,15 @@ def p_binding_list(p):
     
 def p_with_multiple_bindings(p):
     '''
-    with_multiple_bindings : '[' np_let_seen_bracket ID np_seen_variable expr np_seen_bind_expr ']'
-                           | empty
+    with_multiple_bindings : with_multiple_bindings '[' np_let_seen_bracket ID np_seen_variable expr np_seen_bind_expr ']'
+                           | '[' np_let_seen_bracket ID np_seen_variable expr np_seen_bind_expr ']'
     '''
     global environment_stack
     global asm
-    var = p[3]
+    if len(p) == 8:
+        var = p[3]
+    else:
+        var = p[4]
     symbol = environment_stack.scope_lookup(var)
     asm += save_in_memory(symbol.memory_idx)
 

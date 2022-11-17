@@ -56,7 +56,7 @@ class Environment_Stack:
         <name> exactly. If no match is found, it returns null
         '''
         for scope in reversed(self.stack):
-            if name in scope.environment.keys():
+            if name in scope.environment.keys() and scope.environment[name].value is not None:
                 return scope.environment[name]
         return None
 
