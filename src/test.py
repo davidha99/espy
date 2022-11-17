@@ -746,17 +746,17 @@ class ImmediateTest(TestCase):
     def test_mult_4(self):
         self.assertEvaluatesRepr("(* -2 -3)", "6")
     
-    # def test_mult_5(self):
-    #     self.assertEvaluatesRepr("(* 536870911 1)", "536870911")
+    def test_mult_5(self):
+        self.assertEvaluatesRepr("(* 536870911 1)", "536870911")
     
-    # def test_mult_6(self):
-    #     self.assertEvaluatesRepr("(* 536870911 -1)", "-536870911")
+    def test_mult_6(self):
+        self.assertEvaluatesRepr("(* 536870911 -1)", "-536870911")
     
-    # def test_mult_7(self):
-    #     self.assertEvaluatesRepr("(* -536870912 1)", "-536870912")
+    def test_mult_7(self):
+        self.assertEvaluatesRepr("(* -536870912 1)", "-536870912")
     
-    # def test_mult_8(self):
-    #     self.assertEvaluatesRepr("(* -536870911 -1)", "536870911")
+    def test_mult_8(self):
+        self.assertEvaluatesRepr("(* -536870911 -1)", "536870911")
     
     def test_mult_9(self):
         self.assertEvaluatesRepr("(* 2 (* 3 4))", "24")
@@ -781,7 +781,7 @@ class ImmediateTest(TestCase):
         self.assertEvaluatesRepr("(/ 100 50)", "2")
     
     def test_div_3(self):
-        self.assertEvaluatesRepr("(/ 1000 30)", "33")
+        self.assertEvaluatesRepr("(/ -1000 30)", "-33")
     
     # def test_div_4(self):
     #     self.assertEvaluatesRepr("(/ 248 -2)", "124")
@@ -790,7 +790,7 @@ class ImmediateTest(TestCase):
         self.assertEvaluatesRepr("(/ 536870911 1)", "536870911")
     
     def test_div_7(self):
-        self.assertEvaluatesRepr("(/ -536870912 1)", "-536870912")
+        self.assertEvaluatesRepr("(/ -536870911 1)", "-536870911")
     
     def test_div_9(self):
         self.assertEvaluatesRepr("(/ 33 (/ 12 4))", "11")
