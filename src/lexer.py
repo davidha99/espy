@@ -15,7 +15,8 @@ reserved = {
     'char?': 'ISCHAR',
     'if': 'IF', 
     'define': 'DEFINE',
-    'let': 'LET'
+    'let': 'LET',
+    'var': 'VAR'
 }
 
 literals = ['(', ')', '+', '-', '*', '/', '[', ']', '>', '<']
