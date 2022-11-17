@@ -21,7 +21,7 @@ def create_binary(program):
 
 
 if __name__ == '__main__':
-    # program = '''(var [x 2])'''
+    # program = '''(let ([x 12]) (let ([x (+ x x)]) (let ([x (+ x x)]) (let ([x (+ x x)]) (+ x x)))))'''
     while True:
         program = input("espy> ")
         if program == "exit":
