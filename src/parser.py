@@ -23,7 +23,6 @@ from utils import (
 
 from environment import Environment_Stack, Environment, Global_Environment
 from errors import EspyNameError
-# import compiler
 
 asm = ""
 asm += emit_function_header("entry_point")
@@ -40,7 +39,6 @@ memory_stack_index = 0  # Start at byte 0
 environment_stack = Environment_Stack()
 binding_stack = []
 scope_counter = 0
-
 
 def p_program(p):
     '''
