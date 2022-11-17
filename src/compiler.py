@@ -4,9 +4,9 @@ from parser import parser
 
 
 def create_binary(program):
-    """Given text of a scheme program, write assembly and link it into an
+    """
+    Given text of a scheme program, write assembly and link it into an
     executable.
-
     """
     parser_status = parser.parse(program)
 
