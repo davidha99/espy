@@ -69,6 +69,7 @@ def p_np_gbl_scope(p):
 def p_expr(p):
     '''
     expr : literal
+         | variable
          | unary_primitive
          | conditional_expr
          | arithmetic_primitive
@@ -85,7 +86,6 @@ def p_literal(p):
               | BOOLEAN
               | CHAR
               | NULL
-              | variable
     '''
     global asm
     global global_operand_stack
@@ -427,8 +427,8 @@ def p_binding_list(p):
     
 def p_with_multiple_bindings(p):
     '''
-    with_multiple_bindings : with_multiple_bindings '[' np_let_seen_bracket ID np_seen_variable expr np_seen_bind_expr ']'
-                           | '[' np_let_seen_bracket ID np_seen_variable expr np_seen_bind_expr ']'
+    with_multiple_bindings : with_multiple_bindings '[' np_let_seen_bracket ID np_seen_variable expr np_seen_var_expr ']'
+                           | '[' np_let_seen_bracket ID np_seen_variable expr np_seen_var_expr ']'
     '''
     global environment_stack
     global asm
