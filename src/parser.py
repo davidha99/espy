@@ -23,6 +23,7 @@ from utils import (
 
 from environment import Environment_Stack
 from errors import EspyNameError
+# import compiler
 
 asm = ""
 asm += emit_function_header("entry_point")
@@ -38,12 +39,20 @@ func_label_counter = 1
 memory_stack_index = 0  # Start at byte 0
 environment_stack = Environment_Stack()
 binding_stack = []
-scope_counter = 0
+scope_counter = 1
+
+'''
+    Global stack access
+'''
+def get_global_stack():
+    return environment_stack
+def set_global_stack(value):
+    environment_stack = value
 
 
 def p_program(p):
     '''
-    program : np_gbl_scope expr
+    program : expr
     '''
     global asm
     global global_operand_stack
@@ -55,16 +64,16 @@ def p_program(p):
         asm += emit_stack_header("entry_point")
         asm += "L_entry_point:\n"
         cond_label_counter = 1
-    environment_stack.scope_exit()  # Erase Global scope
+    # environment_stack.scope_exit()  # Erase Global scope
 
     p[0] = "Parsed"
 
-def p_np_gbl_scope(p):
-    "np_gbl_scope :"
-    global environment_stack
-    global scope_counter
-    environment_stack.scope_enter(scope_counter)    # Global scope
-    scope_counter += 1
+# def p_np_gbl_scope(p):
+#     "np_gbl_scope :"
+#     global environment_stack
+#     global scope_counter
+#     environment_stack.scope_enter(scope_counter)    # Global scope
+#     scope_counter += 1
 
 def p_expr(p):
     '''

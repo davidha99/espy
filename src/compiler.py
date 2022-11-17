@@ -1,5 +1,8 @@
 import os
+from environment import Environment_Stack
 from parser import parser
+
+environment_stack = Environment_Stack()
 
 
 def create_binary(program):
@@ -25,6 +28,7 @@ if __name__ == '__main__':
     # program = '''(var [x 2])'''
     # print(program)
     # create_binary(program)
+    # environment_stack.scope_enter(0)    # Global scope
     while True:
         program = input("espy> ")
         if program == "exit":
