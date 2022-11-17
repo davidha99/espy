@@ -69,6 +69,7 @@ def p_np_gbl_scope(p):
 def p_expr(p):
     '''
     expr : literal
+         | variable
          | unary_primitive
          | conditional_expr
          | arithmetic_primitive
@@ -85,7 +86,6 @@ def p_literal(p):
               | BOOLEAN
               | CHAR
               | NULL
-              | variable
     '''
     global asm
     global global_operand_stack

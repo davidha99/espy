@@ -22,6 +22,8 @@ def create_binary(program):
 
 if __name__ == '__main__':
     # program = '''(var [x 2])'''
+    # print(program)
+    # create_binary(program)
     while True:
         program = input("espy> ")
         if program == "exit":
