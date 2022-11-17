@@ -38,7 +38,7 @@ func_label_counter = 1
 memory_stack_index = 0  # Start at byte 0
 environment_stack = Environment_Stack()
 binding_stack = []
-scope_counter = 1
+scope_counter = 0
 
 
 def p_program(p):
@@ -46,6 +46,7 @@ def p_program(p):
     program : np_gbl_scope expr
     '''
     global asm
+    global global_operand_stack
     with open("espy.s", "w") as f:
         asm += emit_function_footer()
         f.write(asm)
@@ -55,24 +56,26 @@ def p_program(p):
         asm += "L_entry_point:\n"
         cond_label_counter = 1
     environment_stack.scope_exit()  # Erase Global scope
+
     p[0] = "Parsed"
 
 def p_np_gbl_scope(p):
     "np_gbl_scope :"
     global environment_stack
     global scope_counter
-    environment_stack.scope_enter("global")    # Global scope
+    environment_stack.scope_enter(scope_counter)    # Global scope
+    scope_counter += 1
 
 def p_expr(p):
     '''
     expr : literal
-         | variable
          | unary_primitive
          | conditional_expr
          | arithmetic_primitive
          | comparison_primitive
          | definition
          | let_binding
+         | global_var_declaration
     '''
     # p[0] = p[1]
 
@@ -82,6 +85,7 @@ def p_literal(p):
               | BOOLEAN
               | CHAR
               | NULL
+              | variable
     '''
     global asm
     global global_operand_stack
@@ -112,6 +116,16 @@ def p_variable(p):
     asm += emit_literal(global_operand_stack[-1])
     
     p[0] = p[1]
+
+def p_global_var_declaration(p):
+    '''
+    global_var_declaration : '(' VAR '[' np_let_seen_bracket ID np_seen_variable expr np_seen_var_expr ']' ')'
+    '''
+    global environment_stack
+    global asm
+    var = p[5]
+    symbol = environment_stack.scope_lookup(var)
+    asm += save_in_memory(symbol.memory_idx)
 
 def p_unary_primitive(p):
     '''
@@ -398,7 +412,6 @@ def p_let_binding(p):
     environment_stack.scope_exit()
     scope_counter -= 1
 
-
 #NP After LET lecture
 def p_np_seen_let(p):
     "np_seen_let :"
@@ -406,7 +419,6 @@ def p_np_seen_let(p):
     global scope_counter
     environment_stack.scope_enter(scope_counter)
     scope_counter += 1
-    
 
 def p_binding_list(p):
     '''
@@ -428,12 +440,12 @@ def p_with_multiple_bindings(p):
     asm += save_in_memory(symbol.memory_idx)
 
 #NP After expression lecture in let binding
-def p_np_seen_bind_expr(p):
-    "np_seen_bind_expr :"
+def p_np_seen_var_expr(p):
+    "np_seen_var_expr :"
     global global_operand_stack
     global environment_stack
     global binding_stack
-    var = binding_stack.pop()
+    var = binding_stack.pop()       # Variable's name has been saved before to update its value in Environment stack
     symbol = environment_stack.scope_lookup_current(var)
     symbol.value = global_operand_stack.pop()
 
@@ -448,8 +460,8 @@ def p_np_seen_variable(p):
     global environment_stack
     global memory_stack_index
     global binding_stack
-    variable = p[-1]
-    binding_stack.append(variable)
+    variable = p[-1]        
+    binding_stack.append(variable)    #  Save variable name to later update its value
     environment_stack.scope_bind(name=variable, memory_idx=memory_stack_index)
 
 # def p_expr_binding(p):
