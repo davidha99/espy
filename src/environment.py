@@ -1,3 +1,5 @@
+_global_environment  = None
+
 class Symbol:
     def __init__(self, name=None, memory_idx=None, value=None) -> None:
         self.name = name
@@ -34,6 +36,12 @@ class Environment_Stack:
         '''
         self.stack.pop()
 
+    def scope_pop(self):
+        '''
+        Returns the topmost environment. Used to save global environment
+        '''
+        return self.stack.pop()
+
     def scope_level(self):
         '''
         Returns the number of environments in the current stack (this is helpful to know whether 
@@ -69,5 +77,21 @@ class Environment_Stack:
         if name in topmost_scope.environment.keys():
             return topmost_scope.environment[name]
         return None
+    def insert_environment(self, global_env):
+        '''
+        Function to insert global environment every parse running
+        '''
+        self.stack.append(global_env)
 
+#Singleton Class for global environment
+class Global_Environment:
+    @staticmethod
+    def get_instance():
+        global _global_environment
+        if _global_environment is None:
+            _global_environment = Environment()
+        return _global_environment
+    def set_instance(value):
+        global _global_environment
+        _global_environment = value
 

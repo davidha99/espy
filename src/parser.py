@@ -21,8 +21,9 @@ from utils import (
     save_in_memory,
     )
 
-from environment import Environment_Stack
+from environment import Environment_Stack, Environment, Global_Environment
 from errors import EspyNameError
+# import compiler
 
 asm = ""
 asm += emit_function_header("entry_point")
@@ -55,7 +56,8 @@ def p_program(p):
         asm += emit_stack_header("entry_point")
         asm += "L_entry_point:\n"
         cond_label_counter = 1
-    environment_stack.scope_exit()  # Erase Global scope
+    Global_Environment.set_instance(environment_stack.scope_pop())
+    # environment_stack.scope_exit()  # Erase Global scope
 
     p[0] = "Parsed"
 
@@ -63,7 +65,9 @@ def p_np_gbl_scope(p):
     "np_gbl_scope :"
     global environment_stack
     global scope_counter
-    environment_stack.scope_enter(scope_counter)    # Global scope
+    global_env = Global_Environment.get_instance()
+    # environment_stack.scope_enter(scope_counter)    # Global scope
+    environment_stack.insert_environment(global_env)
     scope_counter += 1
 
 def p_expr(p):
