@@ -10,12 +10,21 @@ def create_binary(program):
     parser_status = parser.parse(program)
 
     if (parser_status == "Parsed"):
-        os.system("gcc espy.s runtime.c -o main")
+        os.system("gcc espy.s runtime.c -o main -w")
+        os.system("./main")
+        # r = open("main", 'r')
+        # print(str(r.readline()))
+        # r.close()
+
     else:
         exit()
 
 
 if __name__ == '__main__':
-    program = '''(/ -4000000 2)'''
-    create_binary(program)
+    # program = '''(var [x 2])'''
+    while True:
+        program = input("espy> ")
+        if program == "exit":
+            exit()
+        create_binary(program)
     
