@@ -1,10 +1,11 @@
 _global_environment  = None
 
 class Symbol:
-    def __init__(self, name=None, memory_idx=None, value=None) -> None:
+    def __init__(self, name=None, memory_idx=None, value=None, size=None) -> None:
         self.name = name
         self.memory_idx = memory_idx
         self.value = value
+        self.size = size
 
 class Environment:
     def __init__(self, name = None) -> None:

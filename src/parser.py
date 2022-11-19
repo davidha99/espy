@@ -39,6 +39,9 @@ memory_stack_index = 0  # Start at byte 0
 environment_stack = Environment_Stack()
 binding_stack = []
 scope_counter = 0
+memory_lists_index = -200   # Lists index, will be saved starting at this dir
+general_temp = None            # General temp helper
+# memory_lists_index = 0      # Index to save memory space
 
 def p_program(p):
     '''
@@ -79,7 +82,7 @@ def p_expr(p):
          | definition
          | let_binding
          | variable_declaration
-         | list
+         | list_declaration
     '''
     # p[0] = p[1]
 
@@ -111,14 +114,16 @@ def p_variable(p):
 
     # If it is, push the value of the variable to the operand stack
     if symbol is not None:
-        if symbol.value != list:
-            global_operand_stack.append(symbol.value)
-        else:
+        if type(symbol.value) is list:
             for x in symbol.value:
-                global_operand_stack.append(x)
+                global_operand_stack.append(x)        
+        else:
+            global_operand_stack.append(symbol.value)
     else:
         raise EspyNameError("Variable '%s' is not defined" % var)
 
+    if type(symbol.value) is list:
+        print(symbol.value)             # Hard coded list showing
     # Generate intel x386 assembly code to load value of variable into register
     asm += emit_literal(global_operand_stack[-1])
     
@@ -134,16 +139,30 @@ def p_variable_declaration(p):
     symbol = environment_stack.scope_lookup(var)
     asm += save_in_memory(symbol.memory_idx)
 
-def p_list(p):
+def p_list_declaration(p):
     '''
-    list : '(' LIST '[' np_seen_list_bracket ID np_seen_variable expr with_multiple_expr np_seen_list_expr ']' ')'
+    list_declaration : '(' LIST '[' np_seen_list_bracket ID np_seen_variable expr np_seen_list_expr with_multiple_list_expr ']' ')'
     '''
+    global memory_lists_index
+    global memory_stack_index
+    global general_temp
+    global global_operand_stack
+    
+    memory_lists_index = memory_stack_index         # Saving Lists index for next list to be read
+    memory_stack_index = general_temp               # Updating mem index to continue normal arguments
+    binding_stack.pop()                             # Poping var name
+    global_operand_stack.pop()                      # Poping fake bottom Flag ('[')
+
+    
     
 def p_np_seen_list_bracket(p):
     "np_seen_list_bracket :"
     global memory_stack_index
     global global_operand_stack
-    memory_stack_index -= 4
+    global memory_lists_index
+    global general_temp
+    general_temp = memory_stack_index       # Memory stack index must be saved to know where are we coming back
+    memory_stack_index = memory_lists_index        # Now memory points to last space at list section
     global_operand_stack.append('[')      # Fake bottom ('flag') to append list content
 
 
@@ -152,14 +171,30 @@ def p_np_seen_list_expr(p):
     global global_operand_stack
     global environment_stack
     global binding_stack
-    var = binding_stack.pop()       # Variable's name has been saved before to update its value in Environment stack
+    global memory_stack_index
+    global asm
+    var = binding_stack[-1]       # Variable's name has been saved before to update its value in Environment stack
     symbol = environment_stack.scope_lookup_current(var)
-    list_content = []
-    x = global_operand_stack.pop()
-    while(x != '['):
-        list_content.append(x)
-        x = global_operand_stack.pop()
-    symbol.value = list_content
+    if symbol.value == None:      
+        list_content = []
+    else:
+        list_content = symbol.value
+    list_content.append(global_operand_stack.pop())     
+    symbol.value = list_content                             # Update the Symbol content
+    symbol.size = len(list_content)                         # Update the Symbol size
+    asm += save_in_memory(memory_stack_index)               # Generate intel assembly instruction to move list value to its corresponding mem space
+    memory_stack_index -= 4                                 # Update Memory index to next space available
+
+    # x = global_operand_stack.pop()
+    # while(x != '['):
+    #     list_content.append(x)
+    #     x = global_operand_stack.pop()
+
+def p_with_multiple_list_expr(p):
+    '''
+    with_multiple_list_expr : with_multiple_list_expr expr np_seen_list_expr
+                       | empty
+    '''
     
 
 def p_unary_primitive(p):
