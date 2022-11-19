@@ -16,7 +16,8 @@ reserved = {
     'if': 'IF', 
     'define': 'DEFINE',
     'let': 'LET',
-    'var': 'VAR'
+    'var': 'VAR',
+    'list': 'LIST'
 }
 
 literals = ['(', ')', '+', '-', '*', '/', '[', ']', '>', '<']

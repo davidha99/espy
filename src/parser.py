@@ -78,7 +78,8 @@ def p_expr(p):
          | comparison_primitive
          | definition
          | let_binding
-         | global_var_declaration
+         | variable_declaration
+         | list
     '''
     # p[0] = p[1]
 
@@ -119,15 +120,42 @@ def p_variable(p):
     
     p[0] = p[1]
 
-def p_global_var_declaration(p):
+def p_variable_declaration(p):
     '''
-    global_var_declaration : '(' VAR '[' np_let_seen_bracket ID np_seen_variable expr np_seen_var_expr ']' ')'
+    variable_declaration : '(' VAR '[' np_seen_bracket ID np_seen_variable expr np_seen_var_expr ']' ')'
     '''
     global environment_stack
     global asm
     var = p[5]
     symbol = environment_stack.scope_lookup(var)
     asm += save_in_memory(symbol.memory_idx)
+
+def p_list(p):
+    '''
+    list : '(' LIST '[' np_seen_list_bracket ID np_seen_variable expr with_multiple_expr np_seen_list_expr ']' ')'
+    '''
+def p_np_seen_list_bracket(p):
+    "np_seen_list_bracket :"
+    global memory_stack_index
+    global global_operand_stack
+    memory_stack_index -= 4
+    global_operand_stack.append('[')      # Fake bottom ('flag') to append list content
+
+
+def p_np_seen_list_expr(p):
+    "np_seen_list_expr :"
+    global global_operand_stack
+    global environment_stack
+    global binding_stack
+    var = binding_stack.pop()       # Variable's name has been saved before to update its value in Environment stack
+    symbol = environment_stack.scope_lookup_current(var)
+    list_content = []
+    x = global_operand_stack.pop()
+    while(x != '['):
+        list_content.append(x)
+        x = global_operand_stack.pop()
+    symbol.value = list_content
+    
 
 def p_unary_primitive(p):
     '''
@@ -429,8 +457,8 @@ def p_binding_list(p):
     
 def p_with_multiple_bindings(p):
     '''
-    with_multiple_bindings : with_multiple_bindings '[' np_let_seen_bracket ID np_seen_variable expr np_seen_var_expr ']'
-                           | '[' np_let_seen_bracket ID np_seen_variable expr np_seen_var_expr ']'
+    with_multiple_bindings : with_multiple_bindings '[' np_seen_bracket ID np_seen_variable expr np_seen_var_expr ']'
+                           | '[' np_seen_bracket ID np_seen_variable expr np_seen_var_expr ']'
     '''
     global environment_stack
     global asm
@@ -452,8 +480,8 @@ def p_np_seen_var_expr(p):
     symbol.value = global_operand_stack.pop()
 
 #NP After '[' lecture inside let_binding
-def p_np_let_seen_bracket(p):
-    "np_let_seen_bracket :"
+def p_np_seen_bracket(p):
+    "np_seen_bracket :"
     global memory_stack_index
     memory_stack_index -= 4
 

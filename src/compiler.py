@@ -19,7 +19,7 @@ def create_binary(program):
 
 
 if __name__ == '__main__':
-    # program = '''(let ([x 1]) (let ([y 2]) (let ([z 3]) (* x y (+ z x)))))'''
+    # program = '''(list [arr 2 3 4 5])'''
     # create_binary(program)
     while True:
         program = input("espy> ")
