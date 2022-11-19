@@ -111,11 +111,15 @@ def p_variable(p):
 
     # If it is, push the value of the variable to the operand stack
     if symbol is not None:
-        global_operand_stack.append(symbol.value)
+        if symbol.value != list:
+            global_operand_stack.append(symbol.value)
+        else:
+            for x in symbol.value:
+                global_operand_stack.append(x)
     else:
         raise EspyNameError("Variable '%s' is not defined" % var)
 
-    # Generate intel assembly code to load value of variable into register
+    # Generate intel x386 assembly code to load value of variable into register
     asm += emit_literal(global_operand_stack[-1])
     
     p[0] = p[1]
@@ -134,6 +138,7 @@ def p_list(p):
     '''
     list : '(' LIST '[' np_seen_list_bracket ID np_seen_variable expr with_multiple_expr np_seen_list_expr ']' ')'
     '''
+    
 def p_np_seen_list_bracket(p):
     "np_seen_list_bracket :"
     global memory_stack_index
