@@ -1041,16 +1041,21 @@ class ImmediateTest(TestCase):
     def test_letrec_18(self):
         self.assertEvaluatesRepr("(letrec ([f (lambda (x acc) (if (zero? x) acc (f (sub1 x) (* acc x))))]) (f 5 1))", "120")
 
-    def test_letrec_19(self):
+    def test_letrec_19_1(self):
+        self.assertEvaluatesRepr("(letrec ([f (lambda (x) (if (zero? x) 0 (+ 1 (f (sub1 x)))))]) (f 63))", "63")
+
+    def test_letrec_19_2(self):
         self.assertEvaluatesRepr("(letrec ([f (lambda (x) (if (zero? x) 0 (+ 1 (f (sub1 x)))))]) (f 200))", "200")
     
-    def test_fibonacci(self):
-        self.assertEvaluatesRepr("(letrec ([fib (lambda (x) (if (<= x 2) 1 (+ (fib (- x 1))(fib (- x 2)))))]) (fib 6))", "8")
+    def test_fibonacci_rec(self):
+        self.assertEvaluatesRepr("(letrec ([fib (lambda (x) (if (<= x 2) 1 (+ 0 (fib (- x 1))(fib (- x 2)))))]) (fib 6))", "8")
     
-    def test_factorial(self):
+    def test_fibonacci_iterativo(self):
+        self.assertEvaluatesRepr("(letrec ([fib (lambda (n r1 r2) (if (< n 2) r2 (fib (- n 1) r2 (+ r1 r2))))]) (fib 6 0 1))", "8")
+    
+    def test_factorial_rec(self):
         self.assertEvaluatesRepr("(letrec ([fact (lambda (n) (if (== n 0) 1 (* n (fact (- n 1)))))]) (fact 3))", "6")
-
-
+    
 if __name__ == '__main__':
     main()
 

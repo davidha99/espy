@@ -95,8 +95,6 @@ def p_func_binding_list(p):
     func_binding_list : '(' with_multiple_func_bindings ')'
                       | NULL
     '''
-    global pointer_offset
-    pointer_offset = -4 * (environment_stack.get_len_all_parameters())
 
 def p_with_multiple_func_bindings(p):
     '''
@@ -157,6 +155,8 @@ def p_with_multiple_params(p):
     with_multiple_params : with_multiple_params ID np_seen_param
                          | ID np_seen_param
     '''
+    global pointer_offset
+    pointer_offset = -4 * (environment_stack.get_len_all_parameters())
 
 def p_np_seen_param(p):
     "np_seen_param :"
