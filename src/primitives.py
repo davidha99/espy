@@ -28,6 +28,8 @@ from utils import (
 
 primitives = {}
 
+TEMP_DIR = -1000
+
 # a decorator for creating a primitive function object and giving it a name
 
 
@@ -241,14 +243,14 @@ def addition(*argv):
     
     if indv_operand:
         temp = operands[-1]
-        asm = "\tmovl %%eax, %s(%%esp)\n" % str(si)     # This means si(esp) = eax
+        asm = "\tmovl %%eax, %s(%%esp)\n" % str(si + TEMP_DIR)     # This means si(esp) = eax
         return temp, asm
     else:
         try: 
             temp = int(operands[-2]) + int(operands[-1])
         except:
             temp = 0
-        asm = "\taddl %%eax, %s(%%esp) \n" % str(si)    # This means si(esp) = n(esp) + eax
+        asm = "\taddl %%eax, %s(%%esp) \n" % str(si + TEMP_DIR)    # This means si(esp) = n(esp) + eax
         return temp, asm
 
 @define_primitive('substraction')
@@ -259,14 +261,14 @@ def substraction(*argv):
     
     if indv_operand:
         temp = operands[-1]
-        asm = "\tmovl %%eax, %s(%%esp)\n" % str(si)     # This means si(esp) = eax
+        asm = "\tmovl %%eax, %s(%%esp)\n" % str(si + TEMP_DIR)     # This means si(esp) = eax
         return temp, asm
     else:
         try: 
             temp = operands[-2] - operands[-1]
         except:
             temp = 0
-        asm = "\tsubl %%eax, %s(%%esp) \n" % str(si)    # This means si(esp) = n(esp) - eax
+        asm = "\tsubl %%eax, %s(%%esp) \n" % str(si + TEMP_DIR)    # This means si(esp) = n(esp) - eax
         return temp, asm
 
 @define_primitive('multiplication')
@@ -277,7 +279,7 @@ def multiplication(*argv):
     
     if indv_operand:
         temp = operands[-1]
-        asm = "\tmovl %%eax, %s(%%esp)\n" % str(si)     # This means si(esp) = eax
+        asm = "\tmovl %%eax, %s(%%esp)\n" % str(si + TEMP_DIR)     # This means si(esp) = eax
         return temp, asm
     else:
         try: 
@@ -285,12 +287,12 @@ def multiplication(*argv):
         except:
             temp = 0
         asm = ""
-        asm += "\tmovl %s(%%esp), %%edx\n" % str(si)
+        asm += "\tmovl %s(%%esp), %%edx\n" % str(si + TEMP_DIR)
         asm += "\tsar $%s, %%edx\n" % num_shift
         asm += "\tsar $%s, %%eax\n" % num_shift
         asm += "\timul %edx, %eax\n"                    # This means eax *= ebx
         asm += "\tsal   $%s, %%eax\n" % num_shift       # Shift to the left the byte answer
-        asm += "\tmovl %%eax, %s(%%esp)\n" % str(si)
+        asm += "\tmovl %%eax, %s(%%esp)\n" % str(si + TEMP_DIR)
 
         return temp, asm
 
@@ -302,7 +304,7 @@ def division(*argv):
     
     if indv_operand:
         temp = operands[-1]
-        asm = "\tmovl %%eax, %s(%%esp)\n" % str(si)     # This means si(esp) = eax
+        asm = "\tmovl %%eax, %s(%%esp)\n" % str(si + TEMP_DIR)     # This means si(esp) = eax
         return temp, asm
     else:
         try: 
@@ -313,11 +315,11 @@ def division(*argv):
         asm += "\tmovl %eax, %ebx\n"                        # Divisor
         # asm += "\tsar $%s, %%ebx\n" % num_shift
         asm += "\tmovl $0, %edx\n"                           # Clear remainder
-        asm += "\tmovl %s(%%esp), %%eax\n" % str(si)        # Dividend
+        asm += "\tmovl %s(%%esp), %%eax\n" % str(si + TEMP_DIR)        # Dividend
         # asm += "\tsar $%s, %%eax\n" % num_shift
         asm += "\tdiv %ebx\n"                    # This means eax /= ebx, the remainder is set in edx
         asm += "\tsal   $%s, %%eax\n" % num_shift   # Shift to the left the byte answer
-        asm += "\tmovl %%eax, %s(%%esp)\n" % str(si)
+        asm += "\tmovl %%eax, %s(%%esp)\n" % str(si + TEMP_DIR)
 
         return temp, asm
 
@@ -330,12 +332,12 @@ def and_expression(*argv):
     
     if indv_operand:
         temp = operands[-1]
-        asm = "\tmovl %%eax, %s(%%esp)\n" % str(si)     # This means si(esp) = eax
+        asm = "\tmovl %%eax, %s(%%esp)\n" % str(si + TEMP_DIR)     # This means si(esp) = eax
         return temp, asm
     else:
         temp = operands[-2] and operands[-1]
-        asm = "\tand %s(%%esp), %%eax\n" % str(si)
-        asm += "\tmovl %%eax, %s(%%esp)\n" % str(si)
+        asm = "\tand %s(%%esp), %%eax\n" % str(si + TEMP_DIR)
+        asm += "\tmovl %%eax, %s(%%esp)\n" % str(si + TEMP_DIR)
         return temp, asm
 
 @define_primitive('or')
@@ -346,12 +348,12 @@ def or_expression(*argv):
     
     if indv_operand:
         temp = operands[-1]
-        asm = "\tmovl %%eax, %s(%%esp)\n" % str(si)     # This means si(esp) = eax
+        asm = "\tmovl %%eax, %s(%%esp)\n" % str(si + TEMP_DIR)     # This means si(esp) = eax
         return temp, asm
     else:
         temp = operands[-2] and operands[-1]
-        asm = "\tor %s(%%esp), %%eax\n" % str(si)
-        asm += "\tmovl %%eax, %s(%%esp)\n" % str(si)
+        asm = "\tor %s(%%esp), %%eax\n" % str(si + TEMP_DIR)
+        asm += "\tmovl %%eax, %s(%%esp)\n" % str(si + TEMP_DIR)
         return temp, asm
 
 @define_primitive('lessequal')
@@ -362,18 +364,18 @@ def less_equal(*argv):
     
     if indv_operand:
         temp = operands[-1]
-        asm = "\tmovl %%eax, %s(%%esp)\n" % str(si)     # This means si(esp) = eax
+        asm = "\tmovl %%eax, %s(%%esp)\n" % str(si + TEMP_DIR)     # This means si(esp) = eax
         return temp, asm
     else:
         temp = operands[-2] <= operands[-1]
         asm = ""
-        asm += "\tmovl %s(%%esp), %%ebx\n" % str(si)
+        asm += "\tmovl %s(%%esp), %%ebx\n" % str(si + TEMP_DIR)
         asm += "\tcmp %eax, %ebx\n"     # Compare operands as: 'ebx <= eax'
         asm += "\tsetle %al\n"          # After comparing, the result is safed in 'al', memory section that safes #t or #f as 8 bits (1 byte)
         asm += "\tmovzbl    %al, %eax\n"
         asm += "\tsal   $%s, %%al\n" % bool_bit     # Shift the 0/1 byte value to its representation as boolean #f/#t
         asm += "\tor    $%s, %%al\n" % bool_f       
-        asm += "\tmov %%al, %s(%%esp)\n" % str(si)     # Save the boolean in memory stack
+        asm += "\tmov %%al, %s(%%esp)\n" % str(si + TEMP_DIR)     # Save the boolean in memory stack
         return temp, asm
 
 @define_primitive('greaterequal')
@@ -384,18 +386,18 @@ def greater_equal(*argv):
     
     if indv_operand:
         temp = operands[-1]
-        asm = "\tmovl %%eax, %s(%%esp)\n" % str(si)     # This means si(esp) = eax
+        asm = "\tmovl %%eax, %s(%%esp)\n" % str(si + TEMP_DIR)     # This means si(esp) = eax
         return temp, asm
     else:
         temp = operands[-2] >= operands[-1]
         asm = ""
-        asm += "\tmovl %s(%%esp), %%ebx\n" % str(si)
+        asm += "\tmovl %s(%%esp), %%ebx\n" % str(si + TEMP_DIR)
         asm += "\tcmp %ebx, %eax\n"     # Compare operands as: 'ebx >= eax'
         asm += "\tsetle %al\n"          # After comparing, the result is safed in 'al', memory section that safes #t or #f as 8 bits (1 byte)
         asm += "\tmovzbl    %al, %eax\n"
         asm += "\tsal   $%s, %%al\n" % bool_bit     # Shift the 0/1 byte value to its representation as boolean #f/#t
         asm += "\tor    $%s, %%al\n" % bool_f       
-        asm += "\tmov %%al, %s(%%esp)\n" % str(si)     # Save the boolean in memory stack
+        asm += "\tmov %%al, %s(%%esp)\n" % str(si + TEMP_DIR)     # Save the boolean in memory stack
         return temp, asm
 
 @define_primitive('equal')
@@ -406,18 +408,18 @@ def equal(*argv):
     
     if indv_operand:
         temp = operands[-1]
-        asm = "\tmovl %%eax, %s(%%esp)\n" % str(si)     # This means si(esp) = eax
+        asm = "\tmovl %%eax, %s(%%esp)\n" % str(si + TEMP_DIR)     # This means si(esp) = eax
         return temp, asm
     else:
         temp = operands[-2] == operands[-1]
         asm = ""
-        asm += "\tmovl %s(%%esp), %%ebx\n" % str(si)
+        asm += "\tmovl %s(%%esp), %%ebx\n" % str(si + TEMP_DIR)
         asm += "\tcmp %ebx, %eax\n"     # Compare operands as: 'ebx == eax'
         asm += "\tsete %al\n"          # After comparing, the result is safed in 'al', memory section that safes #t or #f as 8 bits (1 byte)
         asm += "\tmovzbl    %al, %eax\n"
         asm += "\tsal   $%s, %%al\n" % bool_bit     # Shift the 0/1 byte value to its representation as boolean #f/#t
         asm += "\tor    $%s, %%al\n" % bool_f       
-        asm += "\tmov %%al, %s(%%esp)\n" % str(si)    # Save the boolean in memory stack
+        asm += "\tmov %%al, %s(%%esp)\n" % str(si + TEMP_DIR)    # Save the boolean in memory stack
         return temp, asm
 
 @define_primitive('lessthan')
@@ -428,18 +430,18 @@ def less_than(*argv):
     
     if indv_operand:
         temp = operands[-1]
-        asm = "\tmovl %%eax, %s(%%esp)\n" % str(si)     # This means si(esp) = eax
+        asm = "\tmovl %%eax, %s(%%esp)\n" % str(si + TEMP_DIR)     # This means si(esp) = eax
         return temp, asm
     else:
         temp = operands[-2] < operands[-1]
         asm = ""
-        asm += "\tmovl %s(%%esp), %%ebx\n" % str(si)
+        asm += "\tmovl %s(%%esp), %%ebx\n" % str(si + TEMP_DIR)
         asm += "\tcmp %eax, %ebx\n"     # Compare operands as: 'ebx < eax'
         asm += "\tsetl %al\n"          # After comparing, the result is safed in 'al', memory section that safes #t or #f as 8 bits (1 byte)
         asm += "\tmovzbl    %al, %eax\n"
         asm += "\tsal   $%s, %%al\n" % bool_bit     # Shift the 0/1 byte value to its representation as boolean #f/#t
         asm += "\tor    $%s, %%al\n" % bool_f       
-        asm += "\tmov %%al, %s(%%esp)\n" % str(si)     # Save the boolean in memory stack
+        asm += "\tmov %%al, %s(%%esp)\n" % str(si + TEMP_DIR)     # Save the boolean in memory stack
         return temp, asm
 
 @define_primitive('greaterthan')
@@ -450,16 +452,16 @@ def greater_than(*argv):
     
     if indv_operand:
         temp = operands[-1]
-        asm = "\tmovl %%eax, %s(%%esp)\n" % str(si)     # This means si(esp) = eax
+        asm = "\tmovl %%eax, %s(%%esp)\n" % str(si + TEMP_DIR)     # This means si(esp) = eax
         return temp, asm
     else:
         temp = operands[-2] > operands[-1]
         asm = ""
-        asm += "\tmovl %s(%%esp), %%ebx\n" % str(si)
+        asm += "\tmovl %s(%%esp), %%ebx\n" % str(si + TEMP_DIR)
         asm += "\tcmp %ebx, %eax\n"     # Compare operands as: 'ebx > eax'
         asm += "\tsetl %al\n"          # After comparing, the result is safed in 'al', memory section that safes #t or #f as 8 bits (1 byte)
         asm += "\tmovzbl    %al, %eax\n"
         asm += "\tsal   $%s, %%al\n" % bool_bit     # Shift the 0/1 byte value to its representation as boolean #f/#t
         asm += "\tor    $%s, %%al\n" % bool_f       
-        asm += "\tmov %%al, %s(%%esp)\n" % str(si)    # Save the boolean in memory stack
+        asm += "\tmov %%al, %s(%%esp)\n" % str(si + TEMP_DIR)    # Save the boolean in memory stack
         return temp, asm
