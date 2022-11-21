@@ -13,7 +13,7 @@ def create_binary(program):
     parser_status = parser.parse(program)
 
     if (parser_status == "Parsed"):
-        os.system("gcc espy.s runtime.c -o main")
+        os.system("gcc espy.s runtime.c -o main -w")
         os.system("./main")
         # r = open("main", 'r')
         # print(str(r.readline()))
@@ -24,15 +24,15 @@ def create_binary(program):
 
 
 if __name__ == '__main__':
-    # program = '''(let ([x 1]) (let ([y 2]) (let ([z 3]) (* x y (+ z x)))))'''
+    # program = '''(letrec ([fib (lambda (x) (if (<= x 2) 1 (+ (fib (- x 1)) (fib (- x 2)))))])(fib 10))'''
+    # program = '''(letrec ([f (lambda (x acc) (if (zero? x) acc (f (sub1 x) (* acc x))))]) (f 5 1))'''
+    # program = '''(letrec ([f (lambda (x) (if (zero? x) 0 (+ 1 (f (sub1 x)))))]) (f 200))'''
     # program = '''(+ 2 3 ( + 4 5 ( + 6 (+ 7 8) 9) 10) 11)'''
     # program = '''(letrec ([f (lambda (x) 
     #                             (if (zero? x) 
     #                                 1 
     #                                 (* x (f (sub1 x)))))]) 
     #                 (f 5))'''
-    # program = '''(letrec ([g (lambda (x y) (+ x y))] [f (lambda (x) (g x x))]) (f 12))'''
-    program = '''(letrec ([f (lambda (x y) (+ x y))] [g (lambda (x) (+ x 12))]) (f 16 (f (g 0) (+ 1 (g 0)))))'''
     # program = '''(letrec ([sum (lambda (n ac)
     #                                 (if (zero? n)
     #                                     ac
@@ -40,11 +40,11 @@ if __name__ == '__main__':
     #                 (sum 10 0))'''
     # print(program)
     
-    create_binary(program)
+    # create_binary(program)
     # environment_stack.scope_enter(0)    # Global scope
-    # while True:
-    #     program = input("espy> ")
-    #     if program == "exit":
-    #         exit()
-    #     create_binary(program)
+    while True:
+        program = input("espy> ")
+        if program == "exit":
+            exit()
+        create_binary(program)
     

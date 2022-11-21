@@ -335,7 +335,10 @@ def and_expression(*argv):
         asm = "\tmovl %%eax, %s(%%esp)\n" % str(si + TEMP_DIR)     # This means si(esp) = eax
         return temp, asm
     else:
-        temp = operands[-2] and operands[-1]
+        try: 
+            temp = operands[-2] and operands[-1]
+        except:
+            temp = 0
         asm = "\tand %s(%%esp), %%eax\n" % str(si + TEMP_DIR)
         asm += "\tmovl %%eax, %s(%%esp)\n" % str(si + TEMP_DIR)
         return temp, asm
@@ -351,7 +354,10 @@ def or_expression(*argv):
         asm = "\tmovl %%eax, %s(%%esp)\n" % str(si + TEMP_DIR)     # This means si(esp) = eax
         return temp, asm
     else:
-        temp = operands[-2] and operands[-1]
+        try: 
+            temp = operands[-2] and operands[-1]
+        except:
+            temp = 0
         asm = "\tor %s(%%esp), %%eax\n" % str(si + TEMP_DIR)
         asm += "\tmovl %%eax, %s(%%esp)\n" % str(si + TEMP_DIR)
         return temp, asm
@@ -367,7 +373,10 @@ def less_equal(*argv):
         asm = "\tmovl %%eax, %s(%%esp)\n" % str(si + TEMP_DIR)     # This means si(esp) = eax
         return temp, asm
     else:
-        temp = operands[-2] <= operands[-1]
+        try: 
+            temp = operands[-2] <= operands[-1]
+        except:
+            temp = 0
         asm = ""
         asm += "\tmovl %s(%%esp), %%ebx\n" % str(si + TEMP_DIR)
         asm += "\tcmp %eax, %ebx\n"     # Compare operands as: 'ebx <= eax'
@@ -389,7 +398,10 @@ def greater_equal(*argv):
         asm = "\tmovl %%eax, %s(%%esp)\n" % str(si + TEMP_DIR)     # This means si(esp) = eax
         return temp, asm
     else:
-        temp = operands[-2] >= operands[-1]
+        try: 
+            temp = operands[-2] >= operands[-1]
+        except:
+            temp = 0
         asm = ""
         asm += "\tmovl %s(%%esp), %%ebx\n" % str(si + TEMP_DIR)
         asm += "\tcmp %ebx, %eax\n"     # Compare operands as: 'ebx >= eax'
@@ -411,7 +423,10 @@ def equal(*argv):
         asm = "\tmovl %%eax, %s(%%esp)\n" % str(si + TEMP_DIR)     # This means si(esp) = eax
         return temp, asm
     else:
-        temp = operands[-2] == operands[-1]
+        try: 
+            temp = operands[-2] == operands[-1]
+        except:
+            temp = 0
         asm = ""
         asm += "\tmovl %s(%%esp), %%ebx\n" % str(si + TEMP_DIR)
         asm += "\tcmp %ebx, %eax\n"     # Compare operands as: 'ebx == eax'
@@ -433,7 +448,10 @@ def less_than(*argv):
         asm = "\tmovl %%eax, %s(%%esp)\n" % str(si + TEMP_DIR)     # This means si(esp) = eax
         return temp, asm
     else:
-        temp = operands[-2] < operands[-1]
+        try: 
+            temp = operands[-2] < operands[-1]
+        except:
+            temp = 0
         asm = ""
         asm += "\tmovl %s(%%esp), %%ebx\n" % str(si + TEMP_DIR)
         asm += "\tcmp %eax, %ebx\n"     # Compare operands as: 'ebx < eax'
@@ -455,7 +473,10 @@ def greater_than(*argv):
         asm = "\tmovl %%eax, %s(%%esp)\n" % str(si + TEMP_DIR)     # This means si(esp) = eax
         return temp, asm
     else:
-        temp = operands[-2] > operands[-1]
+        try: 
+            temp = operands[-2] > operands[-1]
+        except:
+            temp = 0
         asm = ""
         asm += "\tmovl %s(%%esp), %%ebx\n" % str(si + TEMP_DIR)
         asm += "\tcmp %ebx, %eax\n"     # Compare operands as: 'ebx > eax'

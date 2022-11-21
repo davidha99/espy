@@ -242,250 +242,250 @@ class ImmediateTest(TestCase):
     '''
     Unary Primitives: Add1
     '''
-    # def test_add1_0(self):
-    #     self.assertEvaluatesRepr("(add1 0)", "1")
+    def test_add1_0(self):
+        self.assertEvaluatesRepr("(add1 0)", "1")
 
-    # def test_add1_neg_1(self):
-    #     self.assertEvaluatesRepr("(add1 -1)", "0")
+    def test_add1_neg_1(self):
+        self.assertEvaluatesRepr("(add1 -1)", "0")
 
-    # def test_add1_1(self):
-    #     self.assertEvaluatesRepr("(add1 1)", "2")
+    def test_add1_1(self):
+        self.assertEvaluatesRepr("(add1 1)", "2")
 
-    # def test_add1_neg_100(self):
-    #     self.assertEvaluatesRepr("(add1 -100)", "-99")
+    def test_add1_neg_100(self):
+        self.assertEvaluatesRepr("(add1 -100)", "-99")
 
-    # def test_add1_1000(self):
-    #     self.assertEvaluatesRepr("(add1 1000)", "1001")
+    def test_add1_1000(self):
+        self.assertEvaluatesRepr("(add1 1000)", "1001")
 
-    # def test_add1_536870910(self):
-    #     self.assertEvaluatesRepr("(add1 536870910)", "536870911")
+    def test_add1_536870910(self):
+        self.assertEvaluatesRepr("(add1 536870910)", "536870911")
 
-    # def test_add1_neg_536870912(self):
-    #     self.assertEvaluatesRepr("(add1 -536870912)", "-536870911")
+    def test_add1_neg_536870912(self):
+        self.assertEvaluatesRepr("(add1 -536870912)", "-536870911")
 
-    # def test_2_add1_0(self):
-    #     self.assertEvaluatesRepr("(add1 (add1 0))", "2")
+    def test_2_add1_0(self):
+        self.assertEvaluatesRepr("(add1 (add1 0))", "2")
 
-    # def test_6_add1_12(self):
-    #     self.assertEvaluatesRepr(
-    #         "(add1 (add1 (add1 (add1 (add1 (add1 12))))))", "18")
+    def test_6_add1_12(self):
+        self.assertEvaluatesRepr(
+            "(add1 (add1 (add1 (add1 (add1 (add1 12))))))", "18")
 
     '''
     Unary Primitives: Sub1
     '''
-    # def test_sub1_0(self):
-    #     self.assertEvaluatesRepr("(sub1 0)", "-1")
+    def test_sub1_0(self):
+        self.assertEvaluatesRepr("(sub1 0)", "-1")
 
-    # def test_sub1_neg_1(self):
-    #     self.assertEvaluatesRepr("(sub1 -1)", "-2")
+    def test_sub1_neg_1(self):
+        self.assertEvaluatesRepr("(sub1 -1)", "-2")
 
-    # def test_sub1_1(self):
-    #     self.assertEvaluatesRepr("(sub1 1)", "0")
+    def test_sub1_1(self):
+        self.assertEvaluatesRepr("(sub1 1)", "0")
 
-    # def test_sub1_neg_100(self):
-    #     self.assertEvaluatesRepr("(sub1 -100)", "-101")
+    def test_sub1_neg_100(self):
+        self.assertEvaluatesRepr("(sub1 -100)", "-101")
 
-    # def test_sub1_1000(self):
-    #     self.assertEvaluatesRepr("(sub1 1000)", "999")
+    def test_sub1_1000(self):
+        self.assertEvaluatesRepr("(sub1 1000)", "999")
 
-    # def test_sub1_536870911(self):
-    #     self.assertEvaluatesRepr("(sub1 536870911)", "536870910")
+    def test_sub1_536870911(self):
+        self.assertEvaluatesRepr("(sub1 536870911)", "536870910")
 
-    # def test_sub1_neg_536870911(self):
-    #     self.assertEvaluatesRepr("(sub1 -536870911)", "-536870912")
+    def test_sub1_neg_536870911(self):
+        self.assertEvaluatesRepr("(sub1 -536870911)", "-536870912")
 
-    # def test_2_sub1_0(self):
-    #     self.assertEvaluatesRepr("(sub1 (sub1 0))", "-2")
+    def test_2_sub1_0(self):
+        self.assertEvaluatesRepr("(sub1 (sub1 0))", "-2")
 
-    # def test_6_sub1_12(self):
-    #     self.assertEvaluatesRepr(
-    #         "(sub1 (sub1 (sub1 (sub1 (sub1 (sub1 12))))))", "6")
+    def test_6_sub1_12(self):
+        self.assertEvaluatesRepr(
+            "(sub1 (sub1 (sub1 (sub1 (sub1 (sub1 12))))))", "6")
 
-    # def test_sub1_add1_0(self):
-    #     self.assertEvaluatesRepr("(sub1 (add1 0))", "0")
+    def test_sub1_add1_0(self):
+        self.assertEvaluatesRepr("(sub1 (add1 0))", "0")
 
     '''
     Conversion functions:
     '''
-    # def test_num_to_char_65(self):
-    #     self.assertEvaluatesRepr("(num->char 65)", "\#A")
+    def test_num_to_char_65(self):
+        self.assertEvaluatesRepr("(num->char 65)", "\#A")
 
-    # def test_num_to_char_97(self):
-    #     self.assertEvaluatesRepr("(num->char 97)", "\#a")
+    def test_num_to_char_97(self):
+        self.assertEvaluatesRepr("(num->char 97)", "\#a")
 
-    # def test_num_to_char_122(self):
-    #     self.assertEvaluatesRepr("(num->char 122)", "\#z")
+    def test_num_to_char_122(self):
+        self.assertEvaluatesRepr("(num->char 122)", "\#z")
 
-    # def test_num_to_char_90(self):
-    #     self.assertEvaluatesRepr("(num->char 90)", "\#Z")
+    def test_num_to_char_90(self):
+        self.assertEvaluatesRepr("(num->char 90)", "\#Z")
 
-    # def test_num_to_char_48(self):
-    #     self.assertEvaluatesRepr("(num->char 48)", "\#0")
+    def test_num_to_char_48(self):
+        self.assertEvaluatesRepr("(num->char 48)", "\#0")
 
-    # def test_num_to_char_57(self):
-    #     self.assertEvaluatesRepr("(num->char 57)", "\#9")
+    def test_num_to_char_57(self):
+        self.assertEvaluatesRepr("(num->char 57)", "\#9")
 
-    # def test_char_to_num_A(self):
-    #     self.assertEvaluatesRepr("(char->num \#A)", "65")
+    def test_char_to_num_A(self):
+        self.assertEvaluatesRepr("(char->num \#A)", "65")
 
-    # def test_char_to_num_a(self):
-    #     self.assertEvaluatesRepr("(char->num \#a)", "97")
+    def test_char_to_num_a(self):
+        self.assertEvaluatesRepr("(char->num \#a)", "97")
 
-    # def test_char_to_num_z(self):
-    #     self.assertEvaluatesRepr("(char->num \#z)", "122")
+    def test_char_to_num_z(self):
+        self.assertEvaluatesRepr("(char->num \#z)", "122")
 
-    # def test_char_to_num_Z(self):
-    #     self.assertEvaluatesRepr("(char->num \#Z)", "90")
+    def test_char_to_num_Z(self):
+        self.assertEvaluatesRepr("(char->num \#Z)", "90")
 
-    # def test_char_to_num_0(self):
-    #     self.assertEvaluatesRepr("(char->num \#0)", "48")
+    def test_char_to_num_0(self):
+        self.assertEvaluatesRepr("(char->num \#0)", "48")
 
-    # def test_char_to_num_9(self):
-    #     self.assertEvaluatesRepr("(char->num \#9)", "57")
+    def test_char_to_num_9(self):
+        self.assertEvaluatesRepr("(char->num \#9)", "57")
 
-    # def test_char_to_num_num_to_char_12(self):
-    #     self.assertEvaluatesRepr("(char->num (num->char 12))", "12")
+    def test_char_to_num_num_to_char_12(self):
+        self.assertEvaluatesRepr("(char->num (num->char 12))", "12")
 
-    # def test_num_to_char_char_to_num_x(self):
-    #     self.assertEvaluatesRepr("(num->char (char->num \#x))", "\#x")
+    def test_num_to_char_char_to_num_x(self):
+        self.assertEvaluatesRepr("(num->char (char->num \#x))", "\#x")
 
     '''
     Self Type: Is_Num
     '''
-    # def test_is_num_0(self):
-    #     self.assertEvaluatesRepr("(num? 0)", "#t")
+    def test_is_num_0(self):
+        self.assertEvaluatesRepr("(num? 0)", "#t")
 
-    # def test_is_num_1(self):
-    #     self.assertEvaluatesRepr("(num? 1)", "#t")
+    def test_is_num_1(self):
+        self.assertEvaluatesRepr("(num? 1)", "#t")
 
-    # def test_is_num_neg_1(self):
-    #     self.assertEvaluatesRepr("(num? -1)", "#t")
+    def test_is_num_neg_1(self):
+        self.assertEvaluatesRepr("(num? -1)", "#t")
 
-    # def test_is_num_37287(self):
-    #     self.assertEvaluatesRepr("(num? 37287)", "#t")
+    def test_is_num_37287(self):
+        self.assertEvaluatesRepr("(num? 37287)", "#t")
 
-    # def test_is_num_neg_23873(self):
-    #     self.assertEvaluatesRepr("(num? -23873)", "#t")
+    def test_is_num_neg_23873(self):
+        self.assertEvaluatesRepr("(num? -23873)", "#t")
 
-    # def test_is_num_536870911(self):
-    #     self.assertEvaluatesRepr("(num? 536870911)", "#t")
+    def test_is_num_536870911(self):
+        self.assertEvaluatesRepr("(num? 536870911)", "#t")
 
-    # def test_is_num_neg_536870911(self):
-    #     self.assertEvaluatesRepr("(num? -536870911)", "#t")
+    def test_is_num_neg_536870911(self):
+        self.assertEvaluatesRepr("(num? -536870911)", "#t")
 
-    # def test_is_num_bool_t(self):
-    #     self.assertEvaluatesRepr("(num? #t)", "#f")
+    def test_is_num_bool_t(self):
+        self.assertEvaluatesRepr("(num? #t)", "#f")
 
-    # def test_is_num_bool_f(self):
-    #     self.assertEvaluatesRepr("(num? #f)", "#f")
+    def test_is_num_bool_f(self):
+        self.assertEvaluatesRepr("(num? #f)", "#f")
 
-    # def test_is_num_null(self):
-    #     self.assertEvaluatesRepr("(num? ())", "#f")
+    def test_is_num_null(self):
+        self.assertEvaluatesRepr("(num? ())", "#f")
 
-    # def test_is_num_char_Q(self):
-    #     self.assertEvaluatesRepr("(num? \#Q)", "#f")
+    def test_is_num_char_Q(self):
+        self.assertEvaluatesRepr("(num? \#Q)", "#f")
 
-    # def test_2_is_num_12(self):
-    #     self.assertEvaluatesRepr("(num? (num? 12))", "#f")
+    def test_2_is_num_12(self):
+        self.assertEvaluatesRepr("(num? (num? 12))", "#f")
 
-    # def test_2_is_num_bool_f(self):
-    #     self.assertEvaluatesRepr("(num? (num? #f))", "#f")
+    def test_2_is_num_bool_f(self):
+        self.assertEvaluatesRepr("(num? (num? #f))", "#f")
 
-    # def test_2_is_num_char_a(self):
-    #     self.assertEvaluatesRepr("(num? (num? \#A))", "#f")
+    def test_2_is_num_char_a(self):
+        self.assertEvaluatesRepr("(num? (num? \#A))", "#f")
 
-    # def test_is_num_char_to_num_char_r(self):
-    #     self.assertEvaluatesRepr("(num? (char->num \#r))", "#t")
+    def test_is_num_char_to_num_char_r(self):
+        self.assertEvaluatesRepr("(num? (char->num \#r))", "#t")
 
-    # def test_is_num_num_to_char_12(self):
-    #     self.assertEvaluatesRepr("(num? (num->char 12))", "#f")
+    def test_is_num_num_to_char_12(self):
+        self.assertEvaluatesRepr("(num? (num->char 12))", "#f")
 
     '''
     Self Type: Is_Null
     '''
-    # def test_is_null_0(self):
-    #     self.assertEvaluatesRepr("(null? ())", "#t")
+    def test_is_null_0(self):
+        self.assertEvaluatesRepr("(null? ())", "#t")
 
-    # def test_is_null_1(self):
-    #     self.assertEvaluatesRepr("(null? ())", "#t")
+    def test_is_null_1(self):
+        self.assertEvaluatesRepr("(null? ())", "#t")
 
-    # def test_is_null_2(self):
-    #     self.assertEvaluatesRepr("(null? ())", "#t")
+    def test_is_null_2(self):
+        self.assertEvaluatesRepr("(null? ())", "#t")
 
-    # def test_is_null_3(self):
-    #     self.assertEvaluatesRepr("(null? ())", "#t")
+    def test_is_null_3(self):
+        self.assertEvaluatesRepr("(null? ())", "#t")
 
-    # def test_is_null_4(self):
-    #     self.assertEvaluatesRepr("(null? ())", "#t")
+    def test_is_null_4(self):
+        self.assertEvaluatesRepr("(null? ())", "#t")
 
-    # def test_is_null_5(self):
-    #     self.assertEvaluatesRepr("(null? ())", "#t")
+    def test_is_null_5(self):
+        self.assertEvaluatesRepr("(null? ())", "#t")
 
-    # def test_is_null_6(self):
-    #     self.assertEvaluatesRepr("(null? ())", "#t")
+    def test_is_null_6(self):
+        self.assertEvaluatesRepr("(null? ())", "#t")
 
-    # def test_is_null_7(self):
-    #     self.assertEvaluatesRepr("(null? ())", "#t")
+    def test_is_null_7(self):
+        self.assertEvaluatesRepr("(null? ())", "#t")
 
     '''
     Self Type: Is_bool
     '''
-    # def test_is_bool_0_0(self):
-    #     self.assertEvaluatesRepr("(boolean? #t)", "#t")
+    def test_is_bool_0_0(self):
+        self.assertEvaluatesRepr("(boolean? #t)", "#t")
 
-    # def test_is_bool_0_1(self):
-    #     self.assertEvaluatesRepr("(boolean? #f)", "#t")
+    def test_is_bool_0_1(self):
+        self.assertEvaluatesRepr("(boolean? #f)", "#t")
 
-    # def test_is_bool_1(self):
-    #     self.assertEvaluatesRepr("(boolean? 0)", "#f")
+    def test_is_bool_1(self):
+        self.assertEvaluatesRepr("(boolean? 0)", "#f")
 
-    # def test_is_bool_2(self):
-    #     self.assertEvaluatesRepr("(boolean? 1)", "#f")
+    def test_is_bool_2(self):
+        self.assertEvaluatesRepr("(boolean? 1)", "#f")
 
-    # def test_is_bool_3(self):
-    #     self.assertEvaluatesRepr("(boolean? -1)", "#f")
+    def test_is_bool_3(self):
+        self.assertEvaluatesRepr("(boolean? -1)", "#f")
 
-    # def test_is_bool_4(self):
-    #     self.assertEvaluatesRepr("(boolean? ())", "#f")
+    def test_is_bool_4(self):
+        self.assertEvaluatesRepr("(boolean? ())", "#f")
 
-    # def test_is_bool_5(self):
-    #     self.assertEvaluatesRepr("(boolean? \#a)", "#f")
+    def test_is_bool_5(self):
+        self.assertEvaluatesRepr("(boolean? \#a)", "#f")
 
-    # def test_is_bool_6(self):
-    #     self.assertEvaluatesRepr("(boolean? (boolean? 0))", "#t")
+    def test_is_bool_6(self):
+        self.assertEvaluatesRepr("(boolean? (boolean? 0))", "#t")
 
-    # def test_is_bool_7(self):
-    #     self.assertEvaluatesRepr("(boolean? (num? (boolean? 0)))", "#t")
+    def test_is_bool_7(self):
+        self.assertEvaluatesRepr("(boolean? (num? (boolean? 0)))", "#t")
 
     '''
     Self Type: Is_char
     '''
-    # def test_is_char_0(self):
-    #     self.assertEvaluatesRepr("(char? \#a)", "#t")
+    def test_is_char_0(self):
+        self.assertEvaluatesRepr("(char? \#a)", "#t")
 
-    # def test_is_char_1(self):
-    #     self.assertEvaluatesRepr("(char? \#Z)", "#t")
+    def test_is_char_1(self):
+        self.assertEvaluatesRepr("(char? \#Z)", "#t")
 
-    # def test_is_char_3(self):
-    #     self.assertEvaluatesRepr("(char? #t)", "#f")
+    def test_is_char_3(self):
+        self.assertEvaluatesRepr("(char? #t)", "#f")
 
-    # def test_is_char_4(self):
-    #     self.assertEvaluatesRepr("(char? #f)", "#f")
+    def test_is_char_4(self):
+        self.assertEvaluatesRepr("(char? #f)", "#f")
 
-    # def test_is_char_5(self):
-    #     self.assertEvaluatesRepr("(char? ())", "#f")
+    def test_is_char_5(self):
+        self.assertEvaluatesRepr("(char? ())", "#f")
 
-    # def test_is_char_6(self):
-    #     self.assertEvaluatesRepr("(char? (char? #t))", "#f")
+    def test_is_char_6(self):
+        self.assertEvaluatesRepr("(char? (char? #t))", "#f")
 
-    # def test_is_char_7(self):
-    #     self.assertEvaluatesRepr("(char? 0)", "#f")
+    def test_is_char_7(self):
+        self.assertEvaluatesRepr("(char? 0)", "#f")
 
-    # def test_is_char_8(self):
-    #     self.assertEvaluatesRepr("(char? 23870)", "#f")
+    def test_is_char_8(self):
+        self.assertEvaluatesRepr("(char? 23870)", "#f")
 
-    # def test_is_char_9(self):
-    #     self.assertEvaluatesRepr("(char? -23789)", "#f")
+    def test_is_char_9(self):
+        self.assertEvaluatesRepr("(char? -23789)", "#f")
 
     '''
     Conditionals: If statement
@@ -1043,7 +1043,22 @@ class ImmediateTest(TestCase):
 
     def test_letrec_19(self):
         self.assertEvaluatesRepr("(letrec ([f (lambda (x) (if (zero? x) 0 (+ 1 (f (sub1 x)))))]) (f 200))", "200")
+    
+    def test_fibonacci(self):
+        self.assertEvaluatesRepr("(letrec ([fib (lambda (x) (if (<= x 2) 1 (+ (fib (- x 1))(fib (- x 2)))))]) (fib 6))", "8")
+    
+    def test_factorial(self):
+        self.assertEvaluatesRepr("(letrec ([fact (lambda (n) (if (== n 0) 1 (* n (fact (- n 1)))))]) (fact 3))", "6")
 
 
 if __name__ == '__main__':
     main()
+
+'''
+(letrec ([fib (lambda (x) (if (<= x 2) 1 (+ (fib (- n 1))(fib (- n 2)))))])(fib 6))
+
+'''
+
+'''
+(letrec ([fact (lambda (n) (if (= n 0) 1 (* n (fact (- n 1)))))]) (fact 3))
+'''
