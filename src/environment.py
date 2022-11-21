@@ -20,8 +20,8 @@ class Parameter:
     def parameter_lookup(self, name) -> int:
         try:
             # Look for the paramater in the parameters dictionary {name: (memory_idx, value)}
-            # Return the memory index of the parameter
-            return self.parameters[name][0]
+            # Return the information of the parameter [memory_idx, value]
+            return self.parameters[name]
         except KeyError:
             raise EspyNameError("Parameter %s is not defined" % name)
 

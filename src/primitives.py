@@ -43,28 +43,37 @@ def define_primitive(function_name):
 
 @define_primitive('add1')
 def add1(*argv):
-    check_argument_number('add1', argv, 1, 1)
-    check_argument_type('add1', argv, ('num',))
-    temp = argv[0] + 1
+    if argv[0] is not None:
+        check_argument_number('add1', argv, 1, 1)
+        check_argument_type('add1', argv, ('num',))
+        temp = argv[0] + 1
+    else:
+        temp = None
     asm = "\taddl    $%s, %%eax\n" % (literal_repr(1))
     return temp, asm
 
 
 @define_primitive('sub1')
 def sub1(*argv):
-    check_argument_number('sub1', argv, 1, 1)
-    # check_argument_type('sub1', argv, ('num',))
-    temp = argv[0] - 1
+    if argv[0] is not None:
+        check_argument_number('sub1', argv, 1, 1)
+        check_argument_type('sub1', argv, ('num',))
+        temp = argv[0] - 1
+    else:
+        temp = None
     asm = "\tsubl   $%s, %%eax\n" % (literal_repr(1))
     return temp, asm
 
 
 @define_primitive('char->num')
 def char_to_num(*argv):
-    check_argument_number('char->num', argv, 1, 1)
-    # check_argument_type('char->num', argv, ('char',))
-    given_char = argv[0]
-    temp = compile_char(given_char)
+    if argv[0] is not None:
+        check_argument_number('char->num', argv, 1, 1)
+        check_argument_type('char->num', argv, ('char',))
+        given_char = argv[0]
+        temp = compile_char(given_char)
+    else:
+        temp = None
     # Shift to the right by 6, explanation:
     #   Num tag: b'      00'
     #   Char tag  : b'00001111'
@@ -77,11 +86,14 @@ def char_to_num(*argv):
 
 @define_primitive('num->char')
 def num_to_char(*argv):
-    check_argument_number('num->char', argv, 1, 1)
-    # check_argument_type('num->char', argv, ('num',))
-    given_num = argv[0]
-    temp = "\#"
-    temp += chr(given_num)
+    if argv[0] is not None:
+        check_argument_number('num->char', argv, 1, 1)
+        check_argument_type('num->char', argv, ('num',))
+        given_num = argv[0]
+        temp = "\#"
+        temp += chr(given_num)
+    else:
+        temp = None
     asm = "\tshll\t$%s, %%eax\n" % (char_shift - num_shift)
     asm += "\torl   \t$%s, %%eax\n" % char_tag
     return temp, asm
@@ -89,8 +101,11 @@ def num_to_char(*argv):
 
 @define_primitive('num?')
 def num_(*argv):
-    temp = argv[0]
-    temp = "#t" if is_num(temp) else "#f"
+    try:
+        temp = argv[0]
+        temp = "#t" if is_num(temp) else "#f"
+    except:
+        temp = None
     asm = ""
     asm += "\tand $%s, %%al\n" % num_mask  # Extracting lower 2 bits
     asm += "\tcmp  $%s, %%al\n" % num_tag  # Comparing lower two bits with num_tag
@@ -103,9 +118,12 @@ def num_(*argv):
 
 @define_primitive('boolean?')
 def boolean_(*argv):
-    temp = argv[0]
-    value = 111 if is_boolean_t(temp) else 47
-    temp = "#t" if is_boolean(temp) else "#f"
+    try:
+        temp = argv[0]
+        value = 111 if is_boolean_t(temp) else 47
+        temp = "#t" if is_boolean(temp) else "#f"
+    except:
+        temp = None
     asm = ""
     asm += "\tcmp  $%s, %%al\n" % value  # Compare the true or false mask
     asm += "\tsete  %al\n"
@@ -117,8 +135,11 @@ def boolean_(*argv):
 
 @define_primitive('char?')
 def char_(*argv):
-    temp = argv[0]
-    temp = "#t" if is_char(temp) else "#f"
+    try:
+        temp = argv[0]
+        temp = "#t" if is_char(temp) else "#f"
+    except:
+        temp = None
     asm = ""
     asm += "\tand $%s, %%al\n" % char_mask  # Extracting lower 8 bits
     asm += "\tcmp  $%s, %%al\n" % char_tag  # Comparing lower 8 bits with char tag
@@ -131,8 +152,11 @@ def char_(*argv):
 
 @define_primitive('null?')
 def null_(*argv):
-    temp = argv[0]
-    temp = "#t" if is_null(temp) else "#f"
+    try:
+        temp = argv[0]
+        temp = "#t" if is_null(temp) else "#f"
+    except:
+        temp = None
     asm = ""
     asm += "\tcmp  $%s, %%al\n" % 63  # Compare Empty list binary mask
     asm += "\tsete  %al\n"
@@ -144,8 +168,11 @@ def null_(*argv):
 
 @define_primitive('not')
 def not_primitive(*argv):
-    temp = argv[0]
-    temp = "#t" if temp == "#f" or temp == 0 or temp == "()" else "#f"
+    try:
+        temp = argv[0]
+        temp = "#t" if temp == "#f" or temp == 0 or temp == "()" else "#f"
+    except:
+        temp = None
     asm = ""
     asm += "\tcmp  $%s, %%al\n" % bool_f
     asm += "\tsete  %al\n"
@@ -157,10 +184,13 @@ def not_primitive(*argv):
 
 @define_primitive('zero?')
 def is_zero(*argv):
-    check_argument_number('zero?', argv, 1, 1)
-    check_argument_type('zero?', argv, ('num',))
-    temp = argv[0]
-    temp = "#t" if temp == 0 else "#f"
+    if argv[0] is not None:
+        check_argument_number('zero?', argv, 1, 1)
+        check_argument_type('zero?', argv, ('num',))
+        temp = argv[0]
+        temp = "#t" if temp == 0 else "#f"
+    else:
+        temp = None
     asm = ""
     asm += "\tcmp   $%s, %%al\n" % 0
     asm += "\tsete  %al\n"

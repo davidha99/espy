@@ -222,7 +222,7 @@ def p_variable(p):
         # asm += emit_literal(symbol.value) # TODO: load_from_memory instead of literal
         asm += load_from_memory(symbol.memory_idx)
     else:
-        mem_idx = environment_stack.func_lookup_param(func_binding_stack[-1], var)
+        mem_idx = environment_stack.func_lookup_param(func_binding_stack[-1], var)[0]
         if mem_idx is not None:
             # Get memory index of the variable and load it to the register
             global_operand_stack.append(var)
@@ -257,8 +257,14 @@ def p_unary_primitive(p):
 
     # Check if yielding of expression is a variable or a literal
     if typeof(operand) == "variable":
+        # Check if it is a variable in the current scope
         symbol = environment_stack.scope_lookup(operand)
-        temp, asm_temp = prim_function(symbol.value)
+        if symbol is None:
+            # Check if it is a parameter of the current function
+            param = environment_stack.func_lookup_param(func_binding_stack[-1], operand)[1]
+            temp, asm_temp = prim_function(param)
+        else:
+            temp, asm_temp = prim_function(symbol.value)
     else:
         temp, asm_temp = prim_function(operand)
 
