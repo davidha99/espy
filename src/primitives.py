@@ -23,6 +23,7 @@ from literals import (
 from utils import (
     check_argument_number, 
     check_argument_type, 
+    typeof
     )
 
 primitives = {}
@@ -52,7 +53,7 @@ def add1(*argv):
 @define_primitive('sub1')
 def sub1(*argv):
     check_argument_number('sub1', argv, 1, 1)
-    check_argument_type('sub1', argv, ('num',))
+    # check_argument_type('sub1', argv, ('num',))
     temp = argv[0] - 1
     asm = "\tsubl   $%s, %%eax\n" % (literal_repr(1))
     return temp, asm
@@ -61,7 +62,7 @@ def sub1(*argv):
 @define_primitive('char->num')
 def char_to_num(*argv):
     check_argument_number('char->num', argv, 1, 1)
-    check_argument_type('char->num', argv, ('char',))
+    # check_argument_type('char->num', argv, ('char',))
     given_char = argv[0]
     temp = compile_char(given_char)
     # Shift to the right by 6, explanation:
@@ -77,7 +78,7 @@ def char_to_num(*argv):
 @define_primitive('num->char')
 def num_to_char(*argv):
     check_argument_number('num->char', argv, 1, 1)
-    check_argument_type('num->char', argv, ('num',))
+    # check_argument_type('num->char', argv, ('num',))
     given_num = argv[0]
     temp = "\#"
     temp += chr(given_num)
@@ -213,7 +214,10 @@ def addition(*argv):
         asm = "\tmovl %%eax, %s(%%esp)\n" % str(si)     # This means si(esp) = eax
         return temp, asm
     else:
-        temp = operands[-2] + operands[-1]
+        try: 
+            temp = int(operands[-2]) + int(operands[-1])
+        except:
+            temp = 0
         asm = "\taddl %%eax, %s(%%esp) \n" % str(si)    # This means si(esp) = n(esp) + eax
         return temp, asm
 
@@ -228,7 +232,10 @@ def substraction(*argv):
         asm = "\tmovl %%eax, %s(%%esp)\n" % str(si)     # This means si(esp) = eax
         return temp, asm
     else:
-        temp = operands[-2] - operands[-1]
+        try: 
+            temp = operands[-2] - operands[-1]
+        except:
+            temp = 0
         asm = "\tsubl %%eax, %s(%%esp) \n" % str(si)    # This means si(esp) = n(esp) - eax
         return temp, asm
 
@@ -243,7 +250,10 @@ def multiplication(*argv):
         asm = "\tmovl %%eax, %s(%%esp)\n" % str(si)     # This means si(esp) = eax
         return temp, asm
     else:
-        temp = operands[-2] * operands[-1]
+        try: 
+            temp = operands[-2] * operands[-1]
+        except:
+            temp = 0
         asm = ""
         asm += "\tmovl %s(%%esp), %%edx\n" % str(si)
         asm += "\tsar $%s, %%edx\n" % num_shift
@@ -265,7 +275,10 @@ def division(*argv):
         asm = "\tmovl %%eax, %s(%%esp)\n" % str(si)     # This means si(esp) = eax
         return temp, asm
     else:
-        temp = operands[-2] / operands[-1]
+        try: 
+            temp = operands[-2] / operands[-1]
+        except:
+            temp = 0
         asm = ""
         asm += "\tmovl %eax, %ebx\n"                        # Divisor
         # asm += "\tsar $%s, %%ebx\n" % num_shift

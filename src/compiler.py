@@ -26,12 +26,19 @@ def create_binary(program):
 if __name__ == '__main__':
     # program = '''(let ([x 1]) (let ([y 2]) (let ([z 3]) (* x y (+ z x)))))'''
     # program = '''(var [x 2])'''
+    # program = '''(letrec ([g (lambda (x y) (+ x y))] [f (lambda (x) (g x x))]) (f 12))'''
+    # program = '''(letrec ([f (lambda (x y) (+ x y))] [g (lambda (x) (+ x 12))]) (f 16 (f (g 0) (+ 1 (g 0)))))'''
+    program = '''(letrec ([sum (lambda (n ac)
+                                    (if (zero? n)
+                                        ac
+                                        (sum (sub1 n) (+ n ac))))])
+                    (sum 10 0))'''
     # print(program)
-    # create_binary(program)
+    create_binary(program)
     # environment_stack.scope_enter(0)    # Global scope
-    while True:
-        program = input("espy> ")
-        if program == "exit":
-            exit()
-        create_binary(program)
+    # while True:
+    #     program = input("espy> ")
+    #     if program == "exit":
+    #         exit()
+    #     create_binary(program)
     
