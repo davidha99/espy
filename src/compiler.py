@@ -24,9 +24,23 @@ def create_binary(program):
 
 
 if __name__ == '__main__':
-    # program = '''(let ([x 1]) (let ([y 2]) (let ([z 3]) (* x y (+ z x)))))'''
-    # program = '''(var [x 2])'''
+    # program = '''(letrec ([fib (lambda (x) (if (<= x 2) 1 (+ 0 (fib (- x 1)) (fib (- x 2)))))]) (fib 17))'''
+    # program = '''(letrec ([f (lambda (x acc) (if (zero? x) acc (f (sub1 x) (* acc x))))]) (f 5 1))'''
+    # program = '''(letrec ([f (lambda (x) (if (zero? x) 0 (+ 1 (f (sub1 x)))))]) (f 200))'''
+    # program = '''(letrec ([fib (lambda (n r1 r2) (if (== n 0) r1 (if (== n 1) r2 (fib (- n 1) r2 (+ r1 r2)))))]) (fib 6 0 1))'''
+    # program = '''(+ 2 3 ( + 4 5 ( + 6 (+ 7 8) 9) 10) 11)'''
+    # program = '''(letrec ([f (lambda (x) 
+    #                             (if (zero? x)
+    #                                 1 
+    #                                 (* x (f (sub1 x)))))]) 
+    #                 (f 5))'''
+    # program = '''(letrec ([sum (lambda (n ac)
+    #                                 (if (zero? n)
+    #                                     ac
+    #                                     (sum (sub1 n) (+ n ac))))])
+    #                 (sum 10 0))'''
     # print(program)
+    
     # create_binary(program)
     # environment_stack.scope_enter(0)    # Global scope
     while True:

@@ -75,13 +75,9 @@ def check_argument_type(function_name, given_arguments, function_argument_types)
 
 
 def create_unique_if_labels(n):
-    # Maybe here we need to add a check for platform support
-    # MacOS or Windows
     return "_IF_L_%s" % n
 
 def create_unique_func_labels(n):
-    # Maybe here we need to add a check for platform support
-    # MacOS or Windows
     return "_FUNC_L_%s" % n
 
 
@@ -98,27 +94,14 @@ def typeof(arg):
         return "variable"
 
 
-# def check_defined_variable(variable_name, environment):
-#     if variable_name not in environment.keys():
-#         raise EspyNameError("Variable %s is not defined" % variable_name)
-
-    
-# def load_from_memory(memory_idx=None, variable_name=None, environment=None):
-#     if memory_idx is not None:
-#         return "\tmovl %s(%%esp), %%eax\n" % memory_idx
-#     elif variable_name is not None and environment is not None:
-#         variable_index = environment[variable_name]
-#         check_defined_variable(variable_name, environment)
-#         return "\tmovl %s(%%esp), %%eax\n" % str(variable_index)
-
+# Function that returns the assembly code to store a variable in memory
+# It receives the following parameters:
+#   memory_index : the memory index of the variable as a str
 def save_in_memory(memory_idx):
     return "\tmovl %%eax, %s(%%esp)\n" % memory_idx
-    
-# def load_variable_from_memory(variable_name, environment):
-#     variable_index = environment[variable_name]
-#     check_defined_variable(variable_name, environment)
-#     return "\tmovl %s(%%esp), %%eax\n" % str(variable_index)
 
-
-# def is_variable(x):
-#     return typeof(x) == "variable"
+# Function that returns the assembly code to load a variable from memory
+# It receives the following parameters:
+#   memory_index : the memory index of the variable as a str
+def load_from_memory(memory_idx):
+    return "\tmovl %s(%%esp), %%eax\n" % memory_idx
