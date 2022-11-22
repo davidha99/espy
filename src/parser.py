@@ -27,6 +27,8 @@ from environment import Environment_Stack, Environment, Global_Environment
 from errors import EspyNameError, InvalidArgumentNumber
 # import compiler
 
+TEMP_DIR = -1000
+
 asm = ""
 asm += emit_function_header("entry_point")
 asm += emit_stack_header("entry_point")
@@ -45,6 +47,7 @@ var_binding_stack = []
 func_binding_stack = []
 scope_counter = 0
 func_call_stack = []
+pointer_offset = 0
 # param_queue = []
 # evaluated_args = 0
 
@@ -152,6 +155,8 @@ def p_with_multiple_params(p):
     with_multiple_params : with_multiple_params ID np_seen_param
                          | ID np_seen_param
     '''
+    global pointer_offset
+    pointer_offset = -4 * (environment_stack.get_len_all_parameters())
 
 def p_np_seen_param(p):
     "np_seen_param :"
@@ -380,7 +385,7 @@ def p_comparison_primitive(p):
     global_operator_stack.pop()     # Pop the operator
     global_operator_stack.pop()     # Pop the operator flag ('(')
     global_operand_stack.pop(-2)    # Pop the operand flag ('(')
-    asm += "\tmovl %s(%%esp), %%eax\n" % str(memory_stack_index)   # We must get the value from n-1(esp) to eax, so that we can continue working with it
+    asm += "\tmovl %s(%%esp), %%eax\n" % str(memory_stack_index + TEMP_DIR)   # We must get the value from n-1(esp) to eax, so that we can continue working with it
     memory_stack_index += 4         # Reset the memory index to 0
 
 #NP After parenthesis lecture
@@ -417,7 +422,7 @@ def p_arithmetic_primitive(p):
     global_operator_stack.pop()     # Pop the operator
     global_operator_stack.pop()     # Pop the operator flag ('(')
     global_operand_stack.pop(-2)        # Pop the operand flag ('(')
-    asm += "\tmovl %s(%%esp), %%eax\n" % str(memory_stack_index)   # We must get the value from n-1(esp) to eax, so that we can continue working with it
+    asm += "\tmovl %s(%%esp), %%eax\n" % str(memory_stack_index + TEMP_DIR)   # We must get the value from n-1(esp) to eax, so that we can continue working with it
     memory_stack_index += 4         # Update the asm stack index every time we close a \paren
 
 #NP After parenthesis lecture
@@ -615,6 +620,7 @@ def p_function_call(p):
     global func_call_stack
     global asm
     global global_operand_stack
+    global pointer_offset
 
     topmost_function = func_call_stack[-1]
     func_name = topmost_function[0]
@@ -625,12 +631,13 @@ def p_function_call(p):
     if evaluated_args != n_params:
         raise InvalidArgumentNumber("Invalid number of arguments")
 
-    pointer_offset = -4 * (environment_stack.get_all_parameters())
+    # pointer_offset = -4 * (environment_stack.get_all_parameters())
     func_label = environment_stack.scope_func_lookup(func_name).label
-    asm += "\taddl $%s, %%esp\n" % pointer_offset
+    pointer_mov = (pointer_offset * len(func_call_stack) - (len(func_call_stack) - 1) * 4)
+    asm += "\taddl $%s, %%esp\n" % pointer_mov
     asm += "\tcall %s\n" % func_label
-    pointer_offset = -1 * pointer_offset
-    asm += "\taddl $%s, %%esp\n" % pointer_offset
+    t_pointer_offset = -1 * pointer_mov
+    asm += "\taddl $%s, %%esp\n" % t_pointer_offset
     global_operand_stack.append(func_name)
     # Pop the function from the call stack
     func_call_stack.pop()
@@ -717,7 +724,12 @@ def p_with_multiple_args(p):
     # Generate asm instructions for function call
     # mem_idx = environment_stack.func_lookup_param(func_name, param_name)
     # offset_idx =  mem_idx - 4 *(len(func_params) + 1)
-    asm += save_in_memory(-4 * evaluated_args + memory_stack_index)
+    # total_evaluated_args = 0
+    # for x in func_call_stack:
+    #     if x[2] > 0:
+    #         total_evaluated_args += x[2]
+    where = func_params.parameters[param_name][0] + ((pointer_offset - 4) * len(func_call_stack))
+    asm += save_in_memory(where)
     # memory_stack_index -= 4
     # asm += "\tmovl %s(%%esp), %s(%%esp)\n" % mem_idx
     p[0] = global_operand_stack[-1]

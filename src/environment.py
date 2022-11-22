@@ -129,7 +129,7 @@ class Environment_Stack:
         else:
             return function.params.parameter_lookup(param_name)
 
-    def get_all_parameters(self):
+    def get_len_all_parameters(self):
         '''
         Get all parameters of a given function
         '''
