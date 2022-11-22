@@ -18,6 +18,7 @@ reserved = {
     'var': 'VAR',
     'letrec' : 'LETREC',
     'lambda': 'LAMBDA'
+    'list': 'LIST'
 }
 
 literals = ['(', ')', '+', '-', '*', '/', '[', ']', '>', '<']

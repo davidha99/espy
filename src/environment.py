@@ -26,17 +26,19 @@ class Parameter:
             raise EspyNameError("Parameter %s is not defined" % name)
 
 class Symbol:
+
     # Name: name of the symbol
     # Memory_idx: memory index of the symbol when the symbol is a variable
     # Value: value of the symbol when the symbol is a variable
     # Label: label of the symbol when the symbol is a function
     # Parameters: dictionary of parameters of the symbol when the symbol is a function
-    def __init__(self, name=None, memory_idx=None, value=None, label=None, params=None) -> None:
+    def __init__(self, name=None, memory_idx=None, value=None, label=None, params=None, size=None) -> None:
         self.name = name
         self.memory_idx = memory_idx 
         self.value = value
         self.label = label
         self.params = params
+        self.size = size
 
 class Environment:
     def __init__(self, name = None) -> None:

@@ -1,3 +1,5 @@
+from errors import EspyTypeError
+
 num_shift = 2
 num_mask = 3  # '%x' % int('00000011', 2)
 num_tag = 0  # '%x' % int('00000000', 2)
@@ -78,5 +80,4 @@ def literal_repr(code):
     elif is_null(code):
         return compile_null(code)
     else:
-        print("Error")
-        exit()
+        raise EspyTypeError("Unrecognized argument type: %s" %  code)
