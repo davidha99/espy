@@ -1,5 +1,4 @@
 #!/usr/bin/python3
-
 import os
 import sys
 from environment import Environment_Stack
@@ -8,7 +7,7 @@ from parser import parser
 
 def create_binary(program):
     """
-    Given text of a scheme program, write assembly and link it into an
+    Given text of a espy program, write assembly and link it into an
     executable.
     """
     parser_status = parser.parse(program)
@@ -22,6 +21,9 @@ def create_binary(program):
 
 
 if __name__ == '__main__':
+    
+    # El usuario puede elegir si leer un programa en archivo 
+    # o escribir el programa en el interpretador
     
     if len(sys.argv) == 2:
         with open(sys.argv[1], 'r') as f:

@@ -1,4 +1,4 @@
-(letrec ([fib (lambda (x) 
+(def ([fib (lambda (x) 
             (if (<= x 2) 
                 1 
                 (+ 0 (fib (- x 1))(fib (- x 2)))))]) 

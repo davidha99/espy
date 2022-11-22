@@ -1,7 +1,21 @@
 from errors import EspyNameError
 
+'''
+Environment.py
+Descripción: Definición de clases y métodos usadas para la administración 
+             y acceso de memoria en compilación
+Autores: David Hernández    |   A01383543
+         Bernardo García    |   A00570682
+'''
+
+# Variable global para el guardado de variables globales
 _global_environment  = None
 
+'''
+    Clase: Parameter
+    Descripción: Almacena los parametros de una función
+    Atributos: parameters : Diccionario de listas[num, num]
+'''
 class Parameter:
     def __init__(self):
         self.parameters = {}
@@ -9,29 +23,33 @@ class Parameter:
     def set_new_parameter(self, name, memory_idx, value=None) -> None:
         self.parameters[name] = [memory_idx, value]
     
+    # Función para buscar y asignar el valor a un parámetro
+    # Regresa: val
     def set_parameter_value(self, name, value) -> None:
         try:
-            # Look for the paramater in the parameters dictionary {name: (memory_idx, value)}
-            # Set the value of the parameter (memory_idx, value)
             self.parameters[name][1] = value
         except KeyError:
             raise EspyNameError("Parameter %s is not defined" % name)
     
+    # Función para buscar un parámetro
+    # Regresa: parametro
     def parameter_lookup(self, name) -> int:
         try:
-            # Look for the paramater in the parameters dictionary {name: (memory_idx, value)}
-            # Return the information of the parameter [memory_idx, value]
             return self.parameters[name]
         except KeyError:
             raise EspyNameError("Parameter %s is not defined" % name)
 
+'''
+    Clase: Symbol
+    Descripción: Almacena los atributos de una variable
+    Atributos: 
+        - name : string
+        - memory_idx : num
+        - value : num, ID, list
+        - label : string
+        - parameters : Parameter
+'''
 class Symbol:
-
-    # Name: name of the symbol
-    # Memory_idx: memory index of the symbol when the symbol is a variable
-    # Value: value of the symbol when the symbol is a variable
-    # Label: label of the symbol when the symbol is a function
-    # Parameters: dictionary of parameters of the symbol when the symbol is a function
     def __init__(self, name=None, memory_idx=None, value=None, label=None, params=None, size=None) -> None:
         self.name = name
         self.memory_idx = memory_idx 
@@ -40,6 +58,13 @@ class Symbol:
         self.params = params
         self.size = size
 
+'''
+    Clase: Environment
+    Descripción: Almacena las variables declaradas de cada contexto (scope)
+    Atributos: 
+        - name : string
+        - environment : Diccionario de Symbols
+'''
 class Environment:
     def __init__(self, name = None) -> None:
         self.environment = {} 
@@ -48,13 +73,19 @@ class Environment:
     def add_entry(self, name, symbol) -> None:
         self.environment[name] = symbol
 
+'''
+    Clase: Environment Stack
+    Descripción: Almacena los distintos alcances (scopes) del programa
+    Atributos: 
+        - stack : Pila de Environments
+'''
 class Environment_Stack:
     def __init__(self) -> None:
         self.stack = []
 
     def scope_enter(self, name = None) -> None:
         '''
-        Causes a new environment to be pushed on the top of the stack, representing a new scope
+        Agregar un nuevo Environment a la pila
         '''
         new_environment = Environment(name)
         self.stack.append(new_environment)
@@ -62,26 +93,25 @@ class Environment_Stack:
 
     def scope_exit(self) -> None:
         '''
-        Causes the topmost environment to be removed
+        Elimina el mas reciente Environment
         '''
         self.stack.pop()
 
     def scope_pop(self) -> Environment:
         '''
-        Returns the topmost environment. Used to save global environment
+        Regresa y elimina el más reciente Environment
         '''
         return self.stack.pop()
 
     def scope_level(self) -> int:
         '''
-        Returns the number of environments in the current stack (this is helpful to know whether 
-        we are at the global scope or not)
+        Regresa el numero de Environments de la pila
         '''
         return len(self.stack)
 
     def scope_bind(self, name, sym=None, memory_idx=None) -> None:
         '''
-        Adds an entry to the topmost environment of the stack, mapping <name> to the symbol structure <sym>.
+        Agrega un Symbol al Environment más reciente, asignando su nombre con la estructura
         '''
         if sym is None:
             sym = Symbol(name, memory_idx)
@@ -90,8 +120,7 @@ class Environment_Stack:
 
     def scope_lookup(self, name) -> Symbol:
         '''
-        Searches the stack of environments from top to bottom, looking for the first entry that matches 
-        <name> exactly. If no match is found, it returns null
+        Busca de arriba hacia abajo de la pila por el Symbol con el mismo nombre <name>
         '''
         for scope in reversed(self.stack):
             if name in scope.environment.keys() and scope.environment[name].value is not None:
@@ -100,8 +129,8 @@ class Environment_Stack:
 
     def scope_func_lookup(self, name) -> Symbol:
         '''
-        Searches the stack of environments from top to bottom, looking for the first entry that matches function name
-        exactly. If no match is found, it returns null
+        Busca de arriba hacia abajo de la pila por Symbol con el mismo nombre <name>. Su implementación es
+        relacionada a la busqueda de funciones (no guardan un valor (value)).
         '''
         for scope in reversed(self.stack):
             if name in scope.environment.keys():
@@ -110,8 +139,8 @@ class Environment_Stack:
 
     def scope_lookup_current(self, name) -> Symbol:
         '''
-        Works like scope lookup except that it only searches the topmost environment. This is used to determine 
-        whether a symbol has already been defined in the current scope.
+        Busca el nombre de una variable dentro del Environment más reciente. Su implementación es relacionada
+        a la búsqueda de Symbols ya definidos dentro del mismo Environment
         '''
         topmost_scope = self.stack[-1]
         if name in topmost_scope.environment.keys():
@@ -120,12 +149,12 @@ class Environment_Stack:
 
     def func_lookup_param(self, func_name, param_name):
         '''
-        Search for the parameter of a given function
+        Busca el parámetro de una función específica
         '''
-        # Search for the function symbol information in the stack of environments
+        # Buscar el Symbol de la función con el nombre otorgado
         function = self.scope_func_lookup(func_name)
         
-        # Create new Parameter object if the function has no parameters yet
+        # Regresa el parámetro que se busca. De no existir ninguno, regresa None.
         if function.params is None:
             return None
         else:
@@ -133,26 +162,24 @@ class Environment_Stack:
 
     def get_len_all_parameters(self):
         '''
-        Get all parameters of a given function
+        Regresa el número de parametros totales que tiene la Environment más reciente
         '''
         total_params = 0
         topmost_scope = self.stack[-1]
         for func in topmost_scope.environment.values():
             if func.params is not None:
                 total_params += len(func.params.parameters)
-        return total_params
-
-        
+        return total_params        
 
     def insert_environment(self, global_env):
         '''
-        Function to insert global environment every parse running
+        Agrega un Environment ya existente al stack
         '''
         self.stack.append(global_env)
     
     def function_bind(self, func_name, label):
         '''
-        Bind the symbol as a function in current environment
+        Agrega una nueva funcion con su Symbol correspondiente al Environment más reciente
         '''
         symbol = Symbol(name=func_name, label=label, params=None)
         topmost_scope = self.stack[-1]
@@ -160,18 +187,22 @@ class Environment_Stack:
     
     def parameter_bind(self, func_name, param_name, memory_idx, value=None):
         '''
-        Bind the symbol as a parameter of a given function
+        Agrega un nuevo parametro al Symbol correspondiente
         '''
-        # Search for the function symbol information in the stack of environments
+        # Buscar la información de la función en el último Environment
         function = self.scope_lookup_current(func_name)
         
-        # Create new Parameter object if the function has no parameters yet
+        # Crear un nuevo parámetro si la función no tiene aún
         if function.params is None:
             function.params = Parameter()
 
+        # Asignar valor de nuevo parámetro
         function.params.set_new_parameter(param_name, memory_idx, value)
 
-#Singleton Class for global environment
+'''
+    Clase: Global Environment
+    Descripción: Diseño Singleton para obtener la instancia global del contexto de variables globales
+'''
 class Global_Environment:
     @staticmethod
     def get_instance():

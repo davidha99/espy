@@ -1,7 +1,12 @@
 from literals import is_num, is_boolean, is_char, is_null, is_literal, literal_repr
 from platform import system
-# from primitives import is_primitive
 
+'''
+Emitter.py
+Descripción: Archivo destinado a la generación de instrucciones comunes de Assembly (ASM)
+Autores: David Hernández    |   A01383543
+         Bernardo García    |   A00570682
+'''
 
 def emit_function_header(func):
     function_header = """	.text
@@ -11,11 +16,9 @@ def emit_function_header(func):
 
     return function_header
 
-
 def emit_function_footer():
     function_footer = "\tret\n"
     return function_footer
-
 
 def emit_stack_header(func):
     asm = '''%s:
@@ -26,13 +29,6 @@ def emit_stack_header(func):
     ret
 ''' % func
     return asm
-
-# .file	"ctest.c"
-# 	.text
-# 	.globl	entry_point
-# 	.def	entry_point;	.scl	2;	.type	32;	.endef
-# 	.seh_proc	entry_point
-
 
 def emit_literal(expr):
     asm = ""
@@ -49,11 +45,3 @@ def emit_literal(expr):
         print("Error")
         exit()
     return asm
-
-
-def emit_primcall(expr):
-    pass
-
-
-def emit_conditional_expr(expr):
-    pass

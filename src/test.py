@@ -1,7 +1,7 @@
 from subprocess import check_output
 from unittest import main, TestCase
 
-from compiler import create_binary
+from espy import create_binary
 
 
 class ImmediateTest(TestCase):
@@ -987,83 +987,83 @@ class ImmediateTest(TestCase):
     def test_let_10(self):
         self.assertEvaluatesRepr("(let ([x 12]) (let ([x (+ x x)]) (let ([x (+ x x)]) (let ([x (+ x x)]) (+ x x)))))", "192")
     
-    def test_letrec_1(self):
-        self.assertEvaluatesRepr("(letrec () 12)", "12")
+    def test_def_1(self):
+        self.assertEvaluatesRepr("(def () 12)", "12")
 
-    def test_letrec_2(self):
-        self.assertEvaluatesRepr("(letrec () (let ([x 5]) (+ x x)))", "10")
+    def test_def_2(self):
+        self.assertEvaluatesRepr("(def () (let ([x 5]) (+ x x)))", "10")
 
-    def test_letrec_3(self):
-        self.assertEvaluatesRepr("(letrec ([f (lambda () 5)]) 7)", "7")
+    def test_def_3(self):
+        self.assertEvaluatesRepr("(def ([f (lambda () 5)]) 7)", "7")
 
-    def test_letrec_4(self):
-        self.assertEvaluatesRepr("(letrec ([f (lambda () 5)]) (let ([x 12]) x))", "12")
+    def test_def_4(self):
+        self.assertEvaluatesRepr("(def ([f (lambda () 5)]) (let ([x 12]) x))", "12")
 
-    def test_letrec_5(self):
-        self.assertEvaluatesRepr("(letrec ([f (lambda () 5)]) (f))", "5")
+    def test_def_5(self):
+        self.assertEvaluatesRepr("(def ([f (lambda () 5)]) (f))", "5")
 
-    def test_letrec_6(self):
-        self.assertEvaluatesRepr("(letrec ([f (lambda () 5)]) (let ([x (f)]) x))", "5")
+    def test_def_6(self):
+        self.assertEvaluatesRepr("(def ([f (lambda () 5)]) (let ([x (f)]) x))", "5")
 
-    def test_letrec_7(self):
-        self.assertEvaluatesRepr("(letrec ([f (lambda () 5)]) (+ (f) 6))", "11")
+    def test_def_7(self):
+        self.assertEvaluatesRepr("(def ([f (lambda () 5)]) (+ (f) 6))", "11")
 
-    def test_letrec_8(self):
-        self.assertEvaluatesRepr("(letrec ([f (lambda () 5)]) (+ 6 (f)))", "11")
+    def test_def_8(self):
+        self.assertEvaluatesRepr("(def ([f (lambda () 5)]) (+ 6 (f)))", "11")
 
-    def test_letrec_9(self):
-        self.assertEvaluatesRepr("(letrec ([f (lambda () 5)]) (- 20 (f)))", "15")
+    def test_def_9(self):
+        self.assertEvaluatesRepr("(def ([f (lambda () 5)]) (- 20 (f)))", "15")
 
-    def test_letrec_10(self):
-        self.assertEvaluatesRepr("(letrec ([f (lambda () 5)]) (+ (f) (f)))", "10")
+    def test_def_10(self):
+        self.assertEvaluatesRepr("(def ([f (lambda () 5)]) (+ (f) (f)))", "10")
 
-    def test_letrec_11(self):
-        self.assertEvaluatesRepr("(letrec ([f (lambda () (+ 5 7))] [g (lambda () 13)]) (+ (f) (g)))", "25")
+    def test_def_11(self):
+        self.assertEvaluatesRepr("(def ([f (lambda () (+ 5 7))] [g (lambda () 13)]) (+ (f) (g)))", "25")
 
-    def test_letrec_12(self):
-        self.assertEvaluatesRepr("(letrec ([f (lambda (x) (+ x 12))]) (f 13))", "25")
+    def test_def_12(self):
+        self.assertEvaluatesRepr("(def ([f (lambda (x) (+ x 12))]) (f 13))", "25")
 
-    def test_letrec_13(self):
-        self.assertEvaluatesRepr("(letrec ([f (lambda (x) (+ x 12))]) (f (f 10)))", "34")
+    def test_def_13(self):
+        self.assertEvaluatesRepr("(def ([f (lambda (x) (+ x 12))]) (f (f 10)))", "34")
 
-    def test_letrec_14(self):
-        self.assertEvaluatesRepr("(letrec ([f (lambda (x) (+ x 12))]) (f (f (f 0))))", "36")
+    def test_def_14(self):
+        self.assertEvaluatesRepr("(def ([f (lambda (x) (+ x 12))]) (f (f (f 0))))", "36")
 
-    def test_letrec_15(self):
-        self.assertEvaluatesRepr("(letrec ([f (lambda (x y) (+ x y))] [g (lambda (x) (+ x 12))]) (f 16 (f (g 0) (+ 1 (g 0)))))", "41")
+    def test_def_15(self):
+        self.assertEvaluatesRepr("(def ([f (lambda (x y) (+ x y))] [g (lambda (x) (+ x 12))]) (f 16 (f (g 0) (+ 1 (g 0)))))", "41")
 
-    def test_letrec_16(self):
-        self.assertEvaluatesRepr("(letrec ([g (lambda (x y) (+ x y))] [f (lambda (x) (g x x))]) (f 12))", "24")
+    def test_def_16(self):
+        self.assertEvaluatesRepr("(def ([g (lambda (x y) (+ x y))] [f (lambda (x) (g x x))]) (f 12))", "24")
 
-    def test_letrec_17(self):
-        self.assertEvaluatesRepr("(letrec ([f (lambda (x) (if (zero? x) 1 (* x (f (sub1 x)))))]) (f 5))", "120")
+    def test_def_17(self):
+        self.assertEvaluatesRepr("(def ([f (lambda (x) (if (zero? x) 1 (* x (f (sub1 x)))))]) (f 5))", "120")
 
-    def test_letrec_18(self):
-        self.assertEvaluatesRepr("(letrec ([f (lambda (x acc) (if (zero? x) acc (f (sub1 x) (* acc x))))]) (f 5 1))", "120")
+    def test_def_18(self):
+        self.assertEvaluatesRepr("(def ([f (lambda (x acc) (if (zero? x) acc (f (sub1 x) (* acc x))))]) (f 5 1))", "120")
 
-    def test_letrec_19_1(self):
-        self.assertEvaluatesRepr("(letrec ([f (lambda (x) (if (zero? x) 0 (+ 1 (f (sub1 x)))))]) (f 63))", "63")
+    def test_def_19_1(self):
+        self.assertEvaluatesRepr("(def ([f (lambda (x) (if (zero? x) 0 (+ 1 (f (sub1 x)))))]) (f 63))", "63")
 
-    # def test_letrec_19_2(self):
-    #     self.assertEvaluatesRepr("(letrec ([f (lambda (x) (if (zero? x) 0 (+ 1 (f (sub1 x)))))]) (f 200))", "200")
+    # def test_def_19_2(self):
+    #     self.assertEvaluatesRepr("(def ([f (lambda (x) (if (zero? x) 0 (+ 1 (f (sub1 x)))))]) (f 200))", "200")
     
     def test_fibonacci_rec(self):
-        self.assertEvaluatesRepr("(letrec ([fib (lambda (x) (if (<= x 2) 1 (+ 0 (fib (- x 1))(fib (- x 2)))))]) (fib 6))", "8")
+        self.assertEvaluatesRepr("(def ([fib (lambda (x) (if (<= x 2) 1 (+ 0 (fib (- x 1))(fib (- x 2)))))]) (fib 6))", "8")
     
     def test_fibonacci_iterativo(self):
-        self.assertEvaluatesRepr("(letrec ([fib (lambda (n r1 r2) (if (< n 2) r2 (fib (- n 1) r2 (+ r1 r2))))]) (fib 6 0 1))", "8")
+        self.assertEvaluatesRepr("(def ([fib (lambda (n r1 r2) (if (< n 2) r2 (fib (- n 1) r2 (+ r1 r2))))]) (fib 6 0 1))", "8")
     
     def test_factorial_rec(self):
-        self.assertEvaluatesRepr("(letrec ([fact (lambda (n) (if (== n 0) 1 (* n (fact (- n 1)))))]) (fact 3))", "6")
+        self.assertEvaluatesRepr("(def ([fact (lambda (n) (if (== n 0) 1 (* n (fact (- n 1)))))]) (fact 3))", "6")
     
 if __name__ == '__main__':
     main()
 
 '''
-(letrec ([fib (lambda (x) (if (<= x 2) 1 (+ (fib (- n 1))(fib (- n 2)))))])(fib 6))
+(def ([fib (lambda (x) (if (<= x 2) 1 (+ (fib (- n 1))(fib (- n 2)))))])(fib 6))
 
 '''
 
 '''
-(letrec ([fact (lambda (n) (if (= n 0) 1 (* n (fact (- n 1)))))]) (fact 3))
+(def ([fact (lambda (n) (if (= n 0) 1 (* n (fact (- n 1)))))]) (fact 3))
 '''

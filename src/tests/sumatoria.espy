@@ -1,4 +1,4 @@
-(letrec ([sum (lambda (n ac)
+(def ([sum (lambda (n ac)
     (if (== n 0)
         ac
         (sum (sub1 n) (+ n ac))))])

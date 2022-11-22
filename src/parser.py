@@ -61,7 +61,7 @@ general_temp = None            # General temp helper
 def p_program(p):
     '''
     program : np_gbl_scope expr
-            | np_gbl_scope '(' LETREC np_seen_letrec func_binding_list expr ')'
+            | np_gbl_scope '(' DEF np_seen_def func_binding_list expr ')'
     '''
     global asm
     global global_operand_stack
@@ -95,8 +95,8 @@ def p_np_gbl_scope(p):
     asm += temp
     scope_counter += 1
 
-def p_np_seen_letrec(p):
-    "np_seen_letrec :"
+def p_np_seen_def(p):
+    "np_seen_def :"
     global environment_stack
     global memory_stack_index
     environment_stack.scope_enter(scope_counter)

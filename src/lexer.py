@@ -16,7 +16,7 @@ reserved = {
     'if': 'IF', 
     'let': 'LET',
     'var': 'VAR',
-    'letrec' : 'LETREC',
+    'def' : 'DEF',
     'lambda': 'LAMBDA',
     'list': 'LIST'
 }
