@@ -43,3 +43,5 @@ if __name__ == '__main__':
             exit()
         create_binary(program)
     
+    (letrec ([fib (lambda (x) (if (<= x 2) arr[0] (+ 0 (fib (- x arr[0])) (fib (- x 2)))))]) (fib arr[2]))
+    (letrec ([fib (lambda (x) (if (<= x y) 1 (+ 0 (fib (- x 1)) (fib (- x y)))))]) (fib arr[2]))

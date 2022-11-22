@@ -1,4 +1,4 @@
-from errors import EspyTypeError, InvalidArgumentNumber, EspyNameError
+from errors import EspyTypeError, InvalidArgumentNumber, EspyNameError, EspyIndexOutOfBounds
 from literals import is_boolean, is_char, is_null, is_num, literal_repr
 from environment import Environment, Symbol
 
@@ -106,6 +106,15 @@ def save_in_memory(memory_idx):
 #   memory_index : the memory index of the variable as a str
 def load_from_memory(memory_idx):
     return "\tmovl %s(%%esp), %%eax\n" % memory_idx
+
+def get_list_element_mem_idx(symbol, i):
+    if i == symbol.size:
+        raise EspyIndexOutOfBounds(f"Index {i} out of bounds")
+    if(symbol.size != None or symbol.size == 0):
+        return symbol.memory_idx - (4 * i)
+    else:
+        return symbol.memory_idx
+        
 
 # Function that restores all existing global variables to its memory index
 # It receives:

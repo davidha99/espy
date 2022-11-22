@@ -21,7 +21,8 @@ from utils import (
     save_in_memory,
     load_from_memory,
     typeof, 
-    restore_glb_var_to_memory
+    restore_glb_var_to_memory, 
+    get_list_element_mem_idx
     )
 
 from environment import Environment_Stack, Environment, Global_Environment
@@ -195,6 +196,7 @@ def p_expr(p):
     '''
     expr : literal
          | variable
+         | list_variable
          | unary_primitive
          | conditional_expr
          | arithmetic_primitive
@@ -235,16 +237,8 @@ def p_variable(p):
 
     # If it is, push the value of the variable to the operand stack
     if symbol is not None:
-        # global_operand_stack.append(symbol.value)
         global_operand_stack.append(var)
-        # asm += emit_literal(symbol.value) # TODO: load_from_memory instead of literal
         asm += load_from_memory(symbol.memory_idx)
-#        if type(symbol.value) is list:
-#            for x in symbol.value:
-#                global_operand_stack.append(x)        
-#       else:
-#            global_operand_stack.append(symbol.value)
-
     else:
         mem_idx = environment_stack.func_lookup_param(func_binding_stack[-1], var)[0]
         if mem_idx is not None:
@@ -254,13 +248,25 @@ def p_variable(p):
         else:
             raise EspyNameError("Variable '%s' is not defined" % var)
 
-#    if type(symbol.value) is list:
-#        print(symbol.value)             # Hard coded list showing
-#    # Generate intel x386 assembly code to load value of variable into register
-#    asm += emit_literal(global_operand_stack[-1])
-
     
     p[0] = p[1]
+
+def p_list_variable(p):
+    '''
+    list_variable : ID '[' expr ']'
+    '''
+    global asm
+    global global_operand_stack
+    global environment_stack
+    var = p[1]
+    index = p[3]
+    symbol = environment_stack.scope_lookup(var)
+
+    # If it is, push the value of the variable to the operand stack
+    if symbol is not None:
+        global_operand_stack.append(var)
+        asm += load_from_memory(get_list_element_mem_idx(symbol, index))
+
 
 def p_variable_declaration(p):
     '''

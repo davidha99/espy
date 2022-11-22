@@ -41,3 +41,6 @@ class InvalidArgumentNumber(CompilerException):
 class EspyStackOverflow(CompilerException):
     def __init__(self):
         super().__init__("Stack overflown")
+
+class EspyIndexOutOfBounds(CompilerException):
+    pass
