@@ -17,7 +17,7 @@ reserved = {
     'let': 'LET',
     'var': 'VAR',
     'letrec' : 'LETREC',
-    'lambda': 'LAMBDA'
+    'lambda': 'LAMBDA',
     'list': 'LIST'
 }
 

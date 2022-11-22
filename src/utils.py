@@ -1,5 +1,6 @@
 from errors import EspyTypeError, InvalidArgumentNumber, EspyNameError
-from literals import is_boolean, is_char, is_null, is_num
+from literals import is_boolean, is_char, is_null, is_num, literal_repr
+from environment import Environment, Symbol
 
 
 def check_argument_number(function_name, given_arguments,
@@ -105,3 +106,23 @@ def save_in_memory(memory_idx):
 #   memory_index : the memory index of the variable as a str
 def load_from_memory(memory_idx):
     return "\tmovl %s(%%esp), %%eax\n" % memory_idx
+
+# Function that restores all existing global variables to its memory index
+# It receives:
+#   environment : environment containing the variables wanted
+def restore_glb_var_to_memory(environment, mem_var_idx, mem_list_idx):
+    asm = ""
+    for var in environment.environment.values():
+        if var.value != None:
+            idx = var.memory_idx
+            if(var.size != None or var.size == 0):
+                temp_list = var.value
+                for x in temp_list:
+                    asm += "\tmovl	$%s, %s(%%esp)\n" % (literal_repr(x), idx)
+                    idx -= 4
+                    mem_list_idx -= 4
+            else:
+                value = var.value
+                asm += "\tmovl	$%s, %s(%%esp)\n" % (literal_repr(value), idx)
+                mem_var_idx -= 4    
+    return asm, mem_var_idx, mem_list_idx

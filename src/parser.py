@@ -20,13 +20,17 @@ from utils import (
     create_unique_func_labels, 
     save_in_memory,
     load_from_memory,
-    typeof
+    typeof, 
+    restore_glb_var_to_memory
     )
 
 from environment import Environment_Stack, Environment, Global_Environment
 from errors import EspyNameError, InvalidArgumentNumber
 
 TEMP_DIR = -1000
+VAR_DIR = -2000
+LISTS_DIR = -3000
+
 
 asm = ""
 asm += emit_function_header("entry_point")
@@ -49,7 +53,8 @@ func_call_stack = []
 pointer_offset = 0
 # param_queue = []
 # evaluated_args = 0
-memory_lists_index = -200   # Lists index, will be saved starting at this dir
+memory_var_index = VAR_DIR   # Lists index, will be saved starting at this dir
+memory_lists_index = LISTS_DIR   # Lists index, will be saved starting at this dir
 general_temp = None            # General temp helper
 
 def p_program(p):
@@ -79,9 +84,14 @@ def p_np_gbl_scope(p):
     "np_gbl_scope :"
     global environment_stack
     global scope_counter
+    global asm
+    global memory_var_index
+    global memory_lists_index
     global_env = Global_Environment.get_instance()
     # environment_stack.scope_enter(scope_counter)    # Global scope
     environment_stack.insert_environment(global_env)
+    temp, memory_var_index, memory_stack_index = restore_glb_var_to_memory(global_env, memory_var_index, memory_lists_index)
+    asm += temp
     scope_counter += 1
 
 def p_np_seen_letrec(p):
@@ -190,11 +200,10 @@ def p_expr(p):
          | arithmetic_primitive
          | comparison_primitive
          | let_binding
-         | global_var_declaration
          | function_call
          | list_declaration         
+         | variable_declaration
     '''
-    #| variable_declaration
     
     p[0] = p[1]
 
@@ -255,13 +264,33 @@ def p_variable(p):
 
 def p_variable_declaration(p):
     '''
-    variable_declaration : '(' VAR '[' np_seen_bracket ID np_seen_variable expr np_seen_var_expr ']' ')'
+    variable_declaration : '(' VAR '[' np_seen_var_bracket ID np_seen_variable expr np_seen_var_expr ']' ')'
     '''
     global environment_stack
     global asm
-    var = p[5]
-    symbol = environment_stack.scope_lookup(var)
-    asm += save_in_memory(symbol.memory_idx)
+    global var_binding_stack
+    global memory_var_index
+    global memory_stack_index
+    global general_temp
+    global global_operand_stack
+    
+    memory_var_index = memory_stack_index         # Saving Lists index for next list to be read
+    memory_stack_index = general_temp               # Updating mem index to continue normal arguments
+    # var_binding_stack.pop()                         # Poping var name
+    # var = p[5]
+    # symbol = environment_stack.scope_lookup(var)
+    # asm += save_in_memory(symbol.memory_idx)
+    
+
+def p_np_seen_var_bracket(p):
+    "np_seen_var_bracket :"
+    global memory_stack_index
+    global global_operand_stack
+    global memory_var_index
+    global general_temp
+    general_temp = memory_stack_index       # Memory stack index must be saved to know where are we coming back
+    memory_stack_index = memory_var_index        # Now memory points to last space at var section
+
 
 def p_list_declaration(p):
     '''
@@ -274,7 +303,7 @@ def p_list_declaration(p):
     
     memory_lists_index = memory_stack_index         # Saving Lists index for next list to be read
     memory_stack_index = general_temp               # Updating mem index to continue normal arguments
-    binding_stack.pop()                             # Poping var name
+    var_binding_stack.pop()                         # Poping var name
     global_operand_stack.pop()                      # Poping fake bottom Flag ('[')
 
     
@@ -287,17 +316,17 @@ def p_np_seen_list_bracket(p):
     global general_temp
     general_temp = memory_stack_index       # Memory stack index must be saved to know where are we coming back
     memory_stack_index = memory_lists_index        # Now memory points to last space at list section
-    global_operand_stack.append('[')      # Fake bottom ('flag') to append list content
+    global_operand_stack.append('[')      # Fake bottom ('flag') to append list content.
 
 
 def p_np_seen_list_expr(p):
     "np_seen_list_expr :"
     global global_operand_stack
     global environment_stack
-    global binding_stack
+    global var_binding_stack
     global memory_stack_index
     global asm
-    var = binding_stack[-1]       # Variable's name has been saved before to update its value in Environment stack
+    var = var_binding_stack[-1]       # Variable's name has been saved before to update its value in Environment stack
     symbol = environment_stack.scope_lookup_current(var)
     if symbol.value == None:      
         list_content = []
