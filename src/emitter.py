@@ -24,7 +24,7 @@ def emit_stack_header(func):
     call    L_entry_point
     movl    %%ecx, %%esp
     ret
-    ''' % func
+''' % func
     return asm
 
 # .file	"ctest.c"

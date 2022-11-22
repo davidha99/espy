@@ -14,9 +14,10 @@ reserved = {
     'boolean?': 'ISBOOLEAN',
     'char?': 'ISCHAR',
     'if': 'IF', 
-    'define': 'DEFINE',
     'let': 'LET',
     'var': 'VAR',
+    'letrec' : 'LETREC',
+    'lambda': 'LAMBDA'
     'list': 'LIST'
 }
 
