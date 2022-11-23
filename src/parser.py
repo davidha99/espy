@@ -830,22 +830,9 @@ def p_with_multiple_args(p):
     func_params.set_parameter_value(param_name, global_operand_stack[-1])
 
     # Generate asm instructions for function call
-    # mem_idx = environment_stack.func_lookup_param(func_name, param_name)
-    # offset_idx =  mem_idx - 4 *(len(func_params) + 1)
-    # total_evaluated_args = 0
-    # for x in func_call_stack:
-    #     if x[2] > 0:
-    #         total_evaluated_args += x[2]
     where = func_params.parameters[param_name][0] + ((pointer_offset - 4) * len(func_call_stack))
     asm += save_in_memory(where)
-    # memory_stack_index -= 4
-    # asm += "\tmovl %s(%%esp), %s(%%esp)\n" % mem_idx
     p[0] = global_operand_stack[-1]
-
-
-
-# def p_np_seen_arg_expr(p):
-#     "np_seen_arg_expr :"
 
 
 # Error rule for syntax errors
