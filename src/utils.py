@@ -2,7 +2,15 @@ from errors import EspyTypeError, InvalidArgumentNumber, EspyNameError, EspyInde
 from literals import is_boolean, is_char, is_null, is_num, literal_repr
 from environment import Environment, Symbol
 
+'''
+Utils.py
+Descripción: Archivo dedicado a la generación de funciones que son útiles a través de los diferentes
+métodos a lo largo del proyecto
+Autores: David Hernández    |   A01383543
+         Bernardo García    |   A00570682
+'''
 
+# Función que revisa el número de argumentos recibidos en alguna otra función
 def check_argument_number(function_name, given_arguments,
                           min_arguments, max_arguments=None):
     assert max_arguments is None or min_arguments <= max_arguments
@@ -34,29 +42,16 @@ def check_argument_number(function_name, given_arguments,
                                                          min_arguments,
                                                          len(given_arguments)))
 
-
+# Función que revisa el tipo de argumentos recibidos en alguna otra función
 def check_argument_type(function_name, given_arguments, function_argument_types):
     '''
-    This functions receives the following parameters:
-        function_name           : the name of the function as a str
-        given_arguments         : the given arguments as a tuple
-        function_argument_types : the types of every argument as a tuple
+    La función recibe los siguientes parámetros:
+        function_name           : el nombre de la función a analizar
+        given_arguments         : los argumentos que recibe
+        function_argument_types : los tipos de datos de los argumentos recibidos
 
-    It raises an exception if there is a type mismatch of any argument
+    Levanta un Error de excepción en caso de que los tipos de datos no coincidan (Type mismatch)
 
-    Example:
-
-    check_argument_type('num->char', (arg1, arg2, arg3), (type1, type2, type3))
-
-    The function checks the types as the following:
-    arg1 -> type1
-    arg2 -> type2
-    arg3 -> type3
-
-    The types should be specified as: "boolean", "num", "char", "null", so if you want to
-    check if some argument is of type "boolean" you could do the following:
-
-    check_argument_type('if', (test_expr,), ('boolean',))
     '''
     right_argument_type = True
 
@@ -95,18 +90,15 @@ def typeof(arg):
         return "variable"
 
 
-# Function that returns the assembly code to store a variable in memory
-# It receives the following parameters:
-#   memory_index : the memory index of the variable as a str
+# Función que regresa la instrucción de assembly para guardar en memoria
 def save_in_memory(memory_idx):
     return "\tmovl %%eax, %s(%%esp)\n" % memory_idx
 
-# Function that returns the assembly code to load a variable from memory
-# It receives the following parameters:
-#   memory_index : the memory index of the variable as a str
+# Función que regresa la instrucción de assembly para obtener un dato desde la memoria
 def load_from_memory(memory_idx):
     return "\tmovl %s(%%esp), %%eax\n" % memory_idx
 
+# Función para obtener el stack index de un dato dentro de una lista
 def get_list_element_mem_idx(symbol, i):
     if i == symbol.size:
         raise EspyIndexOutOfBounds(f"Index {i} out of bounds")
@@ -116,9 +108,7 @@ def get_list_element_mem_idx(symbol, i):
         return symbol.memory_idx
         
 
-# Function that restores all existing global variables to its memory index
-# It receives:
-#   environment : environment containing the variables wanted
+# Función que restaura las variables globales al usar el interpretador
 def restore_glb_var_to_memory(environment, mem_var_idx, mem_list_idx):
     asm = ""
     for var in environment.environment.values():

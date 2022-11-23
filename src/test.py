@@ -3,13 +3,20 @@ from unittest import main, TestCase
 
 from espy import create_binary
 
+'''
+    Tests.py
+    Descripción: Archivo de pruebas para cada funcionalidad.
+    Su finalidad es poder asegurar que al agregar nuevas funcionalidades, no genere cambios
+    en las funcionalidad anteriores
+    Autores: David Hernández    |   A01383543
+             Bernardo García    |   A00570682
+'''
 
+"""
+    Función que revisa que al correr el programa asignado, de el resultado esperado
+    """
 class ImmediateTest(TestCase):
     def assertEvaluatesRepr(self, program, result_repr):
-        """Assert that the given program, when compiled and executed, writes
-        result_repr to stdout.
-
-        """
         create_binary(program)
         self.assertEqual(check_output(
             ['./main']).strip().decode('utf-8'), result_repr)
@@ -17,227 +24,227 @@ class ImmediateTest(TestCase):
     '''
     Self Evaluation
     '''    
-    # def test_42(self):
-    #     self.assertEvaluatesRepr("42", "42")
+    def test_42(self):
+        self.assertEvaluatesRepr("42", "42")
 
-    # def test_0(self):
-    #     self.assertEvaluatesRepr("0", "0")
+    def test_0(self):
+        self.assertEvaluatesRepr("0", "0")
 
-    # def test_1(self):
-    #     self.assertEvaluatesRepr("1", "1")
+    def test_1(self):
+        self.assertEvaluatesRepr("1", "1")
 
-    # def test_neg_1(self):
-    #     self.assertEvaluatesRepr("-1", "-1")
+    def test_neg_1(self):
+        self.assertEvaluatesRepr("-1", "-1")
 
-    # def test_10(self):
-    #     self.assertEvaluatesRepr("10", "10")
+    def test_10(self):
+        self.assertEvaluatesRepr("10", "10")
 
-    # def test_neg_10(self):
-    #     self.assertEvaluatesRepr("-10", "-10")
+    def test_neg_10(self):
+        self.assertEvaluatesRepr("-10", "-10")
 
-    # def test_2736(self):
-    #     self.assertEvaluatesRepr("2736", "2736")
+    def test_2736(self):
+        self.assertEvaluatesRepr("2736", "2736")
 
-    # def test_neg_2736(self):
-    #     self.assertEvaluatesRepr("-2736", "-2736")
+    def test_neg_2736(self):
+        self.assertEvaluatesRepr("-2736", "-2736")
 
-    # def test_536870911(self):
-    #     self.assertEvaluatesRepr("536870911", "536870911")
+    def test_536870911(self):
+        self.assertEvaluatesRepr("536870911", "536870911")
 
-    # def test_neg_536870911(self):
-    #     self.assertEvaluatesRepr("-536870911", "-536870911")
+    def test_neg_536870911(self):
+        self.assertEvaluatesRepr("-536870911", "-536870911")
 
-    # def test_bool_f(self):
-    #     self.assertEvaluatesRepr("#f", "#f")
+    def test_bool_f(self):
+        self.assertEvaluatesRepr("#f", "#f")
 
-    # def test_bool_t(self):
-    #     self.assertEvaluatesRepr("#t", "#t")
+    def test_bool_t(self):
+        self.assertEvaluatesRepr("#t", "#t")
 
-    # def test_empty_list(self):
-    #     self.assertEvaluatesRepr("()", "()")
+    def test_empty_list(self):
+        self.assertEvaluatesRepr("()", "()")
 
-    # def test_char_0(self):
-    #     self.assertEvaluatesRepr("\#0", "\#0")
+    def test_char_0(self):
+        self.assertEvaluatesRepr("\#0", "\#0")
 
-    # def test_char_1(self):
-    #     self.assertEvaluatesRepr("\#1", "\#1")
+    def test_char_1(self):
+        self.assertEvaluatesRepr("\#1", "\#1")
 
-    # def test_char_2(self):
-    #     self.assertEvaluatesRepr("\#2", "\#2")
+    def test_char_2(self):
+        self.assertEvaluatesRepr("\#2", "\#2")
 
-    # def test_char_3(self):
-    #     self.assertEvaluatesRepr("\#3", "\#3")
+    def test_char_3(self):
+        self.assertEvaluatesRepr("\#3", "\#3")
 
-    # def test_char_4(self):
-    #     self.assertEvaluatesRepr("\#4", "\#4")
+    def test_char_4(self):
+        self.assertEvaluatesRepr("\#4", "\#4")
 
-    # def test_char_5(self):
-    #     self.assertEvaluatesRepr("\#5", "\#5")
+    def test_char_5(self):
+        self.assertEvaluatesRepr("\#5", "\#5")
 
-    # def test_char_6(self):
-    #     self.assertEvaluatesRepr("\#6", "\#6")
+    def test_char_6(self):
+        self.assertEvaluatesRepr("\#6", "\#6")
 
-    # def test_char_7(self):
-    #     self.assertEvaluatesRepr("\#7", "\#7")
+    def test_char_7(self):
+        self.assertEvaluatesRepr("\#7", "\#7")
 
-    # def test_char_8(self):
-    #     self.assertEvaluatesRepr("\#8", "\#8")
+    def test_char_8(self):
+        self.assertEvaluatesRepr("\#8", "\#8")
 
-    # def test_char_9(self):
-    #     self.assertEvaluatesRepr("\#9", "\#9")
+    def test_char_9(self):
+        self.assertEvaluatesRepr("\#9", "\#9")
 
-    # def test_char_A(self):
-    #     self.assertEvaluatesRepr("\#A", "\#A")
+    def test_char_A(self):
+        self.assertEvaluatesRepr("\#A", "\#A")
 
-    # def test_char_B(self):
-    #     self.assertEvaluatesRepr("\#B", "\#B")
+    def test_char_B(self):
+        self.assertEvaluatesRepr("\#B", "\#B")
 
-    # def test_char_C(self):
-    #     self.assertEvaluatesRepr("\#C", "\#C")
+    def test_char_C(self):
+        self.assertEvaluatesRepr("\#C", "\#C")
 
-    # def test_char_D(self):
-    #     self.assertEvaluatesRepr("\#D", "\#D")
+    def test_char_D(self):
+        self.assertEvaluatesRepr("\#D", "\#D")
 
-    # def test_char_E(self):
-    #     self.assertEvaluatesRepr("\#E", "\#E")
+    def test_char_E(self):
+        self.assertEvaluatesRepr("\#E", "\#E")
 
-    # def test_char_F(self):
-    #     self.assertEvaluatesRepr("\#F", "\#F")
+    def test_char_F(self):
+        self.assertEvaluatesRepr("\#F", "\#F")
 
-    # def test_char_G(self):
-    #     self.assertEvaluatesRepr("\#G", "\#G")
+    def test_char_G(self):
+        self.assertEvaluatesRepr("\#G", "\#G")
 
-    # def test_char_H(self):
-    #     self.assertEvaluatesRepr("\#H", "\#H")
+    def test_char_H(self):
+        self.assertEvaluatesRepr("\#H", "\#H")
 
-    # def test_char_I(self):
-    #     self.assertEvaluatesRepr("\#I", "\#I")
+    def test_char_I(self):
+        self.assertEvaluatesRepr("\#I", "\#I")
 
-    # def test_char_J(self):
-    #     self.assertEvaluatesRepr("\#J", "\#J")
+    def test_char_J(self):
+        self.assertEvaluatesRepr("\#J", "\#J")
 
-    # def test_char_K(self):
-    #     self.assertEvaluatesRepr("\#K", "\#K")
+    def test_char_K(self):
+        self.assertEvaluatesRepr("\#K", "\#K")
 
-    # def test_char_L(self):
-    #     self.assertEvaluatesRepr("\#L", "\#L")
+    def test_char_L(self):
+        self.assertEvaluatesRepr("\#L", "\#L")
 
-    # def test_char_M(self):
-    #     self.assertEvaluatesRepr("\#M", "\#M")
+    def test_char_M(self):
+        self.assertEvaluatesRepr("\#M", "\#M")
 
-    # def test_char_N(self):
-    #     self.assertEvaluatesRepr("\#N", "\#N")
+    def test_char_N(self):
+        self.assertEvaluatesRepr("\#N", "\#N")
 
-    # def test_char_O(self):
-    #     self.assertEvaluatesRepr("\#O", "\#O")
+    def test_char_O(self):
+        self.assertEvaluatesRepr("\#O", "\#O")
 
-    # def test_char_P(self):
-    #     self.assertEvaluatesRepr("\#P", "\#P")
+    def test_char_P(self):
+        self.assertEvaluatesRepr("\#P", "\#P")
 
-    # def test_char_Q(self):
-    #     self.assertEvaluatesRepr("\#Q", "\#Q")
+    def test_char_Q(self):
+        self.assertEvaluatesRepr("\#Q", "\#Q")
 
-    # def test_char_R(self):
-    #     self.assertEvaluatesRepr("\#R", "\#R")
+    def test_char_R(self):
+        self.assertEvaluatesRepr("\#R", "\#R")
 
-    # def test_char_S(self):
-    #     self.assertEvaluatesRepr("\#S", "\#S")
+    def test_char_S(self):
+        self.assertEvaluatesRepr("\#S", "\#S")
 
-    # def test_char_T(self):
-    #     self.assertEvaluatesRepr("\#T", "\#T")
+    def test_char_T(self):
+        self.assertEvaluatesRepr("\#T", "\#T")
 
-    # def test_char_U(self):
-    #     self.assertEvaluatesRepr("\#U", "\#U")
+    def test_char_U(self):
+        self.assertEvaluatesRepr("\#U", "\#U")
 
-    # def test_char_V(self):
-    #     self.assertEvaluatesRepr("\#V", "\#V")
+    def test_char_V(self):
+        self.assertEvaluatesRepr("\#V", "\#V")
 
-    # def test_char_W(self):
-    #     self.assertEvaluatesRepr("\#W", "\#W")
+    def test_char_W(self):
+        self.assertEvaluatesRepr("\#W", "\#W")
 
-    # def test_char_X(self):
-    #     self.assertEvaluatesRepr("\#X", "\#X")
+    def test_char_X(self):
+        self.assertEvaluatesRepr("\#X", "\#X")
 
-    # def test_char_Y(self):
-    #     self.assertEvaluatesRepr("\#Y", "\#Y")
+    def test_char_Y(self):
+        self.assertEvaluatesRepr("\#Y", "\#Y")
 
-    # def test_char_Z(self):
-    #     self.assertEvaluatesRepr("\#Z", "\#Z")
+    def test_char_Z(self):
+        self.assertEvaluatesRepr("\#Z", "\#Z")
 
-    # def test_char_a(self):
-    #     self.assertEvaluatesRepr("\#a", "\#a")
+    def test_char_a(self):
+        self.assertEvaluatesRepr("\#a", "\#a")
 
-    # def test_char_b(self):
-    #     self.assertEvaluatesRepr("\#b", "\#b")
+    def test_char_b(self):
+        self.assertEvaluatesRepr("\#b", "\#b")
 
-    # def test_char_c(self):
-    #     self.assertEvaluatesRepr("\#c", "\#c")
+    def test_char_c(self):
+        self.assertEvaluatesRepr("\#c", "\#c")
 
-    # def test_char_d(self):
-    #     self.assertEvaluatesRepr("\#d", "\#d")
+    def test_char_d(self):
+        self.assertEvaluatesRepr("\#d", "\#d")
 
-    # def test_char_f(self):
-    #     self.assertEvaluatesRepr("\#f", "\#f")
+    def test_char_f(self):
+        self.assertEvaluatesRepr("\#f", "\#f")
 
-    # def test_char_g(self):
-    #     self.assertEvaluatesRepr("\#g", "\#g")
+    def test_char_g(self):
+        self.assertEvaluatesRepr("\#g", "\#g")
 
-    # def test_char_h(self):
-    #     self.assertEvaluatesRepr("\#h", "\#h")
+    def test_char_h(self):
+        self.assertEvaluatesRepr("\#h", "\#h")
 
-    # def test_char_i(self):
-    #     self.assertEvaluatesRepr("\#i", "\#i")
+    def test_char_i(self):
+        self.assertEvaluatesRepr("\#i", "\#i")
 
-    # def test_char_j(self):
-    #     self.assertEvaluatesRepr("\#j", "\#j")
+    def test_char_j(self):
+        self.assertEvaluatesRepr("\#j", "\#j")
 
-    # def test_char_k(self):
-    #     self.assertEvaluatesRepr("\#k", "\#k")
+    def test_char_k(self):
+        self.assertEvaluatesRepr("\#k", "\#k")
 
-    # def test_char_l(self):
-    #     self.assertEvaluatesRepr("\#l", "\#l")
+    def test_char_l(self):
+        self.assertEvaluatesRepr("\#l", "\#l")
 
-    # def test_char_m(self):
-    #     self.assertEvaluatesRepr("\#m", "\#m")
+    def test_char_m(self):
+        self.assertEvaluatesRepr("\#m", "\#m")
 
-    # def test_char_n(self):
-    #     self.assertEvaluatesRepr("\#n", "\#n")
+    def test_char_n(self):
+        self.assertEvaluatesRepr("\#n", "\#n")
 
-    # def test_char_o(self):
-    #     self.assertEvaluatesRepr("\#o", "\#o")
+    def test_char_o(self):
+        self.assertEvaluatesRepr("\#o", "\#o")
 
-    # def test_char_p(self):
-    #     self.assertEvaluatesRepr("\#p", "\#p")
+    def test_char_p(self):
+        self.assertEvaluatesRepr("\#p", "\#p")
 
-    # def test_char_q(self):
-    #     self.assertEvaluatesRepr("\#q", "\#q")
+    def test_char_q(self):
+        self.assertEvaluatesRepr("\#q", "\#q")
 
-    # def test_char_r(self):
-    #     self.assertEvaluatesRepr("\#r", "\#r")
+    def test_char_r(self):
+        self.assertEvaluatesRepr("\#r", "\#r")
 
-    # def test_char_s(self):
-    #     self.assertEvaluatesRepr("\#s", "\#s")
+    def test_char_s(self):
+        self.assertEvaluatesRepr("\#s", "\#s")
 
-    # def test_char_t(self):
-    #     self.assertEvaluatesRepr("\#t", "\#t")
+    def test_char_t(self):
+        self.assertEvaluatesRepr("\#t", "\#t")
 
-    # def test_char_u(self):
-    #     self.assertEvaluatesRepr("\#u", "\#u")
+    def test_char_u(self):
+        self.assertEvaluatesRepr("\#u", "\#u")
 
-    # def test_char_v(self):
-    #     self.assertEvaluatesRepr("\#v", "\#v")
+    def test_char_v(self):
+        self.assertEvaluatesRepr("\#v", "\#v")
 
-    # def test_char_w(self):
-    #     self.assertEvaluatesRepr("\#w", "\#w")
+    def test_char_w(self):
+        self.assertEvaluatesRepr("\#w", "\#w")
 
-    # def test_char_x(self):
-    #     self.assertEvaluatesRepr("\#x", "\#x")
+    def test_char_x(self):
+        self.assertEvaluatesRepr("\#x", "\#x")
 
-    # def test_char_y(self):
-    #     self.assertEvaluatesRepr("\#y", "\#y")
+    def test_char_y(self):
+        self.assertEvaluatesRepr("\#y", "\#y")
 
-    # def test_char_z(self):
-    #     self.assertEvaluatesRepr("\#z", "\#z")
+    def test_char_z(self):
+        self.assertEvaluatesRepr("\#z", "\#z")
     
     '''
     Unary Primitives: Add1
@@ -838,29 +845,30 @@ class ImmediateTest(TestCase):
     '''
     def test_gt_1(self):
         self.assertEvaluatesRepr("(> 2 4)", "#f")
-    # def test_gt_2(self):
-    #     self.assertEvaluatesRepr("(> 800 450)", "#t")   ##<unknown 0x00000c2f>
     # def test_gt_3(self):
         # self.assertEvaluatesRepr("(> -1 -2)", "#t")
     def test_gt_4(self):
         self.assertEvaluatesRepr("(> 10 10)", "#f")
+    
+    # Funciones de error: Deben regresar un error
     # def test_gt_5(self):
     #     self.assertEvaluatesRepr("(> #t 1)", "#t")
     # def test_gt_6(self):
     #     self.assertEvaluatesRepr("(> #t #f)", "#f")
     # def test_gt_7(self):
     #     self.assertEvaluatesRepr("(> \#A \#B)", "#f")
+
     '''
     Comparison: <
     '''
     def test_lt_1(self):
         self.assertEvaluatesRepr("(< 2 4)", "#t")
-    # def test_lt_2(self):
-    #     self.assertEvaluatesRepr("(< 800 450)", "#f")   ##<unknown 0x00000c2f>
     # def test_lt_3(self):
     #     self.assertEvaluatesRepr("(< -1 -2)", "#f")
     def test_lt_4(self):
         self.assertEvaluatesRepr("(< 10 10)", "#f")
+    
+    # Funciones de error: Deben regresar un error
     # def test_lt_5(self):
         # self.assertEvaluatesRepr("(< #t 1)", "#f")
     # def test_lt_6(self):
@@ -872,12 +880,12 @@ class ImmediateTest(TestCase):
     '''
     def test_ge_1(self):
         self.assertEvaluatesRepr("(>= 2 4)", "#f")
-    # def test_ge_2(self):
-    #     self.assertEvaluatesRepr("(>= 800 450)", "#t")    ##<unknown 0x00000c2f>
     # def test_ge_3(self):
         # self.assertEvaluatesRepr("(>= -1 -2)", "#t")
     def test_ge_4(self):
         self.assertEvaluatesRepr("(>= 10 10)", "#t")
+    
+    # Funciones de error: Deben regresar un error
     # def test_ge_5(self):
         # self.assertEvaluatesRepr("(>= #f 0)", "#f")
     # def test_ge_6(self):
@@ -889,12 +897,12 @@ class ImmediateTest(TestCase):
     '''
     def test_le_1(self):
         self.assertEvaluatesRepr("(<= 2 4)", "#t")
-    # def test_le_2(self):
-        # self.assertEvaluatesRepr("(<= 800 450)", "#f")
     # def test_le_3(self):
         # self.assertEvaluatesRepr("(<= -1 -2)", "#f")
     def test_le_4(self):
         self.assertEvaluatesRepr("(<= 10 10)", "#t")
+    
+    # Funciones de error: Deben regresar un error
     # # def test_le_5(self):
     #     self.assertEvaluatesRepr("(<= #t 1)", "#f")
     # def test_le_6(self):
@@ -906,12 +914,12 @@ class ImmediateTest(TestCase):
     '''
     def test_eq_1(self):
         self.assertEvaluatesRepr("(== 2 4)", "#f")
-    # def test_eq_2(self):
-    #     self.assertEvaluatesRepr("(== 800 450)", "#f")  ##<unknown 0x00000c2f>
     # def test_eq_3(self):
         # self.assertEvaluatesRepr("(== -5 -5)", "#t")
     def test_eq_4(self):
         self.assertEvaluatesRepr("(== 10 10)", "#t")
+    
+    # Funciones de error: Deben regresar un error
     # def test_eq_5(self):
         # self.assertEvaluatesRepr("(== #f 0)", "#f")
     # def test_eq_6(self):
@@ -1043,9 +1051,6 @@ class ImmediateTest(TestCase):
 
     def test_def_19_1(self):
         self.assertEvaluatesRepr("(def ([f (lambda (x) (if (zero? x) 0 (+ 1 (f (sub1 x)))))]) (f 63))", "63")
-
-    # def test_def_19_2(self):
-    #     self.assertEvaluatesRepr("(def ([f (lambda (x) (if (zero? x) 0 (+ 1 (f (sub1 x)))))]) (f 200))", "200")
     
     def test_fibonacci_rec(self):
         self.assertEvaluatesRepr("(def ([fib (lambda (x) (if (<= x 2) 1 (+ 0 (fib (- x 1))(fib (- x 2)))))]) (fib 6))", "8")
@@ -1059,11 +1064,3 @@ class ImmediateTest(TestCase):
 if __name__ == '__main__':
     main()
 
-'''
-(def ([fib (lambda (x) (if (<= x 2) 1 (+ (fib (- n 1))(fib (- n 2)))))])(fib 6))
-
-'''
-
-'''
-(def ([fact (lambda (n) (if (= n 0) 1 (* n (fact (- n 1)))))]) (fact 3))
-'''

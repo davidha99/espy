@@ -1,8 +1,16 @@
 #include <stdio.h>
 #include <sys/mman.h>
 #include <unistd.h>
-
-/* define all espy constants */
+/*
+ '''
+runtime.c
+Descripción: Clase que realiza la lectura la representación intermedia (Assembly)
+Incluye los métodos de manejo de memoria en ejecución
+Autores: David Hernández    |   A01383543
+         Bernardo García    |   A00570682
+'''
+*/
+/* Definición de las constantes de espy */
 #define bool_f          0x2F
 #define bool_t          0x6F
 #define num_mask        0x03
@@ -13,7 +21,7 @@
 #define char_shift         8
 #define empty_list      0x3F
 
-/* all espy values are of types ptrs */
+/* todos los valores de espy son tipo: ptrs */
 typedef unsigned int ptr;
 
 static void print_ptr(ptr x) {

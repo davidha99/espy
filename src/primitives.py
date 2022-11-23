@@ -26,23 +26,29 @@ from utils import (
     typeof
     )
 
+'''
+    Primitives.py
+    Descripción: Archivo dedicado a las funciones que definen las operaciones primitivas y 
+    métodos simples de ESPY. Cada uno trabaja las operaciones de ejecución y escribe las instrucciones
+    de Assembly
+    Autores: David Hernández    |   A01383543
+             Bernardo García    |   A00570682
+'''
+
 primitives = {}
 
 TEMP_DIR = -1000
 
-# a decorator for creating a primitive function object and giving it a name
-
-
+# Se usa un Decorador para crear un objeto de tipo Primitive Function, 
+# y poder elegir distintas funciones de acuerdo al nombre
 def define_primitive(function_name):
     def define_primitive_decorator(function):
         primitives[function_name] = function
-
-        # we return the function too, so we can use multiple decorators
         return function
 
     return define_primitive_decorator
 
-
+# Operación de suma 1
 @define_primitive('add1')
 def add1(*argv):
     if argv[0] is not None:
@@ -54,7 +60,7 @@ def add1(*argv):
     asm = "\taddl    $%s, %%eax\n" % (literal_repr(1))
     return temp, asm
 
-
+# Operación de resta 1
 @define_primitive('sub1')
 def sub1(*argv):
     if argv[0] is not None:
@@ -66,7 +72,7 @@ def sub1(*argv):
     asm = "\tsubl   $%s, %%eax\n" % (literal_repr(1))
     return temp, asm
 
-
+# Operación de conversión de caracter a número
 @define_primitive('char->num')
 def char_to_num(*argv):
     if argv[0] is not None:
@@ -76,7 +82,8 @@ def char_to_num(*argv):
         temp = compile_char(given_char)
     else:
         temp = None
-    # Shift to the right by 6, explanation:
+    
+    # Se realiza un bit shift a la derecha, su explicación:
     #   Num tag: b'      00'
     #   Char tag  : b'00001111'
     temp -= char_tag
@@ -85,7 +92,7 @@ def char_to_num(*argv):
     asm += "\tshrl\t$%s, %%eax\n" % (char_shift - num_shift)
     return temp, asm
 
-
+# Operación de conversión de número a caracter
 @define_primitive('num->char')
 def num_to_char(*argv):
     if argv[0] is not None:
@@ -100,7 +107,7 @@ def num_to_char(*argv):
     asm += "\torl   \t$%s, %%eax\n" % char_tag
     return temp, asm
 
-
+# Operación de verificación de número
 @define_primitive('num?')
 def num_(*argv):
     try:
@@ -109,15 +116,15 @@ def num_(*argv):
     except:
         temp = None
     asm = ""
-    asm += "\tand $%s, %%al\n" % num_mask  # Extracting lower 2 bits
-    asm += "\tcmp  $%s, %%al\n" % num_tag  # Comparing lower two bits with num_tag
+    asm += "\tand $%s, %%al\n" % num_mask  # Obtener los últimos 2 bits
+    asm += "\tcmp  $%s, %%al\n" % num_tag  # Comparar últimos 2 bits con num_tag
     asm += "\tsete  %al\n"
     asm += "\tmovzbl    %al, %eax\n"
     asm += "\tsal   $%s, %%al\n" % bool_bit
     asm += "\tor    $%s, %%al\n" % bool_f
     return temp, asm
 
-
+# Operación de verificación de booleano
 @define_primitive('boolean?')
 def boolean_(*argv):
     try:
@@ -127,14 +134,14 @@ def boolean_(*argv):
     except:
         temp = None
     asm = ""
-    asm += "\tcmp  $%s, %%al\n" % value  # Compare the true or false mask
+    asm += "\tcmp  $%s, %%al\n" % value  # Comparar la máscara de True or False para su identificación
     asm += "\tsete  %al\n"
     asm += "\tmovzbl    %al, %eax\n"
     asm += "\tsal   $%s, %%al\n" % bool_bit
     asm += "\tor    $%s, %%al\n" % 47
     return temp, asm
 
-
+# Operación de verificación de caracter
 @define_primitive('char?')
 def char_(*argv):
     try:
@@ -143,15 +150,15 @@ def char_(*argv):
     except:
         temp = None
     asm = ""
-    asm += "\tand $%s, %%al\n" % char_mask  # Extracting lower 8 bits
-    asm += "\tcmp  $%s, %%al\n" % char_tag  # Comparing lower 8 bits with char tag
+    asm += "\tand $%s, %%al\n" % char_mask  # Obtener los últimos 8 bits
+    asm += "\tcmp  $%s, %%al\n" % char_tag  # Comparar últimos 8 bits con char_tag
     asm += "\tsete  %al\n"
     asm += "\tmovzbl    %al, %eax\n"
     asm += "\tsal   $%s, %%al\n" % bool_bit
     asm += "\tor    $%s, %%al\n" % 47
     return temp, asm
 
-
+# Operación de verificación de lista vacía
 @define_primitive('null?')
 def null_(*argv):
     try:
@@ -160,14 +167,14 @@ def null_(*argv):
     except:
         temp = None
     asm = ""
-    asm += "\tcmp  $%s, %%al\n" % 63  # Compare Empty list binary mask
+    asm += "\tcmp  $%s, %%al\n" % 63  # Comparar la máscara de una lista vacía
     asm += "\tsete  %al\n"
     asm += "\tmovzbl    %al, %eax\n"
     asm += "\tsal   $%s, %%al\n" % bool_bit
     asm += "\tor    $%s, %%al\n" % 47
     return temp, asm
 
-
+# Operación de negación booleana
 @define_primitive('not')
 def not_primitive(*argv):
     try:
@@ -183,7 +190,7 @@ def not_primitive(*argv):
     asm += "\tor    $%s, %%al\n" % bool_f
     return temp, asm
 
-
+# Operación de verificación de cero
 @define_primitive('zero?')
 def is_zero(*argv):
     if argv[0] is not None:
@@ -201,13 +208,12 @@ def is_zero(*argv):
     asm += "\tor    $%s, %%al\n" % bool_f
     return temp, asm
 
-
+# Operación de if condicional: sección de la prueba a verificar
 @define_primitive('if_test')
 def if_test_expression(test_expr, labels):
     # Aquí tenemos la opción de que los IFs sólo acepten booleanos o
     # que acepte cualquier otra cosa que no sea #f como verdadero.
 
-    # check_argument_type('if_test', (test_expr,), ('boolean',))
     alt_label = labels[-2]
     asm = ""
     asm += "\tcmp $%s, %%al\n" % bool_f
@@ -215,7 +221,7 @@ def if_test_expression(test_expr, labels):
 
     return asm
 
-
+# Operación de if condicional: sección del camino en caso de True
 @define_primitive('if_consequent')
 def if_consequent_expression(labels):
     alt_label = labels[-2]
@@ -226,7 +232,7 @@ def if_consequent_expression(labels):
     asm += "\n"
     return asm
 
-
+# Operación de if condicional: sección del camino en caso de False
 @define_primitive('if_alternate')
 def if_alterante_expression(labels):
     end_label = labels[-1]
@@ -234,7 +240,7 @@ def if_alterante_expression(labels):
     asm += "\n"
     return asm
 
-
+# Operación suma
 @define_primitive('addition')
 def addition(*argv):
     si = argv[0]  # stack index
@@ -243,16 +249,17 @@ def addition(*argv):
     
     if indv_operand:
         temp = operands[-1]
-        asm = "\tmovl %%eax, %s(%%esp)\n" % str(si + TEMP_DIR)     # This means si(esp) = eax
+        asm = "\tmovl %%eax, %s(%%esp)\n" % str(si + TEMP_DIR)     # Esto se traduce: si(esp) = eax
         return temp, asm
     else:
         try: 
             temp = int(operands[-2]) + int(operands[-1])
         except:
             temp = 0
-        asm = "\taddl %%eax, %s(%%esp) \n" % str(si + TEMP_DIR)    # This means si(esp) = n(esp) + eax
+        asm = "\taddl %%eax, %s(%%esp) \n" % str(si + TEMP_DIR)    # Esto se traduce: si(esp) = n(esp) + eax
         return temp, asm
 
+# Operación resta
 @define_primitive('substraction')
 def substraction(*argv):
     si = argv[0]  # stack index
@@ -261,16 +268,17 @@ def substraction(*argv):
     
     if indv_operand:
         temp = operands[-1]
-        asm = "\tmovl %%eax, %s(%%esp)\n" % str(si + TEMP_DIR)     # This means si(esp) = eax
+        asm = "\tmovl %%eax, %s(%%esp)\n" % str(si + TEMP_DIR)     # Esto se traduce: si(esp) = eax
         return temp, asm
     else:
         try: 
             temp = operands[-2] - operands[-1]
         except:
             temp = 0
-        asm = "\tsubl %%eax, %s(%%esp) \n" % str(si + TEMP_DIR)    # This means si(esp) = n(esp) - eax
+        asm = "\tsubl %%eax, %s(%%esp) \n" % str(si + TEMP_DIR)    # Esto se traduce: si(esp) = n(esp) - eax
         return temp, asm
 
+# Operación multiplicación
 @define_primitive('multiplication')
 def multiplication(*argv):
     si = argv[0]  # stack index
@@ -279,7 +287,7 @@ def multiplication(*argv):
     
     if indv_operand:
         temp = operands[-1]
-        asm = "\tmovl %%eax, %s(%%esp)\n" % str(si + TEMP_DIR)     # This means si(esp) = eax
+        asm = "\tmovl %%eax, %s(%%esp)\n" % str(si + TEMP_DIR)     # Esto se traduce: si(esp) = eax
         return temp, asm
     else:
         try: 
@@ -290,12 +298,13 @@ def multiplication(*argv):
         asm += "\tmovl %s(%%esp), %%edx\n" % str(si + TEMP_DIR)
         asm += "\tsar $%s, %%edx\n" % num_shift
         asm += "\tsar $%s, %%eax\n" % num_shift
-        asm += "\timul %edx, %eax\n"                    # This means eax *= ebx
-        asm += "\tsal   $%s, %%eax\n" % num_shift       # Shift to the left the byte answer
+        asm += "\timul %edx, %eax\n"                    # Esto se traduce: eax *= ebx
+        asm += "\tsal   $%s, %%eax\n" % num_shift       # Shift a la izquierda respuesta binaria
         asm += "\tmovl %%eax, %s(%%esp)\n" % str(si + TEMP_DIR)
 
         return temp, asm
 
+# Operación división
 @define_primitive('division')
 def division(*argv):
     si = argv[0]  # stack index
@@ -304,7 +313,7 @@ def division(*argv):
     
     if indv_operand:
         temp = operands[-1]
-        asm = "\tmovl %%eax, %s(%%esp)\n" % str(si + TEMP_DIR)     # This means si(esp) = eax
+        asm = "\tmovl %%eax, %s(%%esp)\n" % str(si + TEMP_DIR)     # Esto se traduce: si(esp) = eax
         return temp, asm
     else:
         try: 
@@ -314,16 +323,16 @@ def division(*argv):
         asm = ""
         asm += "\tmovl %eax, %ebx\n"                        # Divisor
         # asm += "\tsar $%s, %%ebx\n" % num_shift
-        asm += "\tmovl $0, %edx\n"                           # Clear remainder
-        asm += "\tmovl %s(%%esp), %%eax\n" % str(si + TEMP_DIR)        # Dividend
+        asm += "\tmovl $0, %edx\n"                           # Limpiar el residuo
+        asm += "\tmovl %s(%%esp), %%eax\n" % str(si + TEMP_DIR)        # Dividendo
         # asm += "\tsar $%s, %%eax\n" % num_shift
-        asm += "\tdiv %ebx\n"                    # This means eax /= ebx, the remainder is set in edx
-        asm += "\tsal   $%s, %%eax\n" % num_shift   # Shift to the left the byte answer
+        asm += "\tdiv %ebx\n"                    # Esto se traduce: eax /= ebx, el residuo se mueve a edx
+        asm += "\tsal   $%s, %%eax\n" % num_shift   # Shift a la izquierda respuesta binaria
         asm += "\tmovl %%eax, %s(%%esp)\n" % str(si + TEMP_DIR)
 
         return temp, asm
 
-
+# Operación and (operador lógico)
 @define_primitive('and')
 def and_expression(*argv):
     si = argv[0]  # stack index
@@ -332,7 +341,7 @@ def and_expression(*argv):
     
     if indv_operand:
         temp = operands[-1]
-        asm = "\tmovl %%eax, %s(%%esp)\n" % str(si + TEMP_DIR)     # This means si(esp) = eax
+        asm = "\tmovl %%eax, %s(%%esp)\n" % str(si + TEMP_DIR)     # Esto se traduce: si(esp) = eax
         return temp, asm
     else:
         try: 
@@ -343,6 +352,7 @@ def and_expression(*argv):
         asm += "\tmovl %%eax, %s(%%esp)\n" % str(si + TEMP_DIR)
         return temp, asm
 
+# Operación or (operador lógico)
 @define_primitive('or')
 def or_expression(*argv):
     si = argv[0]  # stack index
@@ -351,7 +361,7 @@ def or_expression(*argv):
     
     if indv_operand:
         temp = operands[-1]
-        asm = "\tmovl %%eax, %s(%%esp)\n" % str(si + TEMP_DIR)     # This means si(esp) = eax
+        asm = "\tmovl %%eax, %s(%%esp)\n" % str(si + TEMP_DIR)     # Esto se traduce: si(esp) = eax
         return temp, asm
     else:
         try: 
@@ -362,6 +372,7 @@ def or_expression(*argv):
         asm += "\tmovl %%eax, %s(%%esp)\n" % str(si + TEMP_DIR)
         return temp, asm
 
+# Operación menor o igual que (<=) (operador comparativo)
 @define_primitive('lessequal')
 def less_equal(*argv):
     si = argv[0]  # stack index
@@ -370,7 +381,7 @@ def less_equal(*argv):
     
     if indv_operand:
         temp = operands[-1]
-        asm = "\tmovl %%eax, %s(%%esp)\n" % str(si + TEMP_DIR)     # This means si(esp) = eax
+        asm = "\tmovl %%eax, %s(%%esp)\n" % str(si + TEMP_DIR)     # Esto se traduce: si(esp) = eax
         return temp, asm
     else:
         try: 
@@ -379,14 +390,15 @@ def less_equal(*argv):
             temp = 0
         asm = ""
         asm += "\tmovl %s(%%esp), %%ebx\n" % str(si + TEMP_DIR)
-        asm += "\tcmp %eax, %ebx\n"     # Compare operands as: 'ebx <= eax'
-        asm += "\tsetle %al\n"          # After comparing, the result is safed in 'al', memory section that safes #t or #f as 8 bits (1 byte)
+        asm += "\tcmp %eax, %ebx\n"     # Se comparan los operandos: 'ebx <= eax'
+        asm += "\tsetle %al\n"          # Al comparar, el resultado se guarda en 'al', la sección de memoria guarda el #t o #f en 8 bits  
         asm += "\tmovzbl    %al, %eax\n"
-        asm += "\tsal   $%s, %%al\n" % bool_bit     # Shift the 0/1 byte value to its representation as boolean #f/#t
+        asm += "\tsal   $%s, %%al\n" % bool_bit     # Bit shift del valor a su representacion booleana
         asm += "\tor    $%s, %%al\n" % bool_f       
-        asm += "\tmov %%al, %s(%%esp)\n" % str(si + TEMP_DIR)     # Save the boolean in memory stack
+        asm += "\tmov %%al, %s(%%esp)\n" % str(si + TEMP_DIR)     # Guardar el resultado en el stack de memoria 
         return temp, asm
 
+# Operación mayor o igual que (>=) (operador comparativo)
 @define_primitive('greaterequal')
 def greater_equal(*argv):
     si = argv[0]  # stack index
@@ -395,7 +407,7 @@ def greater_equal(*argv):
     
     if indv_operand:
         temp = operands[-1]
-        asm = "\tmovl %%eax, %s(%%esp)\n" % str(si + TEMP_DIR)     # This means si(esp) = eax
+        asm = "\tmovl %%eax, %s(%%esp)\n" % str(si + TEMP_DIR)     # Esto se traduce: si(esp) = eax
         return temp, asm
     else:
         try: 
@@ -404,14 +416,15 @@ def greater_equal(*argv):
             temp = 0
         asm = ""
         asm += "\tmovl %s(%%esp), %%ebx\n" % str(si + TEMP_DIR)
-        asm += "\tcmp %ebx, %eax\n"     # Compare operands as: 'ebx >= eax'
-        asm += "\tsetle %al\n"          # After comparing, the result is safed in 'al', memory section that safes #t or #f as 8 bits (1 byte)
+        asm += "\tcmp %ebx, %eax\n"     # Se comparan los operandos: 'ebx >= eax'
+        asm += "\tsetle %al\n"          # Al comparar, el resultado se guarda en 'al', la sección de memoria guarda el #t o #f en 8 bits  
         asm += "\tmovzbl    %al, %eax\n"
-        asm += "\tsal   $%s, %%al\n" % bool_bit     # Shift the 0/1 byte value to its representation as boolean #f/#t
+        asm += "\tsal   $%s, %%al\n" % bool_bit     # Bit shift del valor a su representacion booleana
         asm += "\tor    $%s, %%al\n" % bool_f       
-        asm += "\tmov %%al, %s(%%esp)\n" % str(si + TEMP_DIR)     # Save the boolean in memory stack
+        asm += "\tmov %%al, %s(%%esp)\n" % str(si + TEMP_DIR)     # Guardar el resultado en el stack de memoria 
         return temp, asm
 
+# Operación igual que (==) (operador comparativo)
 @define_primitive('equal')
 def equal(*argv):
     si = argv[0]  # stack index
@@ -420,7 +433,7 @@ def equal(*argv):
     
     if indv_operand:
         temp = operands[-1]
-        asm = "\tmovl %%eax, %s(%%esp)\n" % str(si + TEMP_DIR)     # This means si(esp) = eax
+        asm = "\tmovl %%eax, %s(%%esp)\n" % str(si + TEMP_DIR)     # Esto se traduce: si(esp) = eax
         return temp, asm
     else:
         try: 
@@ -429,14 +442,15 @@ def equal(*argv):
             temp = 0
         asm = ""
         asm += "\tmovl %s(%%esp), %%ebx\n" % str(si + TEMP_DIR)
-        asm += "\tcmp %ebx, %eax\n"     # Compare operands as: 'ebx == eax'
-        asm += "\tsete %al\n"          # After comparing, the result is safed in 'al', memory section that safes #t or #f as 8 bits (1 byte)
+        asm += "\tcmp %ebx, %eax\n"     # Se comparan los operandos: 'ebx == eax'
+        asm += "\tsete %al\n"          # Al comparar, el resultado se guarda en 'al', la sección de memoria guarda el #t o #f en 8 bits  
         asm += "\tmovzbl    %al, %eax\n"
-        asm += "\tsal   $%s, %%al\n" % bool_bit     # Shift the 0/1 byte value to its representation as boolean #f/#t
+        asm += "\tsal   $%s, %%al\n" % bool_bit     # Bit shift del valor a su representacion booleana
         asm += "\tor    $%s, %%al\n" % bool_f       
-        asm += "\tmov %%al, %s(%%esp)\n" % str(si + TEMP_DIR)    # Save the boolean in memory stack
+        asm += "\tmov %%al, %s(%%esp)\n" % str(si + TEMP_DIR)    # Guardar el resultado en el stack de memoria 
         return temp, asm
 
+# Operación menor que (>) (operador comparativo)
 @define_primitive('lessthan')
 def less_than(*argv):
     si = argv[0]  # stack index
@@ -445,7 +459,7 @@ def less_than(*argv):
     
     if indv_operand:
         temp = operands[-1]
-        asm = "\tmovl %%eax, %s(%%esp)\n" % str(si + TEMP_DIR)     # This means si(esp) = eax
+        asm = "\tmovl %%eax, %s(%%esp)\n" % str(si + TEMP_DIR)     # Esto se traduce: si(esp) = eax
         return temp, asm
     else:
         try: 
@@ -454,14 +468,15 @@ def less_than(*argv):
             temp = 0
         asm = ""
         asm += "\tmovl %s(%%esp), %%ebx\n" % str(si + TEMP_DIR)
-        asm += "\tcmp %eax, %ebx\n"     # Compare operands as: 'ebx < eax'
-        asm += "\tsetl %al\n"          # After comparing, the result is safed in 'al', memory section that safes #t or #f as 8 bits (1 byte)
+        asm += "\tcmp %eax, %ebx\n"     # Se comparan los operandos: 'ebx < eax'
+        asm += "\tsetl %al\n"          # Al comparar, el resultado se guarda en 'al', la sección de memoria guarda el #t o #f en 8 bits  
         asm += "\tmovzbl    %al, %eax\n"
-        asm += "\tsal   $%s, %%al\n" % bool_bit     # Shift the 0/1 byte value to its representation as boolean #f/#t
+        asm += "\tsal   $%s, %%al\n" % bool_bit     # Bit shift del valor a su representacion booleana
         asm += "\tor    $%s, %%al\n" % bool_f       
-        asm += "\tmov %%al, %s(%%esp)\n" % str(si + TEMP_DIR)     # Save the boolean in memory stack
+        asm += "\tmov %%al, %s(%%esp)\n" % str(si + TEMP_DIR)     # Guardar el resultado en el stack de memoria 
         return temp, asm
 
+# Operación mayor que (>) (operador comparativo)
 @define_primitive('greaterthan')
 def greater_than(*argv):
     si = argv[0]  # stack index
@@ -470,7 +485,7 @@ def greater_than(*argv):
     
     if indv_operand:
         temp = operands[-1]
-        asm = "\tmovl %%eax, %s(%%esp)\n" % str(si + TEMP_DIR)     # This means si(esp) = eax
+        asm = "\tmovl %%eax, %s(%%esp)\n" % str(si + TEMP_DIR)     # Esto se traduce: si(esp) = eax
         return temp, asm
     else:
         try: 
@@ -479,10 +494,10 @@ def greater_than(*argv):
             temp = 0
         asm = ""
         asm += "\tmovl %s(%%esp), %%ebx\n" % str(si + TEMP_DIR)
-        asm += "\tcmp %ebx, %eax\n"     # Compare operands as: 'ebx > eax'
-        asm += "\tsetl %al\n"          # After comparing, the result is safed in 'al', memory section that safes #t or #f as 8 bits (1 byte)
+        asm += "\tcmp %ebx, %eax\n"     # Se comparan los operandos: 'ebx > eax'
+        asm += "\tsetl %al\n"          # Al comparar, el resultado se guarda en 'al', la sección de memoria guarda el #t o #f en 8 bits  
         asm += "\tmovzbl    %al, %eax\n"
-        asm += "\tsal   $%s, %%al\n" % bool_bit     # Shift the 0/1 byte value to its representation as boolean #f/#t
+        asm += "\tsal   $%s, %%al\n" % bool_bit     # Bit shift del valor a su representacion booleana
         asm += "\tor    $%s, %%al\n" % bool_f       
-        asm += "\tmov %%al, %s(%%esp)\n" % str(si + TEMP_DIR)    # Save the boolean in memory stack
+        asm += "\tmov %%al, %s(%%esp)\n" % str(si + TEMP_DIR)    # Guardar el resultado en el stack de memoria 
         return temp, asm
