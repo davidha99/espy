@@ -1,11 +1,11 @@
 from errors import EspyNameError
 
 '''
-Environment.py
-Descripción: Definición de clases y métodos usadas para la administración 
-             y acceso de memoria en compilación
-Autores: David Hernández    |   A01383543
-         Bernardo García    |   A00570682
+    Environment.py
+    Descripción: Definición de clases y métodos usadas para la administración 
+                y acceso de memoria en compilación
+    Autores: David Hernández    |   A01383543
+             Bernardo García    |   A00570682
 '''
 
 # Variable global para el guardado de variables globales

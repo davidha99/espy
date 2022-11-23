@@ -2,6 +2,8 @@ import sys
 import ply.yacc as yacc
 from lexer import tokens
 from literals import literal_repr
+from environment import Environment_Stack, Environment, Global_Environment
+from errors import EspyNameError, InvalidArgumentNumber
 
 from emitter import (
     emit_function_header, 
@@ -25,38 +27,47 @@ from utils import (
     get_list_element_mem_idx
     )
 
-from environment import Environment_Stack, Environment, Global_Environment
-from errors import EspyNameError, InvalidArgumentNumber
+'''
+    Parser.py
+    Descripción: Clase que define las reglas sintácticas del lenguaje. Extensión de ply.yacc
+    Este archivo contiene la definición de la sintaxis y la semántica de espy, es el archivo más importante
+    para la funcionalidad del programa.
+    Autores: David Hernández    |   A01383543
+             Bernardo García    |   A00570682
+'''
 
+# Dirección de memoria en ejecución de distintos tipos de estucturas y variables
+# Las variables temporales se guardan a partir de la dirección 1000
 TEMP_DIR = -1000
+# Las variables declaradas se guardan a partir de la dirección 2000, independientemente de su tipo de dato
 VAR_DIR = -2000
+# Las variables dentro de una lista se guardan a partir de la dirección 3000, independientemente de su tipo de dato
 LISTS_DIR = -3000
 
+# Declaración de diferentes variables y estructuras globales usadas en el programa
+environment_stack = Environment_Stack()     # Tipo stack de Environments (scopes). Principal estructura de memoria en 
+environment = {}                            # Diccionario de Environments
+global_operand_stack = []                   # Stack de operandos
+global_operator_stack = []                  # Stack de operadores
+var_binding_stack = []                      # Stack de variables: usado para la declaración de variables y listas
+func_binding_stack = []                     # Stack de funciones: usado para la declaración de funciones
+func_call_stack = []                        # Stack de funciones en proceso: usado para la recursión o el llamado de múltiples funciones
+cond_label_stack = []                       # Stack de cond_labels
+cond_label_counter = 1                      # Contador global de cond_labels
+func_label_stack = []                       # Stack de cond_labels
+func_label_counter = 1                      # Contador global de cond_labels
+scope_counter = 0                           # Contador de contextos (scope): útil para múltiples operaciones en línea
+pointer_offset = 0                          # Offset del pointer de la memoria de ejecución: usado para la llamada de funciones y variables
+memory_stack_index = 0  # Start at byte 0   # Index del stack de memoria
+memory_var_index = VAR_DIR                  # Index de variables declaradas empezará en esa dirección
+memory_lists_index = LISTS_DIR              # Index de listas empezará en esa dirección
+general_temp = None                         # Helper temporal
 
-asm = ""
+asm = ""                                    # Constructor string de las instrucciones de assembly
 asm += emit_function_header("entry_point")
 asm += emit_stack_header("entry_point")
 asm += "L_entry_point:\n"
-asm_functions = []
-environment = {}
-global_operand_stack = []
-global_operator_stack = []
-cond_label_stack = []
-cond_label_counter = 1
-func_label_stack = []
-func_label_counter = 1
-memory_stack_index = 0  # Start at byte 0
-environment_stack = Environment_Stack()
-var_binding_stack = []
-func_binding_stack = []
-scope_counter = 0
-func_call_stack = []
-pointer_offset = 0
-# param_queue = []
-# evaluated_args = 0
-memory_var_index = VAR_DIR   # Lists index, will be saved starting at this dir
-memory_lists_index = LISTS_DIR   # Lists index, will be saved starting at this dir
-general_temp = None            # General temp helper
+asm_functions = []                          # Stack de instrucciones de cada función
 
 def p_program(p):
     '''
@@ -77,7 +88,6 @@ def p_program(p):
         asm += "L_entry_point:\n"
         cond_label_counter = 1
     Global_Environment.set_instance(environment_stack.scope_pop())
-    # environment_stack.scope_exit()  # Erase Global scope
 
     p[0] = "Parsed"
 
@@ -89,7 +99,6 @@ def p_np_gbl_scope(p):
     global memory_var_index
     global memory_lists_index
     global_env = Global_Environment.get_instance()
-    # environment_stack.scope_enter(scope_counter)    # Global scope
     environment_stack.insert_environment(global_env)
     temp, memory_var_index, memory_stack_index = restore_glb_var_to_memory(global_env, memory_var_index, memory_lists_index)
     asm += temp
@@ -114,7 +123,7 @@ def p_with_multiple_func_bindings(p):
                                 | '[' ID np_seen_func_name lambda ']' np_close_func_binding
     '''
 
-#NP after function lecture
+# Punto neurálgico: after function lecture
 def p_np_seen_func_name(p):
     "np_seen_func_name :"
     global func_label_stack
@@ -122,16 +131,16 @@ def p_np_seen_func_name(p):
     global environment_stack
     global var_binding_stack
     global asm
-    # Create a new label for the function
+    # Crear un nuevo label para la función
     function_label = create_unique_func_labels(func_label_counter)
     func_label_counter += 1
     func_label_stack.append(function_label)
-    # Bind the function name into the current environment
+    # Ingresar el nombre de la función en el Environment actual
     func_name = p[-1]
     environment_stack.function_bind(func_name, function_label)
-    # Push the function name to the binding stack (for the parameters)
+    # Ingresar el nombre de la función al binding stack (para agregar después los parámetros)
     func_binding_stack.append(func_name)
-    # Start assembly for the function
+    # Iniciar la redacción de las instrucciones de assembly para la función
     asm += function_label + ":\n"
 
 def p_np_close_func_binding(p):
@@ -157,11 +166,6 @@ def p_lambda(p):
            | '(' LAMBDA NULL expr ')'
     '''
 
-# def p_np_seen_lambda(p):
-#     "np_seen_lambda :"
-#     global memory_stack_index
-#     memory_stack_index -= 4
-
 def p_with_multiple_params(p):
     '''
     with_multiple_params : with_multiple_params ID np_seen_param
@@ -176,7 +180,7 @@ def p_np_seen_param(p):
     global memory_stack_index
     global var_binding_stack
 
-    # Add parameter to the corresponding function
+    # Agregar el parámetro a la función correspondiente
     func_name = func_binding_stack[-1]
     param_name = p[-1]
     environment_stack.parameter_bind(
@@ -184,12 +188,8 @@ def p_np_seen_param(p):
         param_name=param_name, 
         memory_idx=memory_stack_index
         )
-    
-    # Add parameter to the queue (this is to maintain the order when evaluating 
-    # the expressions corresponding to the parameters)
-    # param_queue.append(param_name)
 
-    # Update memory index
+    # Actualizar el memory_index
     memory_stack_index -= 4
 
 def p_expr(p):
@@ -226,26 +226,28 @@ def p_variable(p):
     '''
     variable : ID
     '''
+    # Al hablar de variables hacemos referencia a variables declaradas, lo cuál sólo básicamentes es strings. Ejempli: suma = 10
     global global_operand_stack
     global environment_stack
     global asm
     var = p[1]
 
-    # Check if variable is in the environment
-    # .scope_lookup() returns all information of the variable (the symbol)
+    # Revisar si la variable está en el stack de scopes
     symbol = environment_stack.scope_lookup(var)
 
-    # If it is, push the value of the variable to the operand stack
+    # Si existe, agregar su valor al stack de operandos
     if symbol is not None:
         global_operand_stack.append(var)
         asm += load_from_memory(symbol.memory_idx)
     else:
+        # Si no existe, revisar si es una variable de una función
         mem_idx = environment_stack.func_lookup_param(func_binding_stack[-1], var)[0]
         if mem_idx is not None:
-            # Get memory index of the variable and load it to the register
+            # Si ya está declarada, agregar su valor al stack de operandos
             global_operand_stack.append(var)
             asm += load_from_memory(str(mem_idx))
         else:
+            #Si no, la variable no existe
             raise EspyNameError("Variable '%s' is not defined" % var)
 
     
@@ -262,7 +264,6 @@ def p_list_variable(p):
     index = p[3]
     symbol = environment_stack.scope_lookup(var)
 
-    # If it is, push the value of the variable to the operand stack
     if symbol is not None:
         global_operand_stack.append(var)
         asm += load_from_memory(get_list_element_mem_idx(symbol, index))
@@ -280,12 +281,9 @@ def p_variable_declaration(p):
     global general_temp
     global global_operand_stack
     
-    memory_var_index = memory_stack_index         # Saving Lists index for next list to be read
-    memory_stack_index = general_temp               # Updating mem index to continue normal arguments
-    # var_binding_stack.pop()                         # Poping var name
-    # var = p[5]
-    # symbol = environment_stack.scope_lookup(var)
-    # asm += save_in_memory(symbol.memory_idx)
+    # Guardar el index de variables y actualizar el memory index a su valor anterior
+    memory_var_index = memory_stack_index         
+    memory_stack_index = general_temp               
     
 
 def p_np_seen_var_bracket(p):
@@ -294,8 +292,10 @@ def p_np_seen_var_bracket(p):
     global global_operand_stack
     global memory_var_index
     global general_temp
-    general_temp = memory_stack_index       # Memory stack index must be saved to know where are we coming back
-    memory_stack_index = memory_var_index        # Now memory points to last space at var section
+
+    # Guardar el memory index para saber a donde regresar, y usar el index de declaracion de variables
+    general_temp = memory_stack_index       
+    memory_stack_index = memory_var_index   
 
 
 def p_list_declaration(p):
@@ -307,10 +307,12 @@ def p_list_declaration(p):
     global general_temp
     global global_operand_stack
     
-    memory_lists_index = memory_stack_index         # Saving Lists index for next list to be read
-    memory_stack_index = general_temp               # Updating mem index to continue normal arguments
-    var_binding_stack.pop()                         # Poping var name
-    global_operand_stack.pop()                      # Poping fake bottom Flag ('[')
+    # Guardar el index de variables y actualizar el memory index a su valor anterior
+    memory_lists_index = memory_stack_index         
+    memory_stack_index = general_temp               
+
+    var_binding_stack.pop()                         
+    global_operand_stack.pop()                      # Pop fondo falso ('[')
 
     
     
@@ -320,9 +322,11 @@ def p_np_seen_list_bracket(p):
     global global_operand_stack
     global memory_lists_index
     global general_temp
-    general_temp = memory_stack_index       # Memory stack index must be saved to know where are we coming back
-    memory_stack_index = memory_lists_index        # Now memory points to last space at list section
-    global_operand_stack.append('[')      # Fake bottom ('flag') to append list content.
+    
+    # Guardar el memory index para saber a donde regresar, y usar el index de declaracion de variables
+    general_temp = memory_stack_index       
+    memory_stack_index = memory_lists_index
+    global_operand_stack.append('[')      # Agregar un fondo falso para reconocer el scope
 
 
 def p_np_seen_list_expr(p):
@@ -344,10 +348,6 @@ def p_np_seen_list_expr(p):
     asm += save_in_memory(memory_stack_index)               # Generate intel assembly instruction to move list value to its corresponding mem space
     memory_stack_index -= 4                                 # Update Memory index to next space available
 
-    # x = global_operand_stack.pop()
-    # while(x != '['):
-    #     list_content.append(x)
-    #     x = global_operand_stack.pop()
 
 def p_with_multiple_list_expr(p):
     '''
@@ -406,12 +406,12 @@ def p_conditional_expr(p):
     '''
     conditional_expr : '(' IF np_create_if_labels test np_seen_test expr np_seen_consequent expr np_seen_alternate ')'
     '''
-    # Pop labels of current if
+    # Pop de labels del IF actual
     global cond_label_stack
     cond_label_stack.pop()
     cond_label_stack.pop()
 
-#NP After IF lecture
+# Punto neurálgico: After IF lecture
 def p_np_create_if_labels(p):
     "np_create_if_labels :"
     global cond_label_stack
@@ -452,7 +452,7 @@ def p_comparison_op(p):
     '''
     p[0] = p[1]
 
-#NP After IF conditional expression lecture
+# Punto neurálgico: After IF conditional expression lecture
 def p_np_seen_test(p):
     "np_seen_test :"
     global cond_label_stack
@@ -464,7 +464,7 @@ def p_np_seen_test(p):
     if_test_function = primitives["if_test"]
     asm += if_test_function(test, cond_label_stack)
 
-#NP After IF first expression lecture
+# Punto neurálgico: After IF first expression lecture
 def p_np_seen_consequent(p):
     "np_seen_consequent :"
     global cond_label_stack
@@ -472,7 +472,7 @@ def p_np_seen_consequent(p):
     if_consequent_function = primitives["if_consequent"]
     asm += if_consequent_function(cond_label_stack)
 
-#NP After IF alternate expression lecture
+# Punto neurálgico: After IF alternate expression lecture
 def p_np_seen_alternate(p):
     "np_seen_alternate :"
     global cond_label_stack
@@ -480,11 +480,11 @@ def p_np_seen_alternate(p):
     if_alternate_function = primitives["if_alternate"]
     asm += if_alternate_function(cond_label_stack)
 
+# Punto neurálgico: End of comparison_primitive
 def p_comparison_primitive(p):
     '''
     comparison_primitive : '(' np_compar_seen_paren comparison_op np_compar_seen_operator compar_operands ')'
     '''
-    #NP End of comparison_primitive
     global asm
     global global_operator_stack
     global global_operand_stack
@@ -496,7 +496,7 @@ def p_comparison_primitive(p):
     asm += "\tmovl %s(%%esp), %%eax\n" % str(memory_stack_index + TEMP_DIR)   # We must get the value from n-1(esp) to eax, so that we can continue working with it
     memory_stack_index += 4         # Reset the memory index to 0
 
-#NP After parenthesis lecture
+# Punto neurálgico: After parenthesis lecture
 def p_np_compar_seen_paren(p):
     "np_compar_seen_paren :"
     global global_operator_stack
@@ -506,7 +506,7 @@ def p_np_compar_seen_paren(p):
     global_operand_stack.append(p[-1])
     memory_stack_index -= 4  
 
-#NP After operator lecture
+# Punto neurálgico: After operator lecture
 def p_np_compar_seen_operator(p):
     "np_compar_seen_operator :"
     global global_operator_stack
@@ -521,7 +521,7 @@ def p_arithmetic_primitive(p):
     '''
     arithmetic_primitive : '(' np_arithm_seen_paren operator np_arithm_seen_operator operands ')'
     '''
-    #NP End of arithmetic_primitive
+    # Punto neurálgico: End of arithmetic_primitive
     global asm
     global global_operator_stack
     global global_operand_stack
@@ -533,7 +533,7 @@ def p_arithmetic_primitive(p):
     asm += "\tmovl %s(%%esp), %%eax\n" % str(memory_stack_index + TEMP_DIR)   # We must get the value from n-1(esp) to eax, so that we can continue working with it
     memory_stack_index += 4         # Update the asm stack index every time we close a \paren
 
-#NP After parenthesis lecture
+# Punto neurálgico: After parenthesis lecture
 def p_np_arithm_seen_paren(p):
     "np_arithm_seen_paren :"
     global global_operator_stack
@@ -543,7 +543,7 @@ def p_np_arithm_seen_paren(p):
     global_operand_stack.append(p[-1])
     memory_stack_index -= 4
 
-#NP After operator lecture
+# Punto neurálgico: After operator lecture
 def p_np_arithm_seen_operator(p):
     "np_arithm_seen_operator :"
     global global_operator_stack
@@ -560,7 +560,7 @@ def p_more_expr(p):
               | empty
     '''
 
-#NP After operand lecture
+# Punto neurálgico: After operand lecture
 def p_np_operands_seen_operand(p):
     "np_operands_seen_operand :"
     global asm
@@ -656,7 +656,7 @@ def p_let_binding(p):
     environment_stack.scope_exit()
     scope_counter -= 1
 
-#NP After LET lecture
+# Punto neurálgico: After LET lecture
 def p_np_seen_let(p):
     "np_seen_let :"
     global environment_stack
@@ -683,7 +683,7 @@ def p_with_multiple_bindings(p):
     symbol = environment_stack.scope_lookup(var)
     asm += save_in_memory(symbol.memory_idx)
 
-#NP After expression lecture in let binding
+# Punto neurálgico: After expression lecture in let binding
 def p_np_seen_var_expr(p):
     "np_seen_var_expr :"
     global global_operand_stack
@@ -697,7 +697,7 @@ def p_np_seen_var_expr(p):
     # Save result in the memory
     asm += save_in_memory(symbol.memory_idx)
 
-#NP After '[' lecture inside let_binding
+# Punto neurálgico: After '[' lecture inside let_binding
 def p_np_seen_bracket(p):
     "np_seen_bracket :"
     global memory_stack_index
